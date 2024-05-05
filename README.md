@@ -1,2 +1,2 @@
-# Snake.in
- Snake Game
+# Cube.in
+ Cube Game
