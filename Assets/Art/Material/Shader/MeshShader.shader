@@ -36,7 +36,7 @@ Shader "Snake_in/MeshShader"
 
             sampler2D _MainTex;
             half4 _MainTex_ST;
-            half4 _Colors[1023];
+            // half4 _Colors[1023];
 
             v2f vert (appdata v, uint instanceID: SV_InstanceID)
             {
@@ -46,7 +46,7 @@ Shader "Snake_in/MeshShader"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.color = _Colors[instanceID];
+                // o.color = _Colors[instanceID];
                 return o;
             }
 
@@ -54,7 +54,8 @@ Shader "Snake_in/MeshShader"
             {
                 half4 col = tex2D(_MainTex, i.uv);
                 // return col * _Color;
-                return col * i.color;
+                // return col * i.color;
+                return col;
             }
             ENDCG
         }
