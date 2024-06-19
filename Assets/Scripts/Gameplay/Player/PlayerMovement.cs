@@ -5,20 +5,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Properties")]
     [SerializeField, Range(1,10)] private int moveSpeed = 1;
     [SerializeField, Range(1,100)] private int rotationSpeed = 50;
-
-    // [Space(10), Header("GPU Data"), SerializeField] private Mesh cubeMesh;
-    // [SerializeField] private Material cubeMaterial;
-
-    [Space(10), Header("Broadcasting Channel"), SerializeField] private Vector2EventListener targetPositionListener = default;
+    [Space(10), Header("Broadcasting Channel"), SerializeField] private Vector3EventListener targetPositionListener = default;
 
     [Space(10), Header("Listening Channel"), SerializeField] private IntEventListener inputAxisListener = default;
-
-    // public Transform tempText;
-    // private Cube cube;
-
-    // #region RenderProperty
-    // private Matrix4x4[] matrix;
-    // #endregion
 
     private void OnEnable()
     {
@@ -30,87 +19,23 @@ public class PlayerMovement : MonoBehaviour
         inputAxisListener.onEventRaised -= RotatePlayer;
     }
 
-    private void Start()
-    {
-        // matrix = new Matrix4x4[1];
-        // cube = new Cube(transform.position);
-    }
-
     private void RotatePlayer(int inputAxis)
     {
         //rotate player to a degree
 
-        transform.Rotate(new Vector3(0f, 0f, inputAxis * rotationSpeed * Time.deltaTime));
-
-
-        // transform.Rotate(inputAxis * rotationSpeed * Time.deltaTime);
-        // var temprot = new Vector3(0f, 0f, inputAxis * rotationSpeed * Time.deltaTime);
-        // transform.rotation = Quaternion.Euler(temprot);
+        //rotation in 3d world
+        transform.Rotate(new Vector3(0f, inputAxis * rotationSpeed * Time.deltaTime, 0f));
     }
 
     private void Update()
     {
-        // transform.position += Vector3.right * moveSpeed * Time.deltaTime;
-        transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
-
-        //move player to the right Direction
-        // cube.MoveRight(moveSpeed * Time.deltaTime);
-        targetPositionListener.Raise(transform.position);
-
-        // tempText.localPosition = cube.position;
-        // Vector3 tempRot = new Vector3(cube.rotation.x, cube.rotation.y, cube.rotation.z - 90f);
-        // tempText.localRotation = Quaternion.Euler(tempRot);
-        // DrawCube();
+        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+        // targetPositionListener.Raise(transform.position);
     }
-
-    // private void DrawCube()
-    // {
-    //     matrix[0] = Matrix4x4.TRS(cube.position, Quaternion.Euler(cube.rotation), Vector3.one);
-    //     Graphics.DrawMeshInstanced(cubeMesh, 0, cubeMaterial, matrix, 1);
-    // }
-
-    // #region Visual Debug
-    // #if UNITY_EDITOR
-    // private void OnDrawGizmos()
-    // {
-    //     if(!Application.isPlaying) return;
-    // }
-
-    // #endif
-    // #endregion
+    
+    private void LateUpdate()
+    {
+        //move player to the right Direction
+        targetPositionListener.Raise(transform.position);
+    }
 }
-
-// internal class Cube
-// {
-//     public Vector3 position;
-//     public Vector3 rotation;
-
-//     private readonly float MAX_ROTATION_DEGREE = 359f;
-
-//     public Cube(Vector2 position)
-//     {
-//         this.position = position;
-//         rotation = Vector3.zero;
-//     }
-
-//     public void Rotate(float direction)
-//     {
-//         rotation += new Vector3(0f, 0f, direction);
-//         if(rotation.z > MAX_ROTATION_DEGREE || rotation.z < -MAX_ROTATION_DEGREE)
-//         {
-//             rotation.z = 0f;
-//         }
-//     }
-
-//     public Vector3 Right()
-//     {
-//         Quaternion currentRot = Quaternion.Euler(rotation);
-//         Vector3 finalPos = currentRot * Vector3.right;
-//         return finalPos;
-//     }
-
-//     public void MoveRight(float speed)
-//     {
-//         position += Right() * speed;
-//     }
-// }

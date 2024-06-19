@@ -5,6 +5,12 @@ using UnityEngine;
 public class ResFactorySO : ResFactory
 {
     [SerializeField] private ResConfig resConfig;
+    [SerializeField] private ResType resType;
+
+    // public CNode GetCNode(int index)
+    // {
+    //     return collisionNode[index];
+    // }
 
     protected override ResConfig ResConfig 
     { 
@@ -18,10 +24,7 @@ public class ResFactorySO : ResFactory
 
     public IEnumerable<CNode> GetGridItems(int index)
     {
-        if(!gridMap.ContainsKey(index))
-        {
-            yield return null;
-        }else
+        if(gridMap.ContainsKey(index))
         {
             var item = gridMap[index];
             while(item != -1)
@@ -29,6 +32,10 @@ public class ResFactorySO : ResFactory
                 yield return collisionNode[item];
                 item = collisionNode[item].next;
             }
+            
+        }else
+        {
+            yield return null;
         }
     }
 }

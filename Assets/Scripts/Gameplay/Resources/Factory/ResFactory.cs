@@ -8,7 +8,6 @@ public abstract class ResFactory : ScriptableObject, IRes
     private int entityCount;
     private int mapSize;
 
-    // protected ResConfig ResConfig;
     protected abstract ResConfig ResConfig{get;}
     protected Matrix4x4[] positionMatrix;
     protected CNode[] collisionNode;
@@ -17,7 +16,10 @@ public abstract class ResFactory : ScriptableObject, IRes
     private int freeNode = 0;
     private int nodeCount = 0;
 
-    protected int NodeCount => nodeCount;
+    public int NodeCount => nodeCount;
+    public Matrix4x4[] PositionMatrix => positionMatrix;
+    public CNode[] CollisionNode => collisionNode;
+    public Dictionary<int, int> GridMap => gridMap;
 
     public virtual void Init()
     {
@@ -70,6 +72,7 @@ public abstract class ResFactory : ScriptableObject, IRes
 
     public virtual void RemoveItem(int index)
     {
+        // var currentNode = node;
         var currentNode = collisionNode[index];
         if(currentNode.next != -1)
         {

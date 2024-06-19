@@ -5,3 +5,10 @@ public interface IRes
     void RemoveItem(int index);
     void DeInit();
 }
+
+public enum ResType
+{
+    Res, 
+    MysteryBox,
+    DeathCrate
+}

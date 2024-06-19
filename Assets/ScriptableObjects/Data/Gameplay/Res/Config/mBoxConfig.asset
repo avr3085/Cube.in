@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   extraSpace: 16
   entityCount: 10
-  mapSize: 50
+  mapSize: 10
   material: {fileID: 2100000, guid: bb2fbf1a03a42a143ad60bd0e73a1238, type: 2}
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}

@@ -18,11 +18,11 @@ public class InputHandler : MonoBehaviour
         //Taking Input from arrow key
         if(Input.GetKey(KeyCode.RightArrow))
         {
-            inputAixsListener.Raise(-1);
+            inputAixsListener.Raise(1);
         }
         else if(Input.GetKey(KeyCode.LeftArrow))
         {
-            inputAixsListener.Raise(1);
+            inputAixsListener.Raise(-1);
         }
 
         // if(Input.GetMouseButtonDown(0)){

@@ -2,20 +2,13 @@ using UnityEngine;
 
 public class CollisionHandler : MonoBehaviour
 {
-    // public static CollisionHandler Instance{get; private set;}
-
-    // private void Awake()
+    // private void Update()
     // {
-    //     if(Instance != null)
-    //     {
-    //         Destroy(Instance);
-    //     }else
-    //     {
-    //         Instance = this;
-    //     }
+    //     ResFactoryManager.Instance.ChekcCol((Vector2) transform.position);
     // }
 
-    // private void Start()
+    // private void CheckForCollision()
     // {
+    //     // var collidingItem = ResFactoryManager.Instance.
     // }
 }

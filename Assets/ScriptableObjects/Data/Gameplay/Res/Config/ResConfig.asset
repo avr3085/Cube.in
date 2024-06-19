@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ResConfig
   m_EditorClassIdentifier: 
   extraSpace: 16
-  entityCount: 256
-  mapSize: 50
+  entityCount: 110
+  mapSize: 10
   material: {fileID: 2100000, guid: cd447d5f6406dfa4fb3c9efd39fdbcf5, type: 2}
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}

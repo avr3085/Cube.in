@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: BoxFactory
   m_EditorClassIdentifier: 
   resConfig: {fileID: 11400000, guid: ccc570daa912e2e449ff031c35c2aa74, type: 2}
+  resType: 1

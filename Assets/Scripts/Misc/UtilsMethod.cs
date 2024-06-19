@@ -62,5 +62,15 @@ namespace MiscUtils
             int y = Mathf.FloorToInt(position.y);
             return (x * mapWidth) + y;
         }
+
+        public static Vector2 ToV2(this Vector3 val)
+        {
+            return new Vector2(val.x, val.y);
+        }
+        
+        public static Vector3 ToV3(this Vector2 val)
+        {
+            return new Vector3(val.x, val.y, 0f);
+        }
     }
 }

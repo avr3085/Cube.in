@@ -6,10 +6,10 @@ using UnityEngine;
 //Todo --> fix the camera movement, make it more smooth
 public class CameraFollow : MonoBehaviour
 {
-    // [SerializeField] private Transform target;
-    [SerializeField] private Vector2 offset;
+    [SerializeField] private Vector3 offset;
+    [SerializeField, Range(1, 10)] private int smoothing = 5;
 
-    [Header("Listening Channel"), SerializeField] private Vector2EventListener targetPositionListener = default;
+    [Header("Listening Channel"), SerializeField] private Vector3EventListener targetPositionListener = default;
 
     private void OnEnable()
     {
@@ -21,9 +21,11 @@ public class CameraFollow : MonoBehaviour
         targetPositionListener.onEventRaised -= FollowTarget;
     }
 
-    private void FollowTarget(Vector2 val)
+    private void FollowTarget(Vector3 val)
     {
-        transform.position = new Vector3(val.x + offset.x, val.y + offset.y, -5);
+        var desiredPos = val + offset;
+        var smoothPos = Vector3.Lerp(transform.position, desiredPos, smoothing * Time.deltaTime);
+        transform.position = smoothPos;
     }
 
 } 
