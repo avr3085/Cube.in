@@ -20,11 +20,4 @@ public class ResManager : MonoBehaviour
         ResFactoryManager.Instance.DeInitialize();
     }
 
-    public void OnDrawGizmos()
-    {
-        if(!Application.isPlaying) return;
-
-        Gizmos.color = Color.green;
-        ResFactoryManager.Instance.DrawGizmo();
-    }
 }

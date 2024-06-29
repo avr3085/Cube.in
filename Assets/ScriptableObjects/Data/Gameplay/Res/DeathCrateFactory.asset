@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f78e9ec50457349a67777e47623820, type: 3}
-  m_Name: ResFactory
+  m_Name: DeathCrateFactory
   m_EditorClassIdentifier: 
-  resConfig: {fileID: 11400000, guid: d5f88ffafdabc07429f6779e0d497d2e, type: 2}
-  resType: 0
+  resConfig: {fileID: 11400000, guid: 6558bca2bd7c0b949a28be1d0a0a2025, type: 2}
+  resType: 2
   moveYCurve:
     serializedVersion: 2
     m_Curve:
@@ -47,4 +47,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  useMultiColor: 1
+  useMultiColor: 0

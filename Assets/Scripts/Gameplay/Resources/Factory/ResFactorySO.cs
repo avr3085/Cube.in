@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName ="DataSO/Gameplay/ResFactory", fileName ="ResFactory")]
@@ -6,36 +5,50 @@ public class ResFactorySO : ResFactory
 {
     [SerializeField] private ResConfig resConfig;
     [SerializeField] private ResType resType;
+    [SerializeField] private AnimationCurve moveYCurve;
 
-    // public CNode GetCNode(int index)
-    // {
-    //     return collisionNode[index];
-    // }
+    [Header("Multi Color"), SerializeField] private bool useMultiColor;
+
 
     protected override ResConfig ResConfig 
     { 
         get => resConfig;
     }
 
+    protected override bool IsMultiColor => useMultiColor;
+
     public void DrawMesh()
     {
-        Graphics.DrawMeshInstanced(resConfig.mesh, 0, resConfig.material, positionMatrix, NodeCount);
+        for(int i = 0; i < nodeCount; i++)
+        {
+            if(collisionNode[i].shouldMove)
+            {
+                collisionNode[i].t += Time.deltaTime;
+                var time = collisionNode[i].t;
+                var val = moveYCurve.Evaluate(time);
+                collisionNode[i].MoveUp(val);
+            }
+            positionMatrix[i] = collisionNode[i].matrix;
+        }
+
+        for(int i = 0; i< nodeCount; i++)
+        {
+            if(collisionNode[i].remove)
+            {
+                var currenNode = collisionNode[i];
+                collisionNode.Remove(currenNode);
+                nodeCount -= 1;
+                Debug.Log(nodeCount);
+            }
+        }
+
+        if(useMultiColor)
+        {
+            Graphics.DrawMeshInstanced(resConfig.mesh, 0, resConfig.material, positionMatrix, nodeCount, block);
+            return;
+        }
+
+        Graphics.DrawMeshInstanced(resConfig.mesh, 0, resConfig.material, positionMatrix, nodeCount);
     }
 
-    public IEnumerable<CNode> GetGridItems(int index)
-    {
-        if(gridMap.ContainsKey(index))
-        {
-            var item = gridMap[index];
-            while(item != -1)
-            {
-                yield return collisionNode[item];
-                item = collisionNode[item].next;
-            }
-            
-        }else
-        {
-            yield return null;
-        }
-    }
 }

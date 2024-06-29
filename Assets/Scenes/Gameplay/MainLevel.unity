@@ -731,7 +731,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &618345018
 Transform:
   m_ObjectHideFlags: 0
@@ -763,6 +763,7 @@ MonoBehaviour:
   resFactories:
   - {fileID: 11400000, guid: a902206366131494ab450fec7cdf257f, type: 2}
   - {fileID: 11400000, guid: bc3c40049113d2c49a083f32b733cfca, type: 2}
+  - {fileID: 11400000, guid: 826df8024b97289468664626afaca6c5, type: 2}
 --- !u!1 &644782018
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a87fff9202bc7c44d80f03ebed4c6831, type: 3}
-  m_Name: mBoxConfig
+  m_Name: dCrateConfig
   m_EditorClassIdentifier: 
   extraSpace: 16
-  entityCount: 10
+  entityCount: 5
   mapSize: 45
-  material: {fileID: 2100000, guid: 80cd77c8ab7e3b4468c0db298fd63d5c, type: 2}
+  material: {fileID: 2100000, guid: e66f8ba29fbc7194cbb74a8258c23073, type: 2}
   mesh: {fileID: 4237179799288247963, guid: 96f4b668258d466498e580296873ecaa, type: 3}
