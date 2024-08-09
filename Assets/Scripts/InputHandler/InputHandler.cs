@@ -9,8 +9,11 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     [Header("Broadcasting Channel")]
-    [SerializeField] private IntEventListener inputAixsListener = default;
-    private Vector2 mousePositon = Vector2.zero;
+    [SerializeField] private Vector2EventListener inputAxisListener = default;
+    // private Vector2 mousePositon = Vector2.zero;
+    private Vector2 playerInput;
+
+//### Add joystick input support
 
     private void Update(){
 #if UNITY_EDITOR
@@ -18,18 +21,28 @@ public class InputHandler : MonoBehaviour
         //Taking Input from arrow key
         if(Input.GetKey(KeyCode.RightArrow))
         {
-            inputAixsListener.Raise(1);
+            playerInput.x = 1;
         }
         else if(Input.GetKey(KeyCode.LeftArrow))
         {
-            inputAixsListener.Raise(-1);
+            playerInput.x = -1;
         }
 
-        // if(Input.GetMouseButtonDown(0)){
-        //     mousePositon = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //     Vector2 finalPos = new Vector2(mousePositon.x + 4.5f, mousePositon.y + 4.5f);
-        //     if(finalPos.x>=0 && finalPos.x<=9 && finalPos.y>=0 && finalPos.y<=9) mousePositionListener.Raise(finalPos);
-        // }
+        if(Input.GetKey(KeyCode.UpArrow))
+        {
+            playerInput.y = 1;
+        }
+        else if(Input.GetKey(KeyCode.DownArrow))
+        {
+            playerInput.y = -1;
+        }
+        
+        // playerInput.x = Input.GetAxis("Horizontal");
+        // playerInput.y = Input.GetAxis("Vertical");
+        // playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+        
+        inputAxisListener.Raise(playerInput);
+
 #endif
 
 #if UNITY_WEBGL

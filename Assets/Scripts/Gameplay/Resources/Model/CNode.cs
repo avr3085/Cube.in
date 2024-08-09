@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class CNode
 {
-    // public int key;
     public Vector3 position;
     public Quaternion rotation;
     public CNode parent;
@@ -16,7 +15,7 @@ public class CNode
     {
         this.position = position;
         this.rotation = rotation;
-        matrix = Matrix4x4.TRS(position, rotation, Vector3.one * 0.5f);
+        matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
         shouldMove = false;
         remove = false;
         t = 0;
@@ -24,11 +23,11 @@ public class CNode
 
     public void MoveUp(float val)
     {
-        var newpos = new Vector3(this.position.x, this.position.y + val, this.position.z);
-        position = newpos;
-        matrix = Matrix4x4.TRS(newpos, rotation, Vector3.one * 0.5f);
+        position = new Vector3(this.position.x, this.position.y + val, this.position.z);
+        // position = newpos;
+        matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
 
-        if(t >= 1)
+        if(t >= 1f)
         {
             shouldMove = false;
             remove = true;

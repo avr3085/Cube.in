@@ -2,20 +2,25 @@ using UnityEngine;
 
 public class CollisionHandler : MonoBehaviour
 {
+    [SerializeField, Range(0,180)] private int viewAngle = 45;
     [SerializeField, Range(1, 10)] private int lineLength = 1;
 
-    private void OnDrawGizmos()
+    private float rightOut, leftOut;
+    private Vector3 rightDeg, leftDeg;
+
+    private void Update()
     {
-        if(!Application.isPlaying) return;
+        rightOut = viewAngle + transform.eulerAngles.y;
+        rightDeg = new Vector3(transform.position.x + Mathf.Sin(rightOut * Mathf.Deg2Rad) *  lineLength, 0f, transform.position.z + Mathf.Cos(rightOut * Mathf.Deg2Rad) * lineLength);
 
-        var forPos = (transform.forward *lineLength) +  transform.position;
+        leftOut = (360 - viewAngle) + transform.eulerAngles.y;
+        leftDeg = new Vector3(transform.position.x + Mathf.Sin(leftOut * Mathf.Deg2Rad) * lineLength, 0f, transform.position.z + Mathf.Cos(leftOut * Mathf.Deg2Rad) *  lineLength);
 
-        Gizmos.DrawRay(transform.position, transform.forward);
-        Gizmos.DrawSphere(forPos, 0.3f);
+        var raster = Raster.Line(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.z), 
+            Mathf.FloorToInt(rightDeg.x), Mathf.FloorToInt(rightDeg.z), 
+            Mathf.FloorToInt(leftDeg.x), Mathf.FloorToInt(leftDeg.z));
 
-        Gizmos.color = Color.green;
-        // var val = Raster.Line(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.z), Mathf.FloorToInt(forPos.x), Mathf.FloorToInt(forPos.z));
-        // foreach (var i in val)
+        // foreach (var i in raster)
         // {
         //     var hash  = new Vector3(i.x, 0f, i.y);
         //     //remove item if at certain distance
@@ -23,16 +28,15 @@ public class CollisionHandler : MonoBehaviour
         //     {
         //         ResManager.Instance.RemoveItem((int) hash.GetHash());
         //     }
-        //     Gizmos.DrawSphere(new Vector3(i.x, 0f , i.y), 0.1f);
-        //     DebugCube(i.x, i.y);
+        //     // DebugCube(i.x, i.y);
         // }
     }
 
-    private void DebugCube(int x, int y)
-    {
-        Gizmos.DrawLine(new Vector3(x, 0f, y), new Vector3(x + 1, 0f, y));
-        Gizmos.DrawLine(new Vector3(x + 1, 0f, y), new Vector3(x + 1, 0f, y + 1));
-        Gizmos.DrawLine(new Vector3(x + 1, 0f, y + 1), new Vector3(x, 0f, y + 1));
-        Gizmos.DrawLine(new Vector3(x, 0f, y + 1), new Vector3(x, 0f, y));
-    }
+    // private void DebugCube(int x, int y)
+    // {
+    //     Gizmos.DrawLine(new Vector3(x, 0f, y), new Vector3(x + 1, 0f, y));
+    //     Gizmos.DrawLine(new Vector3(x + 1, 0f, y), new Vector3(x + 1, 0f, y + 1));
+    //     Gizmos.DrawLine(new Vector3(x + 1, 0f, y + 1), new Vector3(x, 0f, y + 1));
+    //     Gizmos.DrawLine(new Vector3(x, 0f, y + 1), new Vector3(x, 0f, y));
+    // }
 }

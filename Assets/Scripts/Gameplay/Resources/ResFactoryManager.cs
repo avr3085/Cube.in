@@ -5,7 +5,6 @@ public class ResFactoryManager : MonoBehaviour
     [SerializeField] private ResFactorySO[] resFactories = default;
 
     public static ResFactoryManager Instance{get; private set;}
-
     private void Awake()
     {
         if(Instance != null)
@@ -17,7 +16,7 @@ public class ResFactoryManager : MonoBehaviour
         }
     }
 
-    public void Initialize()
+    private void Start()
     {
         foreach(var factory in resFactories)
         {
@@ -25,7 +24,7 @@ public class ResFactoryManager : MonoBehaviour
         }
     }
 
-    public void Draw()
+    private void Update()
     {
         foreach(var factory in resFactories)
         {
@@ -33,7 +32,7 @@ public class ResFactoryManager : MonoBehaviour
         }
     }
 
-    public void DeInitialize()
+    private void OnDisable()
     {
         foreach(var factory in resFactories)
         {

@@ -9,7 +9,6 @@ public class ResFactorySO : ResFactory
 
     [Header("Multi Color"), SerializeField] private bool useMultiColor;
 
-
     protected override ResConfig ResConfig 
     { 
         get => resConfig;
@@ -38,7 +37,6 @@ public class ResFactorySO : ResFactory
                 var currenNode = collisionNode[i];
                 collisionNode.Remove(currenNode);
                 nodeCount -= 1;
-                Debug.Log(nodeCount);
             }
         }
 

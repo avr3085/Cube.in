@@ -15,11 +15,6 @@ public abstract class ResFactory : ScriptableObject, IRes
     protected Dictionary<int, CNode> map;
     protected int nodeCount = 0;
 
-    // public int NodeCount => nodeCount;
-    // public Matrix4x4[] PositionMatrix => positionMatrix;
-    // public List<CNode> CollisionNode => collisionNode;
-    // public Dictionary<int, CNode> Map => map;
-
     //MultiColor
     private Vector4[] colors;
     protected MaterialPropertyBlock block;
@@ -69,7 +64,7 @@ public abstract class ResFactory : ScriptableObject, IRes
         Quaternion randRot = Quaternion.Euler(0f, Random.Range(-180, 180), 0f);
 
         int hashKey = randPos.GetHash();
-        var newNode = new CNode(randPos, randRot);
+        CNode newNode = new CNode(randPos, randRot);
         if(!map.ContainsKey(hashKey))
         {
             map.Add(hashKey, newNode);
@@ -84,9 +79,12 @@ public abstract class ResFactory : ScriptableObject, IRes
         nodeCount += 1;
     }
 
-    public virtual void AddItem()
+    public virtual void AddItem(int amount)
     {
-        FillItem();
+        for(int i = 0; i < amount; i++)
+        {
+            FillItem();
+        }
     }
 
     public virtual void RemoveItem(int hashKey)
@@ -95,11 +93,11 @@ public abstract class ResFactory : ScriptableObject, IRes
         if(!isProcessing)
         {
             isProcessing = true;
-            DoNext();
+            RemoveNext();
         }
     }
 
-    private void DoNext()
+    private void RemoveNext()
     {
         if(queue.Count == 0)
         {
@@ -116,7 +114,7 @@ public abstract class ResFactory : ScriptableObject, IRes
             node = nextNode;
         }
         map.Remove(hashKey);
-        DoNext();
+        RemoveNext();
     }
 
 
