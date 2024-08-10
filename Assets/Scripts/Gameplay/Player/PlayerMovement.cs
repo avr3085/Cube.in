@@ -33,11 +33,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void RotatePlayer(Vector2 inputAxis)
     {
-        // float angle = Mathf.Atan2(inputAxis.y, inputAxis.x) * Mathf.Rad2Deg;
-        // Quaternion desiredAngle = Quaternion.Euler(0f, angle, 0f);
-        // float deltaTime = rotationSpeed * Time.deltaTime;
+        float angle = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;
+        // Debug.Log(angle);
+        Quaternion desiredAngle = Quaternion.Euler(0f, angle, 0f);
+        float deltaTime = rotationSpeed * Time.deltaTime;
 
-        // transform.rotation = Quaternion.Lerp(transform.rotation, desiredAngle, deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, desiredAngle, deltaTime);
     }
 
     // private void Update()
