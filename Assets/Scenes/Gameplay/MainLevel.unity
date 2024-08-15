@@ -356,7 +356,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103576512}
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 0.004, z: 0.004}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -375,9 +375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8fa225776e4b248b71d71b69291932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 0, y: 8, z: -8}
+  offset: {x: 0, y: 8, z: -10}
   smoothing: 5
-  targetPositionListener: {fileID: 11400000, guid: aed81e719aef9f04388a3565d00d04f1, type: 2}
+  target: {fileID: 1343585050}
 --- !u!1 &122048383
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,10 +1943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 5
-  ball: {fileID: 1313098802}
-  ballRadius: 0.5
-  targetPositionListener: {fileID: 11400000, guid: aed81e719aef9f04388a3565d00d04f1, type: 2}
+  rotationSpeed: 8
   inputAxisListener: {fileID: 11400000, guid: fabcfeef9379bd448b24c131773eaf02, type: 2}
 --- !u!54 &1343585053
 Rigidbody:
@@ -1959,10 +1956,10 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 116
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!135 &1343585054
 SphereCollider:

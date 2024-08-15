@@ -8,7 +8,6 @@ using Etouch = UnityEngine.InputSystem.EnhancedTouch;
 /// Handle all input related function here
 /// </summary>
 
-//Todo --> Joystick input is yet to be implemented
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] private FloatingJoystick joystick;
@@ -56,13 +55,9 @@ public class InputHandler : MonoBehaviour
         if(finger == centerFinger)
         {
             Vector2 knobPosition;
-            //set the position of the knob
-            //broadcast the joystick direction
-
-            // Etouch.Touch currentTouch = centerFinger.currentTouch;
             Vector2 moveDirection = finger.screenPosition - joystick.JoystickRect.anchoredPosition;
-            float moveDirectionMagnitude = moveDirection.magnitude;
-            if(moveDirectionMagnitude > maxKnobMovement)
+            float moveDirectionSqrMagnitude = moveDirection.sqrMagnitude;
+            if(moveDirectionSqrMagnitude > maxKnobMovement * maxKnobMovement)
             {
                 knobPosition = moveDirection.normalized * maxKnobMovement;
             }
@@ -72,8 +67,7 @@ public class InputHandler : MonoBehaviour
             }
             
             joystick.Knob.anchoredPosition = knobPosition;
-
-            if(moveDirectionMagnitude > minTolranceRange)
+            if(moveDirectionSqrMagnitude > minTolranceRange * minTolranceRange)
             {
                 inputAxisListener.Raise(moveDirection.normalized);
             }

@@ -6,15 +6,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(1,10)] private int moveSpeed = 1;
     [SerializeField, Range(1,100)] private int rotationSpeed = 50;
 
-    [SerializeField] private Transform ball = default;
-    [SerializeField, Min(0.1f)] private float ballRadius = 0.5f;
-
-    [Space(10), Header("Broadcasting Channel"), SerializeField] private Vector3EventListener targetPositionListener = default;
-
     [Space(10), Header("Listening Channel"), SerializeField] private Vector2EventListener inputAxisListener = default;
 
     private Rigidbody rb;
-    private Vector3 velocity;
+    private Vector3 velocity, rotationDirection;
 
     private void OnEnable()
     {
@@ -34,31 +29,15 @@ public class PlayerMovement : MonoBehaviour
     private void RotatePlayer(Vector2 inputAxis)
     {
         float angle = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;
-        // Debug.Log(angle);
-        Quaternion desiredAngle = Quaternion.Euler(0f, angle, 0f);
-        float deltaTime = rotationSpeed * Time.deltaTime;
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, desiredAngle, deltaTime);
+        rotationDirection = new Vector3(0f, angle, 0f);
     }
-
-    // private void Update()
-    // {
-    //     Vector3 movement = rb.velocity * Time.deltaTime;
-    //     float distance = movement.magnitude;
-    //     float angle = distance * (180f / Mathf.PI) / ballRadius;
-    //     ball.localRotation = Quaternion.Euler(Vector3.right * angle) * ball.rotation;
-    // }
 
     private void FixedUpdate()
     {
+        velocity = rb.velocity;
         velocity = transform.forward * moveSpeed;
-        //add acceleration
         rb.velocity = velocity;
-    }
-    
-    private void LateUpdate()
-    {
-        //move player to the right Direction
-        targetPositionListener.Raise(transform.position);
+
+        rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationDirection), Time.fixedDeltaTime * rotationSpeed);
     }
 }
