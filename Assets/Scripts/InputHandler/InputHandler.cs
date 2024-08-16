@@ -80,57 +80,6 @@ public class InputHandler : MonoBehaviour
         joystick.Knob.anchoredPosition = Vector2.zero;
         joystick.gameObject.SetActive(false);
     }
-
-
-
-
-    //     private void Update(){
-    // #if UNITY_EDITOR
-
-    //         //Taking Input from arrow key
-    //         if(Input.GetMouseButtonDown(0))
-    //         {
-    //             mouseCenter = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //         }
-    //         else if(Input.GetMouseButton(0))
-    //         {
-    //             Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-    //             // mouseDrag = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //             // mouseDirection = mouseCenter - mouseDrag;
-    //             // mouseDirection = Vector2.ClampMagnitude(mouseDirection, 1f);
-    //             // Debug.Log(mouseDirection);
-
-    //             // if(mouseDirection.magnitude >= 0.2f)
-    //             // {
-    //             //     inputAxisListener.Raise(mouseDirection);
-    //             // }
-    //         }
-
-    // #endif
-
-    // #if UNITY_WEBGL
-    //         // int currentFinger = -1;
-    //         // foreach(Touch t in Input.touches){
-    //         //     if(t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled){
-    //         //         currentFinger++;
-    //         //     }else{
-    //         //         return;
-    //         //     }
-
-    //         //     if(currentFinger == 0){
-    //         //         if(t.phase == TouchPhase.Began){
-    //         //             mousePositon = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //         //             Vector2 finalPos = new Vector2(mousePositon.x + 4.5f, mousePositon.y + 4.5f);
-    //         //             if(finalPos.x>=0 && finalPos.x<=9 && finalPos.y>=0 && finalPos.y<=9) mousePositionListener.Raise(finalPos);
-    //         //         }
-    //         //     }else{
-    //         //         return;
-    //         //     }
-    //         // }
-    // #endif
-
-    // TODO : make sure to add input function for andorid platform
-
 }
 
 

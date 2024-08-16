@@ -15,6 +15,8 @@ public class ResFactorySO : ResFactory
     }
 
     protected override bool IsMultiColor => useMultiColor;
+    public bool ContainsKey (int haskKey) => map.ContainsKey(haskKey);
+    public ResType ResourceType => resType;
 
     public void DrawMesh()
     {

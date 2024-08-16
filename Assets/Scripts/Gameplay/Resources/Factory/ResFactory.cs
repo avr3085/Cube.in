@@ -117,7 +117,6 @@ public abstract class ResFactory : ScriptableObject, IRes
         RemoveNext();
     }
 
-
     public virtual void DeInit()
     {
         nodeCount = 0;

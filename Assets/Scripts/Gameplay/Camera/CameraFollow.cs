@@ -2,14 +2,12 @@ using System;
 using UnityEngine;
 
 //smooth camera follow script
-
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private Vector3 offset;
     [SerializeField, Range(1, 10)] private int smoothing = 5;
     [SerializeField] private Transform target;
     
-
     private void LateUpdate()
     {
         FollowTarget(target.position);

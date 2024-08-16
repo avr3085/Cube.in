@@ -1,6 +1,7 @@
 using UnityEngine;
+using MiscUtils;
 
-public class CollisionHandler : MonoBehaviour
+public class ResCollector : MonoBehaviour, ICollect
 {
     [SerializeField, Range(0,180)] private int viewAngle = 45;
     [SerializeField, Range(1, 10)] private int lineLength = 1;
@@ -20,16 +21,21 @@ public class CollisionHandler : MonoBehaviour
             Mathf.FloorToInt(rightDeg.x), Mathf.FloorToInt(rightDeg.z), 
             Mathf.FloorToInt(leftDeg.x), Mathf.FloorToInt(leftDeg.z));
 
-        // foreach (var i in raster)
-        // {
-        //     var hash  = new Vector3(i.x, 0f, i.y);
-        //     //remove item if at certain distance
-        //     if(ResManager.Instance.HasKey((int) hash.GetHash()))
-        //     {
-        //         ResManager.Instance.RemoveItem((int) hash.GetHash());
-        //     }
-        //     // DebugCube(i.x, i.y);
-        // }
+        foreach (var i in raster)
+        {
+            var hash  = new Vector3(i.x, 0f, i.y).GetHash();
+            // remove item if at certain distance
+            if(ResFactoryManager.Instance.ContainsKey(hash))
+            {
+                ResFactoryManager.Instance.RequestCollect(hash, this);
+            }
+        }
+    }
+
+    public void OnCollect(ResType resType)
+    {
+        //called when an item is collected
+        Debug.Log(resType.ToString() + " Item collected!");
     }
 
     // private void DebugCube(int x, int y)
