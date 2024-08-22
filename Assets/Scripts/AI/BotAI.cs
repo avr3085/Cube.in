@@ -9,7 +9,7 @@ public class BotAI : MonoBehaviour
         // handle bot state
         // handle bodyproperties
 
-    [SerializeField] private Intention intention = Intention.FreeRoam;
+    // [SerializeField] private Intention intention = Intention.FreeRoam;
 
     private void Start()
     {
