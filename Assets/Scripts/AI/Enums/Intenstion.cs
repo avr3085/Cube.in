@@ -1,6 +1,6 @@
 public enum Intention
 {
-    FreeRoam,
-    Combat,
-    RunAway
+    Roaming,
+    Survival,
+    Combat
 }
