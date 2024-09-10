@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a87fff9202bc7c44d80f03ebed4c6831, type: 3}
-  m_Name: resConfig
+  m_Name: foodConfig
   m_EditorClassIdentifier: 
-  extraSpace: 16
-  entityCount: 256
   mapSize: 45
-  material: {fileID: 2100000, guid: e28c02810fddb6843bb64f27e629e3d8, type: 2}
+  resCount: 512
+  extraSpace: 8
   mesh: {fileID: 4237179799288247963, guid: 96f4b668258d466498e580296873ecaa, type: 3}
+  material: {fileID: 2100000, guid: e28c02810fddb6843bb64f27e629e3d8, type: 2}

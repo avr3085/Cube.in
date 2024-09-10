@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f78e9ec50457349a67777e47623820, type: 3}
-  m_Name: ResFactory
+  m_Name: FoodFactory
   m_EditorClassIdentifier: 
   resConfig: {fileID: 11400000, guid: d5f88ffafdabc07429f6779e0d497d2e, type: 2}
   resType: 0

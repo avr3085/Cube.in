@@ -7,7 +7,7 @@ public class BotAI : MonoBehaviour
     [SerializeField, Range(1,10)] private int moveSpeed = 1;
     [SerializeField, Range(1,100)] private int rotationSpeed = 50;
     [SerializeField, Range(1, 100)] private float boundry = 48f;
-    private float turn = 0.5f;
+    private float turn = 0.1f;
 
     private Rigidbody rb;
     private Vector3 rbVelocity, rotationAngle;
@@ -60,8 +60,8 @@ public class BotAI : MonoBehaviour
             currentVelocity.y -= turn;
         }
 
-        Vector2 newDir = currentVelocity - moveVelocity;
-        moveVelocity += newDir.normalized;
+        Vector2 newDir = moveVelocity - currentVelocity;
+        moveVelocity -= newDir.normalized;
 
         rotationAngle = new Vector3(0f, Angle, 0f);
     }

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87fff9202bc7c44d80f03ebed4c6831, type: 3}
   m_Name: mBoxConfig
   m_EditorClassIdentifier: 
-  extraSpace: 16
-  entityCount: 10
   mapSize: 45
-  material: {fileID: 2100000, guid: 80cd77c8ab7e3b4468c0db298fd63d5c, type: 2}
+  resCount: 16
+  extraSpace: 8
   mesh: {fileID: 4237179799288247963, guid: 96f4b668258d466498e580296873ecaa, type: 3}
+  material: {fileID: 2100000, guid: 80cd77c8ab7e3b4468c0db298fd63d5c, type: 2}

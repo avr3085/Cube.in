@@ -45,63 +45,63 @@ public class ResFactoryManager : MonoBehaviour
         }
     }
 
-    private void Request(int hashKey, ICollect i)
-    {
-        foreach(var factory in resFactories)
-        {
-            if (factory.ContainsKey(hashKey))
-            {
-                requestQueue.Enqueue(
-                    new Tuple<int, ICollect>(hashKey, i)
-                );
+    // private void Request(int hashKey, ICollect i)
+    // {
+    //     foreach(var factory in resFactories)
+    //     {
+    //         if (factory.ContainsKey(hashKey))
+    //         {
+    //             requestQueue.Enqueue(
+    //                 new Tuple<int, ICollect>(hashKey, i)
+    //             );
 
-                //dequeue here
+    //             //dequeue here
 
-                if(!isProcessing)
-                {
-                    isProcessing = true;
-                    DoNext(i);
-                }
-            }
-        }
-    }
+    //             if(!isProcessing)
+    //             {
+    //                 isProcessing = true;
+    //                 DoNext(i);
+    //             }
+    //         }
+    //     }
+    // }
 
-    private void DoNext(ICollect i)
-    {
-        if(requestQueue.Count == 0)
-        {
-            isProcessing = false;
-            return;
-        }
-        //removing item;
-        Tuple<int, ICollect> request = requestQueue.Dequeue();
+    // private void DoNext(ICollect i)
+    // {
+    //     if(requestQueue.Count == 0)
+    //     {
+    //         isProcessing = false;
+    //         return;
+    //     }
+    //     //removing item;
+    //     Tuple<int, ICollect> request = requestQueue.Dequeue();
 
-        foreach(var factory in resFactories)
-        {
-            if(factory.ContainsKey(request.Item1))
-            {
-                factory.RemoveItem(request.Item1);
-                request.Item2.OnCollect(factory.ResourceType);
-            }
-        }
-        DoNext(i);
-    }
+    //     foreach(var factory in resFactories)
+    //     {
+    //         if(factory.ContainsKey(request.Item1))
+    //         {
+    //             factory.RemoveItem(request.Item1);
+    //             request.Item2.OnCollect(factory.ResourceType);
+    //         }
+    //     }
+    //     DoNext(i);
+    // }
 
-    public void RequestCollect(int hashKey, ICollect i)
-    {
-        Request(hashKey, i);
-    }
+    // public void RequestCollect(int hashKey, ICollect i)
+    // {
+    //     Request(hashKey, i);
+    // }
 
-    public bool ContainsKey(int hashKey)
-    {
-        foreach(var factory in resFactories)
-        {
-            if(factory.ContainsKey(hashKey))
-            {
-                return true;
-            }
-        }
+    // public bool ContainsKey(int hashKey)
+    // {
+    //     foreach(var factory in resFactories)
+    //     {
+    //         if(factory.ContainsKey(hashKey))
+    //         {
+    //             return true;
+    //         }
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 }
