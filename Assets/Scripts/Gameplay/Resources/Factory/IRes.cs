@@ -8,7 +8,7 @@ public interface IRes
 
 public enum ResType
 {
-    Food, 
-    MysteryBox,
-    DeathCrate
+    DCrate,
+    Edible, 
+    MBox
 }

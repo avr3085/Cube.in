@@ -14,9 +14,8 @@ public abstract class ResFactory : ScriptableObject, IRes
     protected Dictionary<int, HNode> hMap;
     protected int NodeCount => resLookup.Count;
 
-    //GC Queue
-    private readonly Queue<int> gcQueue = new Queue<int>();
-    private bool isProcessing = false;
+    //GC List -> contains all the hash cell, which should be deleted later
+    private readonly List<int> gcArray = new List<int>();
 
     public virtual void Init()
     {
@@ -75,18 +74,32 @@ public abstract class ResFactory : ScriptableObject, IRes
 
     public virtual void AddItem(int amount)
     {
-        // Handling GC queue before creating new resources
-        if(gcQueue.Count > 0)
+        // Handling GC Array before creating new resources
+        if(gcArray.Count > 0)
         {
-            ClearGCQ();
+            ClearGC();
         }
 
         GenerateRes(amount);
     }
 
-    private void ClearGCQ()
+    private void ClearGC()
     {
-        //Try using sorted priority queue for this problem
+        gcArray.Sort();
+        for(int i = gcArray.Count - 1; i >= 0; i--)
+        {
+            //remove the item from list
+            int hKey = gcArray[i];
+            HNode n = hMap[hKey];
+            for(int j = 0; j < n.totalNode; j++)
+            {
+                resLookup.RemoveAt(n.startIndex);
+            }
+
+            // hMap.Remove(hKey); //Since we will clear the map after it, no need to use this method
+        }
+
+        gcArray.Clear();
     }
 
     public virtual void RemoveItem(int hashKey, RNode node)
@@ -96,12 +109,14 @@ public abstract class ResFactory : ScriptableObject, IRes
         
         if(hMap[hashKey].nodeCount <= 0)
         {
-            gcQueue.Enqueue(hashKey);
+            gcArray.Add(hashKey);
         }
     }
 
     public virtual void DeInit()
     {
+        resLookup.Clear();
+        gcArray.Clear();
         hMap.Clear();
     }
 }

@@ -3,14 +3,18 @@ using MiscUtils;
 
 public class ResCollector : MonoBehaviour, ICollect
 {
-    [SerializeField, Range(0,180)] private int viewAngle = 45;
-    [SerializeField, Range(1, 10)] private int lineLength = 1;
-
-    // private float rightOut, leftOut;
-    // private Vector3 rightDeg, leftDeg;
-
+    [SerializeField] private bool debug = false;
     private void Update()
     {
+
+        //Making a collision box to check collision in cube
+        if(debug)
+        {
+            Vector2 cPos = new Vector2(transform.position.x, transform.position.z);
+            DrawDebugCube(cPos);
+        }
+        
+
         // rightOut = viewAngle + transform.eulerAngles.y;
         // rightDeg = new Vector3(transform.position.x + Mathf.Sin(rightOut * Mathf.Deg2Rad) *  lineLength, 0f, transform.position.z + Mathf.Cos(rightOut * Mathf.Deg2Rad) * lineLength);
 
@@ -38,11 +42,13 @@ public class ResCollector : MonoBehaviour, ICollect
         // Debug.Log(resType.ToString() + " Item collected!");
     }
 
-    // private void DebugCube(int x, int y)
-    // {
-    //     Gizmos.DrawLine(new Vector3(x, 0f, y), new Vector3(x + 1, 0f, y));
-    //     Gizmos.DrawLine(new Vector3(x + 1, 0f, y), new Vector3(x + 1, 0f, y + 1));
-    //     Gizmos.DrawLine(new Vector3(x + 1, 0f, y + 1), new Vector3(x, 0f, y + 1));
-    //     Gizmos.DrawLine(new Vector3(x, 0f, y + 1), new Vector3(x, 0f, y));
-    // }
+    private void DrawDebugCube(Vector2 pos)
+    {
+        //this code will draw a debug cube around the player
+        Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), Color.red);
+        Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), Color.red);
+        Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), Color.red);
+        Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), Color.red);
+
+    }
 }
