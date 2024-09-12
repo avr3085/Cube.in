@@ -7,7 +7,7 @@ public class ResFactoryManager : MonoBehaviour
     [SerializeField] private ResFactorySO[] resFactories = default;
 
     public static ResFactoryManager Instance{get; private set;}
-    private Queue<Tuple<int, ICollect>> requestQueue = new Queue<Tuple<int, ICollect>>();
+    private Queue<Tuple<ResType, ICollect>> requestQueue = new Queue<Tuple<ResType, ICollect>>();
     private bool isProcessing = false;
 
     private void Awake()
@@ -45,63 +45,44 @@ public class ResFactoryManager : MonoBehaviour
         }
     }
 
-    // private void Request(int hashKey, ICollect i)
-    // {
-    //     foreach(var factory in resFactories)
-    //     {
-    //         if (factory.ContainsKey(hashKey))
-    //         {
-    //             requestQueue.Enqueue(
-    //                 new Tuple<int, ICollect>(hashKey, i)
-    //             );
+    public void CheckCollision(int hashKey, Vector3 pos, ICollect onCollect)
+    {
+        foreach(var factory in resFactories)
+        {
+            if(!factory.ContainsKey(hashKey))
+            {
+                continue;
+            }
+            var colResArray = factory.hashCollided(hashKey, pos);
+            foreach(var res in colResArray)
+            {
+                requestQueue.Enqueue(
+                    new Tuple<ResType, ICollect>(res, onCollect)
+                );
+            }
+            
+        }
 
-    //             //dequeue here
+        if(!isProcessing)
+        {
+            isProcessing = true;
+            DoNext();
+        }
 
-    //             if(!isProcessing)
-    //             {
-    //                 isProcessing = true;
-    //                 DoNext(i);
-    //             }
-    //         }
-    //     }
-    // }
+    }
 
-    // private void DoNext(ICollect i)
-    // {
-    //     if(requestQueue.Count == 0)
-    //     {
-    //         isProcessing = false;
-    //         return;
-    //     }
-    //     //removing item;
-    //     Tuple<int, ICollect> request = requestQueue.Dequeue();
+    private void DoNext()
+    {
+        if(requestQueue.Count == 0)
+        {
+            isProcessing = false;
+            return;
+        }
 
-    //     foreach(var factory in resFactories)
-    //     {
-    //         if(factory.ContainsKey(request.Item1))
-    //         {
-    //             factory.RemoveItem(request.Item1);
-    //             request.Item2.OnCollect(factory.ResourceType);
-    //         }
-    //     }
-    //     DoNext(i);
-    // }
+        Tuple<ResType, ICollect> request = requestQueue.Dequeue();
+        request.Item2.OnCollect(request.Item1);
 
-    // public void RequestCollect(int hashKey, ICollect i)
-    // {
-    //     Request(hashKey, i);
-    // }
+        DoNext();
+    }
 
-    // public bool ContainsKey(int hashKey)
-    // {
-    //     foreach(var factory in resFactories)
-    //     {
-    //         if(factory.ContainsKey(hashKey))
-    //         {
-    //             return true;
-    //         }
-    //     }
-
-    //     return false;
-    // }
 }

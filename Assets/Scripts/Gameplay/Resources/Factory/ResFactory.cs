@@ -72,7 +72,7 @@ public abstract class ResFactory : ScriptableObject, IRes
         }
     }
 
-    public virtual void AddItem(int amount)
+    public virtual void AddRes(int amount)
     {
         // Handling GC Array before creating new resources
         if(gcArray.Count > 0)
@@ -102,7 +102,7 @@ public abstract class ResFactory : ScriptableObject, IRes
         gcArray.Clear();
     }
 
-    public virtual void RemoveItem(int hashKey, RNode node)
+    public virtual void RemoveRes(int hashKey, RNode node)
     {
         node.animate = true;
         hMap[hashKey].nodeCount -= 1;

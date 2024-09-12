@@ -4,7 +4,7 @@ namespace MiscUtils
 {
     public static class UtilsMethod
     {
-        private const int mapMax = 110; // must be greater than the grid size in the game
+        private const int mapMax = 52; // must be greater than the grid size in the game
 
         public static Vector3Int ToFloorInt(this Vector3 val)
         {
@@ -21,7 +21,7 @@ namespace MiscUtils
         public static int GetHash(this Vector3 v)
         {
             Vector3Int val = v.ToFloorInt();
-            return ((val.z + mapMax) * mapMax * 2) + val.x + mapMax;
+            return ((val.z + mapMax) * (mapMax * 2)) + val.x + mapMax;
         }
     }
 }

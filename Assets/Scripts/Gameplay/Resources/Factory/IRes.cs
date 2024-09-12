@@ -1,8 +1,8 @@
 public interface IRes
 {
     void Init();
-    void AddItem(int amount);
-    void RemoveItem(int hashKey, RNode node);
+    void AddRes(int amount);
+    void RemoveRes(int hashKey, RNode node);
     void DeInit();
 }
 
