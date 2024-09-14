@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
 
-//smooth camera follow script
+/// <summary>
+/// Enables Camera to follow the target, with a smooth movement.
+/// Camera will always maintain a distance(offset) from the target.
+/// </summary>
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private Vector3 offset;
@@ -12,6 +15,11 @@ public class CameraFollow : MonoBehaviour
     {
         FollowTarget(target.position);
     }
+    
+    /// <summary>
+    /// Updating camera position by given input
+    /// </summary>
+    /// <param name="targetPosition">Current target position</param>
     private void FollowTarget(Vector3 targetPosition)
     {
         Vector3 desiredPos = targetPosition + offset;

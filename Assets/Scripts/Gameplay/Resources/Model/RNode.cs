@@ -5,6 +5,7 @@ using UnityEngine;
 /// hashId = grid cell id, which this cell belongs to
 /// t = animation evaluation time
 /// position = position of the particle in the world space
+/// roatation = rotation matrix
 /// matrix = TRS matrix for the GPU
 /// isMoving = if the particle is moving in space
 /// hasMoved = if the particle has already moved then we will remove it from the index
@@ -28,14 +29,13 @@ public class RNode
         matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
         animate = false;
         hasAnimated = false;
-        t = 0;
+        t = 0f;
     }
 
-    public void MoveUp(float val)
+    public void MoveUp(float posyVal)
     {
-        position = new Vector3(this.position.x, this.position.y + val, this.position.z);
+        position = new Vector3(this.position.x, this.position.y + posyVal, this.position.z);
         matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
-
         if(t >= 1f)
         {
             animate = false;
@@ -44,7 +44,9 @@ public class RNode
     }
 }
 
-// For HashTable
+/// <summary>
+/// HNode, For Hash Map
+/// </summary>
 public class HNode
 {
     public int startIndex;

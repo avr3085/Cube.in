@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Main UI handler
+/// </summary>
 public class MainUIHandler : MonoBehaviour
 {
     [Header("Data"), SerializeField] private SceneSO gameplay = default;

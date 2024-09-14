@@ -5,7 +5,9 @@ using Etouch = UnityEngine.InputSystem.EnhancedTouch;
 
 /// <summary>
 /// Input Handler
-/// Handle all input related function here
+/// Handling input from dynamic touch joystick and mouse
+/// [Using new input system]
+/// [handles mouse/touch input's, in different touch state. ex - OnFingerDown, OnFingerMoved, etc.]
 /// </summary>
 
 public class InputHandler : MonoBehaviour
@@ -19,9 +21,6 @@ public class InputHandler : MonoBehaviour
 
     private Finger centerFinger;
     private readonly float maxKnobMovement = 100f;
-
-    //Using new Input system for the touch input
-    //handles touch/mouse input from joystick
 
     private void OnEnable()
     {
@@ -81,12 +80,3 @@ public class InputHandler : MonoBehaviour
         joystick.gameObject.SetActive(false);
     }
 }
-
-
-// #region DebugRegion
-//     private void OnDrawGizmos(){
-//          for Debug Purpose
-//     }
-// #endregion
-
-// }

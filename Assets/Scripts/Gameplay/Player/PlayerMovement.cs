@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Player Movement and rotation handler
+/// </summary>
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Player Properties")]
@@ -26,6 +29,10 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
+    /// <summary>
+    /// Rotating Rigidbody toward the movement direction
+    /// </summary>
+    /// <param name="inputAxis"></param>
     private void RotatePlayer(Vector2 inputAxis)
     {
         float angle = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;

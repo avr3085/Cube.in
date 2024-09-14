@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// System Inventory Ui handler
+/// </summary>
 public class InventoryUIHandler : MonoBehaviour
 {
     [SerializeField] private InventoryItems inventoryItems;

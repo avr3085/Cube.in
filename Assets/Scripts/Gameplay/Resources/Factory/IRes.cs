@@ -1,3 +1,6 @@
+/// <summary>
+/// Resource Interface
+/// </summary>
 public interface IRes
 {
     void Init();
@@ -6,6 +9,9 @@ public interface IRes
     void DeInit();
 }
 
+/// <summary>
+/// Type of the resource being generated
+/// </summary>
 public enum ResType
 {
     DCrate,

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: MBoxConfig
   m_EditorClassIdentifier: 
   mapSize: 45
-  resCount: 16
-  extraSpace: 8
+  resCount: 8
+  reGenThres: 4
   mesh: {fileID: 8163341877318068376, guid: bc830de282d11d04b99f5ac8c6ecbf9c, type: 3}
   material: {fileID: 2100000, guid: 80cd77c8ab7e3b4468c0db298fd63d5c, type: 2}
+  autoGenerate: 1

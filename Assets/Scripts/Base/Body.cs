@@ -1,3 +1,6 @@
+/// <summary>
+/// [To be implemented]
+/// </summary>
 public abstract class Body
 {
     private int score;

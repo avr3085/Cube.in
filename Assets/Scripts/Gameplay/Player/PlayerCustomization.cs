@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// [To be implemented]
+/// </summary>
 public class PlayerCustomization : MonoBehaviour
 {
     [SerializeField] private Material playerMat;

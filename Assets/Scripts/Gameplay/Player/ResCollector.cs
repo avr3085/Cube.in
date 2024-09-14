@@ -1,28 +1,37 @@
 using UnityEngine;
+using Misc;
 
-public class ResCollector : MonoBehaviour, ICollect
+/// <summary>
+/// Resource collection handler
+/// </summary>
+public class ResCollector : MonoBehaviour, IResCollector
 {
+    [Tooltip("Toggle's AABB for uniform grid collision check.")]
     [SerializeField] private bool debug = false;
+
     private void Update()
     {
-        //Making a collision box to check collision in cube
         if(debug)
         {
             Vector2 cPos = new Vector2(transform.position.x, transform.position.z);
             DrawDebugCube(cPos);
         }
 
-        var collisionArray = BBoxCC.GetCollisionHash(transform.position);
-        foreach (int i in collisionArray)
+        var hahsArray = transform.position.ToBBoxHash();
+        foreach(int hashKey in hahsArray)
         {
-            ResFactoryManager.Instance.CheckCollision(i, transform.position, this);
+            ResFactoryManager.Instance.CheckCollision(hashKey, transform.position, this);
         }
     }
 
-    public void OnCollect(ResType resType)
+    /// <summary>
+    /// A CallBack method, gets called every time we collect an item.
+    /// [Read the class which is raising this method]
+    /// </summary>
+    /// <param name="resType"></param>
+    public void OnResCollected(ResType resType)
     {
-        //called when an item is collected
-        Debug.Log(resType.ToString() + " Item collected!");
+        // Raised when an item is collected
     }
 
     private void DrawDebugCube(Vector2 pos)

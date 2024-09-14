@@ -10,7 +10,8 @@ public class ResConfig : ScriptableObject
 {
     public int mapSize;
     public int resCount;
-    public int extraSpace;
+    public int reGenThres;
     public Mesh mesh;
     public Material material;
+    public bool autoGenerate;
 }
