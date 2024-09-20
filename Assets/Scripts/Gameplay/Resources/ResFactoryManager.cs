@@ -88,6 +88,30 @@ public class ResFactoryManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Calculates the average position of all the factories
+    /// </summary>
+    /// <param name="hashKey"></param>
+    /// <returns>return average position</returns>
+    public Vector3 GetAveragePosition(int hashKey)
+    {
+        Vector3 avgPos = Vector3.zero;
+        int validFactory = 0;
+        foreach(var factory in resFactories)
+        {
+            if(!factory.ContainsKey(hashKey))
+            {
+                continue;
+            }
+
+            avgPos += factory.CalculateAveragePosition(hashKey);
+            validFactory += 1;
+        }
+
+        return avgPos / validFactory;
+        // return avgPos;
+    }
+
+    /// <summary>
     /// Request queue is being processed. and the callback method is being invoked
     /// </summary>
     private void DoNext()

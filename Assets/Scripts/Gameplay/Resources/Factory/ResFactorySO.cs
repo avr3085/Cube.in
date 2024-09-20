@@ -11,7 +11,7 @@ public class ResFactorySO : ResFactory
     [SerializeField] private ResType resType;
     [SerializeField] private AnimationCurve animY;
 
-    private const float colOffset = 0.7f;
+    private const float SqrdColOffset = 0.7f;
 
     protected override ResConfig ResConfig 
     { 
@@ -54,8 +54,8 @@ public class ResFactorySO : ResFactory
             RNode rNode = resLookup[index];
             if(!rNode.animate && !rNode.hasAnimated)
             {
-                float colDist = (position - rNode.position).sqrMagnitude;
-                if(colDist < colOffset)
+                float colDistSqrd = (position - rNode.position).sqrMagnitude;
+                if(colDistSqrd < SqrdColOffset)
                 {
                     RemoveRes(hashKey, rNode);
                     index += 1;
@@ -63,6 +63,26 @@ public class ResFactorySO : ResFactory
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Calculates the average position of all the resources in a hashCell
+    /// </summary>
+    /// <param name="hashKey"></param>
+    /// <returns>Returns average position</returns>
+    public Vector3 CalculateAveragePosition(int hashKey)
+    {
+        Vector3 avgPos = Vector3.zero;
+        HNode hNode = hMap[hashKey];
+        int index = hNode.startIndex;
+        for(int i = 0; i < hNode.totalNode; i++)
+        {
+            avgPos += resLookup[index].position;
+            index += 1;
+        }
+
+        // return avgPos / hNode.totalNode;
+        return avgPos;
     }
 
     /// <summary>

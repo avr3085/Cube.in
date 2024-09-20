@@ -17,8 +17,8 @@ public class ResCollector : MonoBehaviour, IResCollector
             DrawDebugCube(cPos);
         }
 
-        var hahsArray = transform.position.ToBBoxHash();
-        foreach(int hashKey in hahsArray)
+        var hashArray = transform.position.ToBBoxHash();
+        foreach(int hashKey in hashArray)
         {
             ResFactoryManager.Instance.CheckCollision(hashKey, transform.position, this);
         }

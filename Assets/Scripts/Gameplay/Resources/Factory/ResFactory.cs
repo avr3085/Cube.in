@@ -63,7 +63,7 @@ public abstract class ResFactory : ScriptableObject, IRes
     /// </summary>
     private void InitHashMap()
     {
-        hMap.Clear(); //cleaning map
+        // hMap.Clear(); //cleaning map
         
         int i = 0;
         foreach(RNode node in resLookup)
@@ -115,6 +115,8 @@ public abstract class ResFactory : ScriptableObject, IRes
 
             // hMap.Remove(hKey); //Since we will clear the map after it, no need to use this method
         }
+
+        hMap.Clear();
 
         gcArray.Clear();
     }
