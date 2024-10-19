@@ -75,6 +75,38 @@ namespace Misc
         }
 
         /// <summary>
+        /// Calculates hash, when the bounding box is using magnet effect
+        /// Can collect item, like magent does in games
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static IEnumerable<int> ToMagBBoxHash(this Vector3 pos)
+        {
+            int currentHash = -1;
+            Vector3 startPos = new Vector3(pos.x - 1.5f, 0f, pos.z - 2.5f);
+            for(int i = 0; i < 3; i++)
+            {
+                startPos += new Vector3(0f, 0f, 1f);
+                if(currentHash < startPos.ToHash())
+                {
+                    currentHash = startPos.ToHash();
+                    yield return currentHash;
+                }
+
+                for(int j = 0; j < 3; j++)
+                {
+                    startPos += new Vector3(1f, 0f, 0f);
+                    if(currentHash < startPos.ToHash())
+                    {
+                        currentHash = startPos.ToHash();
+                        yield return currentHash;
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Bresenham’s Line Generation Algorithm
         /// [Not used in the game, cuz of optimaztion problem]
         /// </summary>

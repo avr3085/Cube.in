@@ -1,8 +1,22 @@
 using UnityEngine;
 
 /// <summary>
+/// SpawnAnimation - Resource will show animation when spawned
+/// Idol - Resting state
+/// CollisionAnimation - state after the resource has collided to the player
+/// Removal - This item will get removed permanently
+/// </summary>
+public enum RNodeState
+{
+    SpawnAnimation,
+    Idol,
+    CollisionAnimation,
+    Removal
+}
+
+/// <summary>
 /// RNode
-/// hashId = grid cell id, which this cell belongs to
+/// key = grid cell id, which this cell belongs to
 /// t = animation evaluation time
 /// position = position of the particle in the world space
 /// roatation = rotation matrix
@@ -13,33 +27,58 @@ using UnityEngine;
 
 public class RNode
 {
-    public int hashKey;
-    public float t;
+    public int key;
+    public float moveT;
+    public float scaleT;
     public Vector3 position;
     public Quaternion rotation;
     public Matrix4x4 matrix;
-    public bool animate;
-    public bool hasAnimated;
-
-    public RNode(int hashKey, Vector3 position, Quaternion rotation)
+    public RNodeState state;
+    public RNode(int key, Vector3 position, Quaternion rotation)
     {
-        this.hashKey = hashKey;
+        this.key = key;
         this.position = position;
         this.rotation = rotation;
+        moveT = 0f;
+        scaleT = 0f;
         matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
-        animate = false;
-        hasAnimated = false;
-        t = 0f;
+        state = RNodeState.SpawnAnimation;
     }
 
-    public void MoveUp(float posyVal)
+    public void EvaluateAnimation(float val)
     {
-        position = new Vector3(this.position.x, this.position.y + posyVal, this.position.z);
-        matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
-        if(t >= 1f)
+        switch(state)
         {
-            animate = false;
-            hasAnimated = true;
+            case RNodeState.SpawnAnimation:
+                SpawnAnimation(val);
+                break;
+
+            case RNodeState.CollisionAnimation:
+                CollisionAnimation(val);
+                break;
+
+            default:
+                Debug.LogWarning("Undefined state");
+                break;
+        }
+    }
+
+    private void SpawnAnimation(float val)
+    {
+        matrix = Matrix4x4.TRS(position, rotation, Vector3.one * val);
+        if(scaleT >= 1f)
+        {
+            state = RNodeState.Idol;
+        }
+    }
+
+    private void CollisionAnimation(float val)
+    {
+        position.y += val;
+        matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
+        if(moveT >= 1f)
+        {
+            state = RNodeState.Removal;
         }
     }
 }
@@ -50,13 +89,13 @@ public class RNode
 public class HNode
 {
     public int startIndex;
-    public int nodeCount;
-    public int totalNode;
+    public int activeNodes;
+    public int totalNodes;
 
     public HNode(int startIndex)
     {
         this.startIndex = startIndex;
-        nodeCount = 1;
-        totalNode = 1;
+        activeNodes = 1;
+        totalNodes = 1;
     }
 }

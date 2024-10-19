@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87fff9202bc7c44d80f03ebed4c6831, type: 3}
   m_Name: EdibleConfig
   m_EditorClassIdentifier: 
-  mapSize: 45
-  resCount: 512
-  reGenThres: 3
+  mapSize: 5
+  resCount: 20
+  reGenThres: 2
   mesh: {fileID: 8163341877318068376, guid: bc830de282d11d04b99f5ac8c6ecbf9c, type: 3}
   material: {fileID: 2100000, guid: e28c02810fddb6843bb64f27e629e3d8, type: 2}
   autoGenerate: 1

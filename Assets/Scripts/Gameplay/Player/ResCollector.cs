@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using Misc;
 
 /// <summary>
@@ -7,20 +8,40 @@ using Misc;
 public class ResCollector : MonoBehaviour, IResCollector
 {
     [Tooltip("Toggle's AABB for uniform grid collision check.")]
-    [SerializeField] private bool debug = false;
+
+    private int currentHash = -1;
+    private Vector3 Position => new Vector3(transform.position.x, 0f, transform.position.z);
+    private IEnumerable<int> hashArray;
 
     private void Update()
     {
-        if(debug)
+
+    #if UNITY_EDITOR
+        ///For debug only
+        Vector2 cPos = new Vector2(Position.x, Position.z);
+        DrawDebugCube(cPos);
+
+    #endif
+
+        Vector3 mPos = new Vector3(Position.x - 0.5f, 0f, Position.z - 0.5f);
+        if(currentHash != mPos.ToHash())
         {
-            Vector2 cPos = new Vector2(transform.position.x, transform.position.z);
-            DrawDebugCube(cPos);
+            currentHash = mPos.ToHash();
+            hashArray = Position.ToBBoxHash();// Use strategy pattern, if possible
+            // hashArray = Position.ToMagBBoxHash(); // using Magnet method
+
+            // Debug.Log("For Debug");
+            // foreach(var val in hashArray)
+            // {
+            //     Debug.Log(val);
+            // }
         }
 
-        var hashArray = transform.position.ToBBoxHash();
+        if(hashArray == null) return;
+
         foreach(int hashKey in hashArray)
         {
-            ResFactoryManager.Instance.CheckCollision(hashKey, transform.position, this);
+            ResFactoryManager.Instance.CheckCollision(hashKey, Position, this);
         }
     }
 

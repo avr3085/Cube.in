@@ -15,10 +15,12 @@ public abstract class ResFactory : ScriptableObject, IRes
     protected List<RNode> resLookup;
     protected Dictionary<int, HNode> hMap;
     protected int ResCount => resLookup.Count;
+    protected int activeResCount;
+    protected List<RNode> animationList;
+    protected int AnimationListCount => animationList.Count;
 
     //GC List -> contains all the hash cell, which should be deleted later
-    private readonly List<int> gcArray = new List<int>();
-    protected int activeResCount;
+    protected List<int> gcArray;
 
     public virtual void Init()
     {
@@ -28,6 +30,9 @@ public abstract class ResFactory : ScriptableObject, IRes
         positionMatrix = new Matrix4x4[resCount];
         resLookup = new List<RNode>();
         hMap = new Dictionary<int, HNode>();
+        // animationList = new List<int>();
+        animationList = new List<RNode>();
+        gcArray = new List<int>();
         activeResCount = 0;
 
         GenerateRes(resCount);
@@ -45,14 +50,17 @@ public abstract class ResFactory : ScriptableObject, IRes
             Vector3 randPos = new Vector3(Random.Range(-fMapSize, fMapSize), 0f, Random.Range(-fMapSize, fMapSize));
             Quaternion randRot = Quaternion.Euler(0f, Random.Range(-180, 180), 0f);
 
-            int hashKey = randPos.ToHash();
-            RNode newNode = new RNode(hashKey, randPos, randRot);
+            int hKey = randPos.ToHash();
+            RNode newNode = new RNode(hKey, randPos, randRot);
+
+            animationList.Add(newNode);
+
             resLookup.Add(newNode);
-            activeResCount += 1;
+            activeResCount++;
         }
 
         //sort the list by hashID
-        resLookup.Sort((x, y) => x.hashKey.CompareTo(y.hashKey));
+        resLookup.Sort((x, y) => x.key.CompareTo(y.key));
 
         //creating indices map
         InitHashMap();
@@ -63,22 +71,21 @@ public abstract class ResFactory : ScriptableObject, IRes
     /// </summary>
     private void InitHashMap()
     {
-        // hMap.Clear(); //cleaning map
-        
+        // hMap.Clear(); //cleaning map, already cleared
         int i = 0;
-        foreach(RNode node in resLookup)
+        foreach(RNode n in resLookup)
         {
-            if(!hMap.ContainsKey(node.hashKey))
+            if(!hMap.ContainsKey(n.key))
             {
-                HNode hashNode  = new HNode(i);
-                hMap.Add(node.hashKey, hashNode);
+                HNode hNode  = new HNode(i);
+                hMap.Add(n.key, hNode);
             }else
             {
-                hMap[node.hashKey].nodeCount += 1;
-                hMap[node.hashKey].totalNode += 1;
+                hMap[n.key].activeNodes++;
+                hMap[n.key].totalNodes++;
             }
-            
-            i += 1;
+
+            i++;
         }
     }
 
@@ -90,17 +97,18 @@ public abstract class ResFactory : ScriptableObject, IRes
     {
         if(gcArray.Count != 0)
         {
-            ClearGC();
+            ClearGC(amount);
+            Debug.Log("cach clear");
         }
 
-        GenerateRes(amount);
+        // GenerateRes(amount);
     }
 
     /// <summary>
     /// Cleaning up all the unused resource from the garbage collector
     /// and generating the new resources
     /// </summary>
-    private void ClearGC()
+    private void ClearGC(int amount)
     {
         gcArray.Sort();
         for(int i = gcArray.Count - 1; i >= 0; i--)
@@ -108,7 +116,7 @@ public abstract class ResFactory : ScriptableObject, IRes
             //remove the item from list
             int hKey = gcArray[i];
             HNode n = hMap[hKey];
-            for(int j = 0; j < n.totalNode; j++)
+            for(int j = 0; j < n.totalNodes; j++)
             {
                 resLookup.RemoveAt(n.startIndex);
             }
@@ -117,8 +125,9 @@ public abstract class ResFactory : ScriptableObject, IRes
         }
 
         hMap.Clear();
-
         gcArray.Clear();
+
+        GenerateRes(amount);
     }
 
     /// <summary>
@@ -126,17 +135,25 @@ public abstract class ResFactory : ScriptableObject, IRes
     /// </summary>
     /// <param name="hashKey"></param>
     /// <param name="node"></param>
-    public virtual void RemoveRes(int hashKey, RNode node)
+    // public virtual void RemoveRes(int hashKey, RNode node)
+    public virtual void RemoveRes(RNode node)
     {
-        node.animate = true;
-        hMap[hashKey].nodeCount -= 1;
-        activeResCount -= 1;
+        int key = node.key;
+        hMap[key].activeNodes--;
         
-        if(hMap[hashKey].nodeCount <= 0)
+        activeResCount--;
+        if(hMap[key].activeNodes <= 0)
         {
-            gcArray.Add(hashKey);
+            gcArray.Add(key);
+        }
+
+        if(activeResCount == ResConfig.reGenThres && ResConfig.autoGenerate)
+        {
+            int reGenAmount = ResConfig.resCount - activeResCount;
+            AddRes(reGenAmount);
         }
     }
+
 
     /// <summary>
     /// Cleaning up
@@ -144,6 +161,7 @@ public abstract class ResFactory : ScriptableObject, IRes
     public virtual void DeInit()
     {
         resLookup.Clear();
+        animationList.Clear();
         gcArray.Clear();
         hMap.Clear();
     }

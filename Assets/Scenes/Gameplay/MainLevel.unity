@@ -298,7 +298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 8, z: -10}
   smoothing: 10
-  target: {fileID: 288729782}
+  target: {fileID: 1343585050}
 --- !u!1 &122048383
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +485,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &288729780
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -493,7 +493,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288729778}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 48deb8b970b5f014d9843fb2895b0972, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -523,7 +523,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288729778}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.87, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -547,7 +547,6 @@ MonoBehaviour:
   moveSpeed: 6
   rotationSpeed: 5
   boundry: 48
-  intention: 1
   debug: 1
 --- !u!1 &344841622
 GameObject:
@@ -1124,9 +1123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resFactories:
-  - {fileID: 11400000, guid: 826df8024b97289468664626afaca6c5, type: 2}
   - {fileID: 11400000, guid: a902206366131494ab450fec7cdf257f, type: 2}
-  - {fileID: 11400000, guid: bc3c40049113d2c49a083f32b733cfca, type: 2}
 --- !u!1 &644782018
 GameObject:
   m_ObjectHideFlags: 0
@@ -2162,7 +2159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1343585050
 Transform:
   m_ObjectHideFlags: 0
@@ -2192,7 +2189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700b93a26e689f14298a52280eec307d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 7
   rotationSpeed: 5
   inputAxisListener: {fileID: 11400000, guid: fabcfeef9379bd448b24c131773eaf02, type: 2}
 --- !u!54 &1343585053
@@ -2223,7 +2220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 752aaadbbf17d0c4192045f78f4b7de1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
 --- !u!65 &1343585056
 BoxCollider:
   m_ObjectHideFlags: 0
