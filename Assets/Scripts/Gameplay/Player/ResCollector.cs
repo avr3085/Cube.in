@@ -20,7 +20,6 @@ public class ResCollector : MonoBehaviour, IResCollector
         ///For debug only
         Vector2 cPos = new Vector2(Position.x, Position.z);
         DrawDebugCube(cPos);
-
     #endif
 
         Vector3 mPos = new Vector3(Position.x - 0.5f, 0f, Position.z - 0.5f);
@@ -29,12 +28,6 @@ public class ResCollector : MonoBehaviour, IResCollector
             currentHash = mPos.ToHash();
             hashArray = Position.ToBBoxHash();// Use strategy pattern, if possible
             // hashArray = Position.ToMagBBoxHash(); // using Magnet method
-
-            // Debug.Log("For Debug");
-            // foreach(var val in hashArray)
-            // {
-            //     Debug.Log(val);
-            // }
         }
 
         if(hashArray == null) return;
@@ -62,7 +55,5 @@ public class ResCollector : MonoBehaviour, IResCollector
         Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), Color.red);
         Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), Color.red);
         Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), Color.red);
-
     }
-
 }

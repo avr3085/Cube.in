@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSize: 5
   resCount: 20
-  reGenThres: 2
+  reGenThres: 10
   mesh: {fileID: 8163341877318068376, guid: bc830de282d11d04b99f5ac8c6ecbf9c, type: 3}
   material: {fileID: 2100000, guid: e28c02810fddb6843bb64f27e629e3d8, type: 2}
   autoGenerate: 1

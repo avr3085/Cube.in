@@ -22,6 +22,12 @@ public abstract class ResFactory : ScriptableObject, IRes
     //GC List -> contains all the hash cell, which should be deleted later
     protected List<int> gcArray;
 
+    //Command System
+    private Queue<RNode> commandQueue;
+    private bool isProcessing;
+    private bool isRegen;
+
+
     public virtual void Init()
     {
         this.mapSize = ResConfig.mapSize;
@@ -34,6 +40,11 @@ public abstract class ResFactory : ScriptableObject, IRes
         animationList = new List<RNode>();
         gcArray = new List<int>();
         activeResCount = 0;
+
+        commandQueue = new Queue<RNode>();
+        isProcessing = false;
+        isRegen = false;
+
 
         GenerateRes(resCount);
     }
@@ -62,7 +73,6 @@ public abstract class ResFactory : ScriptableObject, IRes
         //sort the list by hashID
         resLookup.Sort((x, y) => x.key.CompareTo(y.key));
 
-        //creating indices map
         InitHashMap();
     }
 
@@ -81,36 +91,33 @@ public abstract class ResFactory : ScriptableObject, IRes
                 hMap.Add(n.key, hNode);
             }else
             {
-                hMap[n.key].activeNodes++;
                 hMap[n.key].totalNodes++;
+                hMap[n.key].activeNodes++;
+            }
+
+            if(n.state == RNodeState.Removal)
+            {
+                hMap[n.key].activeNodes--;
             }
 
             i++;
         }
-    }
 
-    /// <summary>
-    /// Re Generate the removed resources
-    /// </summary>
-    /// <param name="amount"></param>
-    public virtual void AddRes(int amount)
-    {
-        if(gcArray.Count != 0)
-        {
-            ClearGC(amount);
-            Debug.Log("cach clear");
-        }
-
-        // GenerateRes(amount);
+        isRegen = false;
+        DoNext();
     }
 
     /// <summary>
     /// Cleaning up all the unused resource from the garbage collector
     /// and generating the new resources
     /// </summary>
-    private void ClearGC(int amount)
+    private void ClearGC()
     {
+        if(gcArray.Count <= 0) return;
+
+        int totalRemovedRes = 0;
         gcArray.Sort();
+
         for(int i = gcArray.Count - 1; i >= 0; i--)
         {
             //remove the item from list
@@ -121,13 +128,14 @@ public abstract class ResFactory : ScriptableObject, IRes
                 resLookup.RemoveAt(n.startIndex);
             }
 
-            // hMap.Remove(hKey); //Since we will clear the map after it, no need to use this method
+            totalRemovedRes += n.totalNodes;
         }
 
-        hMap.Clear();
         gcArray.Clear();
+        hMap.Clear();
 
-        GenerateRes(amount);
+        // Debug.Log("Regene");
+        GenerateRes(totalRemovedRes);
     }
 
     /// <summary>
@@ -138,22 +146,70 @@ public abstract class ResFactory : ScriptableObject, IRes
     // public virtual void RemoveRes(int hashKey, RNode node)
     public virtual void RemoveRes(RNode node)
     {
-        int key = node.key;
-        hMap[key].activeNodes--;
+        commandQueue.Enqueue(node);
+
+        if(!isProcessing)
+        {
+            isProcessing = true;
+            DoNext();
+        }
+        // int key = node.key;
+        // if (!hMap.ContainsKey(key))
+        // {
+        //     Debug.Log("Key Not found");
+        //     return;
+        // }
+        // hMap[key].activeNodes--;
+
+        // if(hMap[key].activeNodes <= 0)
+        // {
+        //     gcArray.Add(key);
+        // }
+
+        // activeResCount--;
+        // if(activeResCount <= ResConfig.reGenThres && ResConfig.autoGenerate)
+        // {
+        //     ClearGC();
+        // }
+    }
+
+    private void DoNext()
+    {
+        if(commandQueue.Count == 0)
+        {
+            isProcessing = false;
+            return;
+        }
+
+        if(isRegen)
+        {
+            return;
+        }
+
+        RNode node = commandQueue.Dequeue();
         
-        activeResCount--;
+        int key = node.key;
+        if (!hMap.ContainsKey(key))
+        {
+            Debug.Log("Key Not found");
+            return;
+        }
+        hMap[key].activeNodes--;
+
         if(hMap[key].activeNodes <= 0)
         {
             gcArray.Add(key);
         }
 
-        if(activeResCount == ResConfig.reGenThres && ResConfig.autoGenerate)
+        activeResCount--;
+        if(activeResCount <= ResConfig.reGenThres && ResConfig.autoGenerate)
         {
-            int reGenAmount = ResConfig.resCount - activeResCount;
-            AddRes(reGenAmount);
+            isRegen = true;
+            ClearGC();
         }
-    }
 
+        DoNext();
+    }
 
     /// <summary>
     /// Cleaning up

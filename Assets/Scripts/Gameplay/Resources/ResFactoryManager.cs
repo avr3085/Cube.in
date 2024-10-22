@@ -45,16 +45,14 @@ public class ResFactoryManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks collision between given position and nearby resources
-    /// If any resource is getting collided with the input position
-    /// then that resource type is added to the requst queue for further processing
+    /// Bridge between Caller and reciever
+    /// Remove resource if caller collides with it
     /// </summary>
     /// <param name="hashKey"></param>
     /// <param name="pos"></param>
     /// <param name="resCollector">Caller</param>
     public void CheckCollision(int hashKey, Vector3 pos, IResCollector resCollector)
     {
-        // this function is called every frame
         foreach(var factory in resFactories)
         {
             if(!factory.ContainsKey(hashKey))
@@ -62,7 +60,6 @@ public class ResFactoryManager : MonoBehaviour
                 continue;
             }
 
-            /// if any error appeared, then make sure to use queue command system
             factory.CheckCollision(hashKey, pos, resCollector);
         }
     }

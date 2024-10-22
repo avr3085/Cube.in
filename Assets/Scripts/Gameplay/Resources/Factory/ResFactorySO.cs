@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 /// <summary>
 /// Factory SO
@@ -21,12 +20,6 @@ public class ResFactorySO : ResFactory
 
     public bool ContainsKey (int haskKey) => hMap.ContainsKey(haskKey);
 
-    // public override void Init()
-    // {
-    //     animationCommandQueue = new Queue<RNode>();
-    //     base.Init();
-    // }
-
     public void DrawMesh()
     {
         if(animationList.Count > 0)
@@ -38,10 +31,15 @@ public class ResFactorySO : ResFactory
         {
             positionMatrix[i] = resLookup[i].matrix;
         }
-        
+
         Graphics.DrawMeshInstanced(resConfig.mesh, 0, resConfig.material, positionMatrix, ResCount);
     }
 
+    /// <summary>
+    /// This function process the animation list
+    /// all the items in the list will be animated according to their state
+    /// if the items has already been animated then it's state will be switched
+    /// </summary>
     private void ProcessAnimationList()
     {
         for(int i = 0; i < AnimationListCount; i++)
@@ -54,8 +52,8 @@ public class ResFactorySO : ResFactory
             }
             else if(node.state == RNodeState.Removal)
             {
-                base.RemoveRes(node); //permanently removing the item from all the list's
                 animationList.Remove(node);
+                base.RemoveRes(node); //permanently removing the item from all the list's
             }
             else if(node.state == RNodeState.SpawnAnimation)
             {
@@ -90,16 +88,16 @@ public class ResFactorySO : ResFactory
             if(rNode.state == RNodeState.Idol)
             {
                 float distSqrd = (position - rNode.position).sqrMagnitude;
-                if(distSqrd < SqrdColOffset)
+                if(distSqrd <= SqrdColOffset)
                 {
-                    // RequestAnimationCommand(rNode);
                     rNode.state = RNodeState.CollisionAnimation;
                     animationList.Add(rNode);
 
                     collector.OnResCollected(resType);
-                    index++;
                 }
             }
+    
+            index++;
         }
     }
 }

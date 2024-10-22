@@ -41,7 +41,7 @@ public class RNode
         this.rotation = rotation;
         moveT = 0f;
         scaleT = 0f;
-        matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
+        matrix = Matrix4x4.TRS(position, rotation, Vector3.zero);
         state = RNodeState.SpawnAnimation;
     }
 
