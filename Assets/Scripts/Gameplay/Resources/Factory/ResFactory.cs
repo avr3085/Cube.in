@@ -7,46 +7,37 @@ using Misc;
 /// </summary>
 public abstract class ResFactory : ScriptableObject, IRes
 {
-    private int mapSize;
-    private int resCount;
-
     protected abstract ResConfig ResConfig{get;}
     protected Matrix4x4[] positionMatrix;
     protected List<RNode> resLookup;
     protected Dictionary<int, HNode> hMap;
-    protected int ResCount => resLookup.Count;
-    protected int activeResCount;
-    protected List<RNode> animationList;
-    protected int AnimationListCount => animationList.Count;
+    protected List<RNode> animatorsArray;
+    protected int ResCount => resLookup.Count; // total resources in the scene, including the non-active ones
+    protected int AnimatorsCount => animatorsArray.Count; // total item in the animation list
+    protected int activeResCount; // total active resources, excluding the collided resources
+    protected int preGCCounter; // keeps track of all the collected resources which is yet to be added to the gcArray
 
-    //GC List -> contains all the hash cell, which should be deleted later
-    protected List<int> gcArray;
-
-    //Command System
-    private Queue<RNode> commandQueue;
-    private bool isProcessing;
-    private bool isRegen;
+    private List<RNode> gcArray; // contains all the nodes, about to be permanently deleted
+    private Queue<RNode> commandQueue; //Command system for systematic node removal
+    private bool queueProcessing;
+    private bool regenerating;
 
 
     public virtual void Init()
     {
-        this.mapSize = ResConfig.mapSize;
-        this.resCount = ResConfig.resCount;
-
-        positionMatrix = new Matrix4x4[resCount];
+        positionMatrix = new Matrix4x4[ResConfig.resCount];
         resLookup = new List<RNode>();
         hMap = new Dictionary<int, HNode>();
-        // animationList = new List<int>();
-        animationList = new List<RNode>();
-        gcArray = new List<int>();
+        animatorsArray = new List<RNode>();
+        gcArray = new List<RNode>();
         activeResCount = 0;
+        preGCCounter = 0;
 
         commandQueue = new Queue<RNode>();
-        isProcessing = false;
-        isRegen = false;
+        queueProcessing = false;
+        regenerating = false;
 
-
-        GenerateRes(resCount);
+        GenerateRes(ResConfig.resCount);
     }
 
     /// <summary>
@@ -57,15 +48,14 @@ public abstract class ResFactory : ScriptableObject, IRes
     {
         for(int i = 0; i < count; i++)
         {
-            float fMapSize = mapSize; 
+            float fMapSize = ResConfig.mapSize; 
             Vector3 randPos = new Vector3(Random.Range(-fMapSize, fMapSize), 0f, Random.Range(-fMapSize, fMapSize));
             Quaternion randRot = Quaternion.Euler(0f, Random.Range(-180, 180), 0f);
 
             int hKey = randPos.ToHash();
-            RNode newNode = new RNode(hKey, randPos, randRot);
+            RNode newNode = new RNode(hKey, randPos, randRot, true);
 
-            animationList.Add(newNode);
-
+            animatorsArray.Add(newNode);
             resLookup.Add(newNode);
             activeResCount++;
         }
@@ -81,30 +71,27 @@ public abstract class ResFactory : ScriptableObject, IRes
     /// </summary>
     private void InitHashMap()
     {
-        // hMap.Clear(); //cleaning map, already cleared
         int i = 0;
+        int currentKey = -1;
         foreach(RNode n in resLookup)
         {
-            if(!hMap.ContainsKey(n.key))
+            if(n.key != currentKey)
             {
-                HNode hNode  = new HNode(i);
-                hMap.Add(n.key, hNode);
+                currentKey = n.key;
+                HNode hNode = new HNode(i);
+                hMap.Add(currentKey, hNode);
             }else
             {
-                hMap[n.key].totalNodes++;
-                hMap[n.key].activeNodes++;
-            }
-
-            if(n.state == RNodeState.Removal)
-            {
-                hMap[n.key].activeNodes--;
+                hMap[currentKey].totalNodes++;
             }
 
             i++;
         }
 
-        isRegen = false;
-        DoNext();
+        if(regenerating)
+        {
+            regenerating = false;
+        }
     }
 
     /// <summary>
@@ -113,28 +100,17 @@ public abstract class ResFactory : ScriptableObject, IRes
     /// </summary>
     private void ClearGC()
     {
-        if(gcArray.Count <= 0) return;
-
         int totalRemovedRes = 0;
-        gcArray.Sort();
 
         for(int i = gcArray.Count - 1; i >= 0; i--)
         {
-            //remove the item from list
-            int hKey = gcArray[i];
-            HNode n = hMap[hKey];
-            for(int j = 0; j < n.totalNodes; j++)
-            {
-                resLookup.RemoveAt(n.startIndex);
-            }
-
-            totalRemovedRes += n.totalNodes;
+            resLookup.Remove(gcArray[i]);
+            totalRemovedRes++;
         }
 
         gcArray.Clear();
         hMap.Clear();
 
-        // Debug.Log("Regene");
         GenerateRes(totalRemovedRes);
     }
 
@@ -143,68 +119,32 @@ public abstract class ResFactory : ScriptableObject, IRes
     /// </summary>
     /// <param name="hashKey"></param>
     /// <param name="node"></param>
-    // public virtual void RemoveRes(int hashKey, RNode node)
     public virtual void RemoveRes(RNode node)
     {
         commandQueue.Enqueue(node);
 
-        if(!isProcessing)
+        if(!queueProcessing)
         {
-            isProcessing = true;
+            queueProcessing = true;
             DoNext();
         }
-        // int key = node.key;
-        // if (!hMap.ContainsKey(key))
-        // {
-        //     Debug.Log("Key Not found");
-        //     return;
-        // }
-        // hMap[key].activeNodes--;
-
-        // if(hMap[key].activeNodes <= 0)
-        // {
-        //     gcArray.Add(key);
-        // }
-
-        // activeResCount--;
-        // if(activeResCount <= ResConfig.reGenThres && ResConfig.autoGenerate)
-        // {
-        //     ClearGC();
-        // }
     }
 
     private void DoNext()
     {
         if(commandQueue.Count == 0)
         {
-            isProcessing = false;
-            return;
-        }
-
-        if(isRegen)
-        {
+            queueProcessing = false;
             return;
         }
 
         RNode node = commandQueue.Dequeue();
-        
-        int key = node.key;
-        if (!hMap.ContainsKey(key))
-        {
-            Debug.Log("Key Not found");
-            return;
-        }
-        hMap[key].activeNodes--;
-
-        if(hMap[key].activeNodes <= 0)
-        {
-            gcArray.Add(key);
-        }
-
+        gcArray.Add(node);
         activeResCount--;
-        if(activeResCount <= ResConfig.reGenThres && ResConfig.autoGenerate)
+
+        if(preGCCounter == 0 && activeResCount <= ResConfig.reGenThres && ResConfig.autoGenerate)
         {
-            isRegen = true;
+            regenerating = true;
             ClearGC();
         }
 
@@ -217,7 +157,7 @@ public abstract class ResFactory : ScriptableObject, IRes
     public virtual void DeInit()
     {
         resLookup.Clear();
-        animationList.Clear();
+        animatorsArray.Clear();
         gcArray.Clear();
         hMap.Clear();
     }

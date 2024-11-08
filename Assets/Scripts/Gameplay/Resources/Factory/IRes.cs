@@ -4,7 +4,6 @@
 public interface IRes
 {
     void Init();
-    // void AddRes(int amount);
     void RemoveRes(RNode node);
     void DeInit();
 }

@@ -28,7 +28,7 @@ public class ResFactoryManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         foreach(var factory in resFactories)
         {
@@ -55,12 +55,10 @@ public class ResFactoryManager : MonoBehaviour
     {
         foreach(var factory in resFactories)
         {
-            if(!factory.ContainsKey(hashKey))
+            if(factory.ContainsKey(hashKey))
             {
-                continue;
+                factory.CheckCollision(hashKey, pos, resCollector);
             }
-
-            factory.CheckCollision(hashKey, pos, resCollector);
         }
     }
 }

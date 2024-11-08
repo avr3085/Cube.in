@@ -8,10 +8,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="DataSO/Gameplay/ResConfig", fileName ="ResConfig")]
 public class ResConfig : ScriptableObject
 {
-    public int mapSize;
-    public int resCount;
-    public int reGenThres;
+    public int mapSize; // size of the floor
+    public int resCount; // number of resources to be generated
+    public int reGenThres; // regeneration will take place after the total active resCount is less than the reGenThres
     public Mesh mesh;
     public Material material;
-    public bool autoGenerate;
+    public bool autoGenerate; // Auto Regeneration of item will take place only when this option is set
 }

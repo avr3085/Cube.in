@@ -17,32 +17,36 @@ public enum RNodeState
 /// <summary>
 /// RNode
 /// key = grid cell id, which this cell belongs to
-/// t = animation evaluation time
+/// scaleT = animates the size of the resource
+/// moveT = animates the resource when collision occurs
 /// position = position of the particle in the world space
 /// roatation = rotation matrix
 /// matrix = TRS matrix for the GPU
-/// isMoving = if the particle is moving in space
-/// hasMoved = if the particle has already moved then we will remove it from the index
+/// node = current state of the node
+/// animatingAlready = tracks if node is already in the animation list, [this will prevent duplication in the list, and outofIndex error]
 /// </summary>
 
 public class RNode
 {
     public int key;
-    public float moveT;
     public float scaleT;
+    public float moveT;
     public Vector3 position;
     public Quaternion rotation;
     public Matrix4x4 matrix;
     public RNodeState state;
-    public RNode(int key, Vector3 position, Quaternion rotation)
+    public bool animatingAlready;
+
+    public RNode(int key, Vector3 position, Quaternion rotation, bool animatingAlready = false)
     {
         this.key = key;
         this.position = position;
         this.rotation = rotation;
-        moveT = 0f;
         scaleT = 0f;
+        moveT = 0f;
         matrix = Matrix4x4.TRS(position, rotation, Vector3.zero);
         state = RNodeState.SpawnAnimation;
+        this.animatingAlready = animatingAlready;
     }
 
     public void EvaluateAnimation(float val)
@@ -88,14 +92,12 @@ public class RNode
 /// </summary>
 public class HNode
 {
-    public int startIndex;
-    public int activeNodes;
+    public int index;
     public int totalNodes;
 
-    public HNode(int startIndex)
+    public HNode(int index)
     {
-        this.startIndex = startIndex;
-        activeNodes = 1;
+        this.index = index;
         totalNodes = 1;
     }
 }
