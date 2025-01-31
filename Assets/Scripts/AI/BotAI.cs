@@ -1,95 +1,144 @@
 using UnityEngine;
+using System.Collections.Generic;
 using Misc;
 
-public class BotAI : MonoBehaviour
+public class BotAI : MonoBehaviour, IResCollector
 {
-    // [Header("Bot Properties")]
-    // [SerializeField, Range(1,10)] private int moveSpeed = 1;
-    // [SerializeField, Range(1,100)] private int rotationSpeed = 50;
-    // [SerializeField, Range(1, 100)] private float boundry = 48f;
+    [SerializeField, Range(1, 10)] private int moveSpeed = 6;
+    [SerializeField, Range(1, 100)] private int rotationSpeed = 5;
+    [SerializeField, Range(1, 100)] private int boundry = 46;
 
-    // [Header("Intentions")]
-    // [SerializeField] private Intention intention = Intention.Roaming;
+    [Tooltip("Toggle's Debug AABB for uniform grid collision check.")]
+    [SerializeField] private bool debug = false;
+    private float turn = 0.5f;
 
-    // [Tooltip("Toggle's AABB for uniform grid collision check.")]
-    // [SerializeField] private bool debug = false;
-    // private float turn = 0.1f;
-
-    // private Rigidbody rb;
+    private Rigidbody rb;
+    private Vector3 rotationDirection;
+    
     // private Vector3 rbVelocity, rotationAngle;
     // private Vector2 rotVector;
 
-
-    // public Vector2 Position => new Vector2(transform.position.x, transform.position.z);
+    // public Vector3 Pos => new Vector3(transform.position.x, 0f, transform.position.z);
     // public float RotAngle => Mathf.Atan2(rotVector.x, rotVector.y) * Mathf.Rad2Deg;
 
-    // private void Start()
-    // {
-    //     rb = GetComponent<Rigidbody>();
-    //     rotVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-    //     rotationAngle = new Vector3(0f, RotAngle, 0f);
-    // }
+    private IEnumerable<int> hashArray;
+    private int currentHash = -1;
+    private BotIntention intention;
 
-    // private void Update()
-    // {
-    //     if(debug)
-    //     {
-    //         Vector2 cPos = new Vector2(transform.position.x, transform.position.z);
-    //         DrawDebugCube(cPos);
-    //     }
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        intention = BotIntention.Roaming;
+        // rotVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        // rotationAngle = new Vector3(0f, RotAngle, 0f);
+    }
 
-    //     FreeRoamState();
+    private void Update()
+    {
+        // if(debug)
+        // {
+        //     DrawDebugCube(Pos);
+        // }
+
+        // Tick(intention);
+        // WrapAround();
+    }
+
+    private void FixedUpdate()
+    {
+        // rbVelocity = rb.velocity;
+        // rbVelocity = transform.forward * moveSpeed;
+        // rb.velocity = rbVelocity;
+
+        // Debug.DrawLine(transform.position, transform.position + transform.forward, Color.red);
+
+        // // rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
+        // var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
+        // rb.MoveRotation(rot);
+    }
+
+    // private void LateUpdate()
+    // {
     //     WrapAround();
     // }
 
-    // private void FixedUpdate()
+    public void OnResCollected(ResType resType)
+    {
+        // throw new System.NotImplementedException();
+    }
+
+    // private void Tick(BotIntention mIntention)
     // {
-    //     rbVelocity = rb.velocity;
-    //     rbVelocity = transform.forward * moveSpeed;
-    //     rb.velocity = rbVelocity;
+    //     switch(mIntention)
+    //     {
+    //         case BotIntention.Roaming:
+    //             Roaming();
+    //             break;
 
-    //     Debug.DrawLine(transform.position, transform.position + transform.forward, Color.red);
+    //         case BotIntention.Survival:
+    //             // Survival 
+    //             break;
 
-    //     rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
+    //         case BotIntention.Combat:
+    //             // Combat
+    //             break;
+
+    //         default:
+    //             Debug.LogError("UnDefined bot intention detected");
+    //             break;
+    //     }
     // }
 
-//     private void FreeRoamState()
-//     {
-//         var hashArray = transform.position.ToBBoxHash();
+    // private void Roaming()
+    // {
+    //     Vector3 mPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
+    //     if(currentHash != mPos.ToHash())
+    //     {
+    //         currentHash = mPos.ToHash();
+    //         hashArray = Pos.ToBBoxHash();
 
-//         Vector3 avgRoamPosition = Vector3.zero;
-//         foreach(var hashKey in hashArray)
-//         {
-//             avgRoamPosition += ResFactoryManager.Instance.GetAveragePosition(hashKey);
-//         }
+    //         Vector3 avgPos = Vector3.zero;
+    //         int count = 0;
+    //         foreach(int key in hashArray)
+    //         {
+    //             avgPos += ResFactoryManager.Instance.GetAveragePosition(key);
+    //             count++;
+    //         }
 
-// //[Note - add the player position here]
-// //Try avgRoamPosition/total array
-// // and try avgRoamPosition
-//         Vector3 roamDirection = (avgRoamPosition - transform.position).normalized;
+    //         if(avgPos.Equals(Vector3.zero)) return;
 
-//         Vector2 newDir = rotVector - new Vector2(roamDirection.x, roamDirection.z);
-//         rotVector -= newDir.normalized;
+    //         avgPos /= count;
+    //         Vector3 newPos = avgPos - Pos;
+    //         rotVector += new Vector2(newPos.x, newPos.z).normalized;
+    //         rotationAngle = new Vector3(0f, RotAngle, 0f);
+    //     }
+    // }
 
-//         rotationAngle = new Vector3(0f, RotAngle, 0f);
-//     }
+    // private void DrawDebugCube(Vector3 pos)
+    // {
+    //     //this code will draw a debug cube around the player
+    //     Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f), Color.red);
+    //     Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f), Color.red);
+    //     Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f), Color.red);
+    //     Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f), Color.red);
+    // }
 
     // private void WrapAround()
     // {
     //     Vector2 currentVelocity = rotVector;
-    //     if(Position.x < -boundry)
+    //     if(Pos.x < -boundry)
     //     {
     //         currentVelocity.x += turn;
     //     }
-    //     if(Position.x > boundry)
+    //     if(Pos.x > boundry)
     //     {
     //         currentVelocity.x -= turn;
     //     }
-    //     if(Position.y < -boundry)
+    //     if(Pos.z < -boundry)
     //     {
     //         currentVelocity.y += turn;
     //     }
-    //     if(Position.y > boundry)
+    //     if(Pos.z > boundry)
     //     {
     //         currentVelocity.y -= turn;
     //     }
@@ -99,177 +148,4 @@ public class BotAI : MonoBehaviour
 
     //     rotationAngle = new Vector3(0f, RotAngle, 0f);
     // }
-
-
-    // private void DrawDebugCube(Vector2 pos)
-    // {
-    //     //this code will draw a debug cube around the player
-    //     Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), Color.red);
-    //     Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), Color.red);
-    //     Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), Color.red);
-    //     Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), Color.red);
-
-    // }
-
-
-    //Pseudo code for bot ai
-
-    //Properties
-    [SerializeField, Range(1, 10)] private int moveSpeed = 5;
-    [SerializeField, Range(1, 100)] private int rotationSpeed = 50;
-    [SerializeField, Range(1, 100)] private int boundry = 48;
-
-    private int health = 100; // health will range between 1 - 100
-    private int score = 0; // bot score
-    /*
-
-    */
-    private int hunger = 0;
-    /*
-
-    */
-    private int combatUrge = 0;
-    private IntentionState state = IntentionState.Roaming;
-
-    [Tooltip("Toggle's AABB for uniform grid collision check.")]
-    [SerializeField] private bool debug = false;
-    private float turn = 0.1f;
-
-    private Rigidbody rb;
-    private Vector3 rbVelocity, rotationAngle;
-    private Vector2 rotVector;
-
-    public Vector2 Position => new Vector2(transform.position.x, transform.position.z);
-    public float RotAngle => Mathf.Atan2(rotVector.x, rotVector.y) * Mathf.Rad2Deg;
-
-
-    // we need some between each tick
-    private float tickGap = 1f;
-    private float lastTick = 0f;
-
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-        rotVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-        rotationAngle = new Vector3(0f, RotAngle, 0f);
-    }
-
-    private void Update()
-    {
-        if(debug)
-        {
-            Vector2 cPos = new Vector2(transform.position.x, transform.position.z);
-            DrawDebugCube(cPos);
-        }
-
-        if(lastTick >= tickGap)
-        {
-            lastTick = 0f;
-            Tick();
-        }else
-        {
-            lastTick += Time.deltaTime;
-        }
-        // FreeRoamState();
-        // WrapAround();
-    }
-
-    private void Tick()
-    {
-        //check for the state change
-        switch(state)
-        {
-            case IntentionState.Roaming:
-                //function for roaming
-                break;
-
-            case IntentionState.Combat:
-                //function for combat
-                break;
-
-            case IntentionState.Survival:
-                //function for survival
-                break;
-
-            default:
-                Debug.LogWarning("Bot AI - State not defined");
-                break;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        rbVelocity = rb.velocity;
-        rbVelocity = transform.forward * moveSpeed;
-        rb.velocity = rbVelocity;
-
-        Debug.DrawLine(transform.position, transform.position + transform.forward, Color.red);
-
-        rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
-    }
-
-    private void FreeRoamState()
-    {
-        var hashArray = transform.position.ToBBoxHash();
-
-        Vector3 avgRoamPosition = Vector3.zero;
-        foreach(var hashKey in hashArray)
-        {
-            // avgRoamPosition += ResFactoryManager.Instance.GetAveragePosition(hashKey);
-        }
-
-//[Note - add the player position here]
-//Try avgRoamPosition/total array
-// and try avgRoamPosition
-        Vector3 roamDirection = (avgRoamPosition - transform.position).normalized;
-
-        Vector2 newDir = rotVector - new Vector2(roamDirection.x, roamDirection.z);
-        rotVector -= newDir.normalized;
-
-        rotationAngle = new Vector3(0f, RotAngle, 0f);
-    }
-
-    private void WrapAround()
-    {
-        Vector2 currentVelocity = rotVector;
-        if(Position.x < -boundry)
-        {
-            currentVelocity.x += turn;
-        }
-        if(Position.x > boundry)
-        {
-            currentVelocity.x -= turn;
-        }
-        if(Position.y < -boundry)
-        {
-            currentVelocity.y += turn;
-        }
-        if(Position.y > boundry)
-        {
-            currentVelocity.y -= turn;
-        }
-
-        Vector2 newDir = rotVector - currentVelocity;
-        rotVector -= newDir.normalized;
-
-        rotationAngle = new Vector3(0f, RotAngle, 0f);
-    }
-
-    private void DrawDebugCube(Vector2 pos)
-    {
-        //this code will draw a debug cube around the player
-        Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), Color.red);
-        Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y + 0.5f), new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), Color.red);
-        Debug.DrawLine(new Vector3(pos.x - 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), Color.red);
-        Debug.DrawLine(new Vector3(pos.x + 0.5f, 0f, pos.y - 0.5f), new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f), Color.red);
-    }
-
-}
-
-
-public enum IntentionState
-{
-    Roaming,
-    Combat,
-    Survival
 }

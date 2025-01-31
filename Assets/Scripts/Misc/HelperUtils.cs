@@ -83,27 +83,86 @@ namespace Misc
         public static IEnumerable<int> ToMagBBoxHash(this Vector3 pos)
         {
             int currentHash = -1;
-            Vector3 startPos = new Vector3(pos.x - 1.5f, 0f, pos.z - 2.5f);
-            for(int i = 0; i < 3; i++)
-            {
-                startPos += new Vector3(0f, 0f, 1f);
-                if(currentHash < startPos.ToHash())
-                {
-                    currentHash = startPos.ToHash();
-                    yield return currentHash;
-                }
+            Vector3 blb = new Vector3(pos.x - 0.5f, 0f, pos.z - 1.5f);
+            currentHash =  blb.ToHash();
+            yield return currentHash;
 
-                for(int j = 0; j < 3; j++)
-                {
-                    startPos += new Vector3(1f, 0f, 0f);
-                    if(currentHash < startPos.ToHash())
-                    {
-                        currentHash = startPos.ToHash();
-                        yield return currentHash;
-                    }
-                }
+            Vector3 brb = new Vector3(pos.x + 0.5f, 0f, pos.z - 1.5f);
+            if(currentHash < brb.ToHash())
+            {
+                currentHash = brb.ToHash();
+                yield return currentHash;
             }
 
+            Vector3 bll = new Vector3(pos.x - 1.5f, 0f, pos.z - 0.5f);
+            if(currentHash < bll.ToHash())
+            {
+                currentHash = bll.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
+            if(currentHash < bl.ToHash())
+            {
+                currentHash = bl.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
+            if(currentHash < br.ToHash())
+            {
+                currentHash = br.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 brr = new Vector3(pos.x + 1.5f, 0f, pos.z - 0.5f);
+            if(currentHash < brr.ToHash())
+            {
+                currentHash = brr.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 tll = new Vector3(pos.x - 1.5f, 0f, pos.z + 0.5f);
+            if(currentHash < tll.ToHash())
+            {
+                currentHash = tll.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
+            if(currentHash < tl.ToHash())
+            {
+                currentHash = tl.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
+            if(currentHash < tr.ToHash())
+            {
+                currentHash = tr.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 trr = new Vector3(pos.x + 1.5f, 0f, pos.z + 0.5f);
+            if(currentHash < trr.ToHash())
+            {
+                currentHash = trr.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 tlu = new Vector3(pos.x - 0.5f, 0f, pos.z + 1.5f);
+            if(currentHash < tlu.ToHash())
+            {
+                currentHash = tlu.ToHash();
+                yield return currentHash;
+            }
+
+            Vector3 tru = new Vector3(pos.x + 0.5f, 0f, pos.z + 1.5f);
+            if(currentHash < tru.ToHash())
+            {
+                currentHash = tru.ToHash();
+                yield return currentHash;
+            }
         }
 
         /// <summary>

@@ -45,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
         velocity = transform.forward * moveSpeed;
         rb.velocity = velocity;
 
-        rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationDirection), Time.fixedDeltaTime * rotationSpeed);
+        // rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationDirection), Time.fixedDeltaTime * rotationSpeed);
+        var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotationDirection), Time.fixedDeltaTime * rotationSpeed);
+        rb.MoveRotation(rot);
     }
 }

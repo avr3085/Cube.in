@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DCrateConfig
   m_EditorClassIdentifier: 
   mapSize: 45
-  resCount: 4
+  resCount: 0
   reGenThres: 0
   mesh: {fileID: 8163341877318068376, guid: bc830de282d11d04b99f5ac8c6ecbf9c, type: 3}
   material: {fileID: 2100000, guid: e66f8ba29fbc7194cbb74a8258c23073, type: 2}

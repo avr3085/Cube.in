@@ -18,7 +18,7 @@ public class ResFactorySO : ResFactory
         get => resConfig;
     }
 
-    private const float SqrdColOffset = 0.7f;
+    private const float SqrdColOffset = 1f;
 
     public void DrawMesh()
     {
@@ -99,5 +99,36 @@ public class ResFactorySO : ResFactory
 
             mIndex++;
         }
+    }
+
+    /// <summary>
+    /// Calculates the average position of all the resources present at given hashkey
+    /// </summary>
+    /// <param name="hashKey">Key at which has is to be calculated</param>
+    /// <returns>Average position, if null then returns zero</returns>
+    public Vector3 AveragePosition(int hashKey)
+    {
+        Vector3 avgPos = Vector3.zero;
+        HNode node = hMap[hashKey];
+        
+        int mIndex = node.index;
+        int count = 0;
+        for(int i = 0; i < node.totalNodes; i++)
+        {
+            if(resLookup[mIndex].state == RNodeState.Idol)
+            {
+                avgPos += resLookup[mIndex].position;
+                count++;
+            }
+
+            mIndex++;
+        }
+
+        if(count > 1)
+        {
+            avgPos =  avgPos/count;
+        }
+
+        return avgPos;
     }
 }
