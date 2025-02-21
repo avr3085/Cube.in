@@ -106,29 +106,29 @@ public class ResFactorySO : ResFactory
     /// </summary>
     /// <param name="hashKey">Key at which has is to be calculated</param>
     /// <returns>Average position, if null then returns zero</returns>
-    public Vector3 AveragePosition(int hashKey)
-    {
-        Vector3 avgPos = Vector3.zero;
-        HNode node = hMap[hashKey];
+    // public Vector3 AveragePosition(int hashKey)
+    // {
+    //     Vector3 avgPos = Vector3.zero;
+    //     HNode node = hMap[hashKey];
         
-        int mIndex = node.index;
-        int count = 0;
-        for(int i = 0; i < node.totalNodes; i++)
-        {
-            if(resLookup[mIndex].state == RNodeState.Idol)
-            {
-                avgPos += resLookup[mIndex].position;
-                count++;
-            }
+    //     int mIndex = node.index;
+    //     int count = 0;
+    //     for(int i = 0; i < node.totalNodes; i++)
+    //     {
+    //         if(resLookup[mIndex].state == RNodeState.Idol)
+    //         {
+    //             avgPos += resLookup[mIndex].position;
+    //             count++;
+    //         }
 
-            mIndex++;
-        }
+    //         mIndex++;
+    //     }
 
-        if(count > 1)
-        {
-            avgPos =  avgPos/count;
-        }
+    //     if(count > 1)
+    //     {
+    //         avgPos =  avgPos/count;
+    //     }
 
-        return avgPos;
-    }
+    //     return avgPos;
+    // }
 }

@@ -67,26 +67,26 @@ public class ResFactoryManager : MonoBehaviour
     /// </summary>
     /// <param name="hashKey"></param>
     /// <returns></returns>
-    public Vector3 GetAveragePosition(int hashKey)
-    {
-        Vector3 avgPos = Vector3.zero;
-        int count = 0;
-        foreach(var factory in resFactories)
-        {
-            if(!factory.ContainsKey(hashKey))
-            {
-                continue;
-            }
+    // public Vector3 GetAveragePosition(int hashKey)
+    // {
+    //     Vector3 avgPos = Vector3.zero;
+    //     int count = 0;
+    //     foreach(var factory in resFactories)
+    //     {
+    //         if(!factory.ContainsKey(hashKey))
+    //         {
+    //             continue;
+    //         }
 
-            avgPos += factory.AveragePosition(hashKey);
-            count++;
-        }
+    //         avgPos += factory.AveragePosition(hashKey);
+    //         count++;
+    //     }
 
-        if(count > 1)
-        {
-            avgPos = avgPos/count;
-        }
+    //     if(count > 1)
+    //     {
+    //         avgPos = avgPos/count;
+    //     }
 
-        return avgPos;
-    }
+    //     return avgPos;
+    // }
 }

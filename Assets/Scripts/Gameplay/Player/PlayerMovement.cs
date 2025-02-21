@@ -14,6 +14,10 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 velocity, rotationDirection;
 
+    // Collider properties
+    private int maxColliders = 10;
+    private Collider[] hitColliders;
+
     private void OnEnable()
     {
         inputAxisListener.onEventRaised += RotatePlayer;
@@ -27,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        hitColliders = new Collider[maxColliders];
     }
 
     /// <summary>
@@ -37,6 +42,11 @@ public class PlayerMovement : MonoBehaviour
     {
         float angle = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;
         rotationDirection = new Vector3(0f, angle, 0f);
+    }
+
+    private void Update()
+    {
+        // int hitCount = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 2f, hitColliders);
     }
 
     private void FixedUpdate()
