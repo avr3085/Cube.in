@@ -4,6 +4,7 @@ using UnityEngine;
 public class BombPoolSO : ComponentPool<Bomb>
 {
     [SerializeField] private BombFactorySO bombFactorySO;
+    [SerializeField] private BombType bombType = BombType.TypeA;
 
     protected override IFactory<Bomb> Factory 
     { 

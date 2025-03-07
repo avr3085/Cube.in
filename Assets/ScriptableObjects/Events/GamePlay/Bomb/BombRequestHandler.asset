@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2011848a950188245b9a7190995bf38a, type: 3}
-  m_Name: TypeBBomb
+  m_Script: {fileID: 11500000, guid: 031781f526056f0409c41465b672a45d, type: 3}
+  m_Name: BombRequestHandler
   m_EditorClassIdentifier: 
-  bombFactorySO: {fileID: 11400000, guid: 65d33934ae91117448ab81ac5eecdf25, type: 2}
-  bombType: 1
+  description: 
