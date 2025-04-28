@@ -1,67 +1,82 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Etouch = UnityEngine.InputSystem.EnhancedTouch;
 
 /// <summary>
 /// Input Handler
-/// Handle all input related function here
+/// Handling input from dynamic touch joystick and mouse
+/// [Using new input system]
+/// [handles mouse/touch input's, in different touch state. ex - OnFingerDown, OnFingerMoved, etc.]
 /// </summary>
 
-//Todo --> Joystick input is yet to be implemented
 public class InputHandler : MonoBehaviour
 {
+    [SerializeField] private FloatingJoystick joystick;
+
     [Header("Broadcasting Channel")]
-    [SerializeField] private IntEventListener inputAixsListener = default;
-    private Vector2 mousePositon = Vector2.zero;
+    [SerializeField] private Vector2EventListener inputAxisListener = default;
+    [SerializeField, Range(0.1f, 0.9f)] private float validTouchPercentile = 0.85f;
+    [SerializeField, Range(1, 100f)] private int minTolranceRange = 50;
 
-    private void Update(){
-#if UNITY_EDITOR
+    private Finger centerFinger;
+    private readonly float maxKnobMovement = 100f;
 
-        //Taking Input from arrow key
-        if(Input.GetKey(KeyCode.RightArrow))
+    private void OnEnable()
+    {
+        Etouch.EnhancedTouchSupport.Enable();
+        Etouch.Touch.onFingerDown += HandleFingerDown;
+        Etouch.Touch.onFingerMove += HandleFingerMove;
+        Etouch.Touch.onFingerUp += HandleFingerUp;
+    }
+
+    private void OnDisable()
+    {
+        Etouch.Touch.onFingerDown -= HandleFingerDown;
+        Etouch.Touch.onFingerMove -= HandleFingerMove;
+        Etouch.Touch.onFingerUp -= HandleFingerUp;
+        Etouch.EnhancedTouchSupport.Disable();
+    }
+
+    private void HandleFingerDown(Finger finger)
+    {
+        float screenBoundary = Screen.height * validTouchPercentile;
+        if(centerFinger == null && finger.screenPosition.y < screenBoundary)
         {
-            inputAixsListener.Raise(-1);
+            centerFinger = finger;
+            joystick.gameObject.SetActive(true);
+            joystick.JoystickRect.anchoredPosition = finger.screenPosition;
         }
-        else if(Input.GetKey(KeyCode.LeftArrow))
+    }
+
+    private void HandleFingerMove(Finger finger)
+    {
+        if(finger == centerFinger)
         {
-            inputAixsListener.Raise(1);
+            Vector2 knobPosition;
+            Vector2 moveDirection = finger.screenPosition - joystick.JoystickRect.anchoredPosition;
+            float moveDirectionSqrMagnitude = moveDirection.sqrMagnitude;
+            if(moveDirectionSqrMagnitude > maxKnobMovement * maxKnobMovement)
+            {
+                knobPosition = moveDirection.normalized * maxKnobMovement;
+            }
+            else
+            {
+                knobPosition = moveDirection;
+            }
+            
+            joystick.Knob.anchoredPosition = knobPosition;
+            if(moveDirectionSqrMagnitude > minTolranceRange * minTolranceRange)
+            {
+                inputAxisListener.Raise(moveDirection.normalized);
+            }
         }
+    }
 
-        // if(Input.GetMouseButtonDown(0)){
-        //     mousePositon = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //     Vector2 finalPos = new Vector2(mousePositon.x + 4.5f, mousePositon.y + 4.5f);
-        //     if(finalPos.x>=0 && finalPos.x<=9 && finalPos.y>=0 && finalPos.y<=9) mousePositionListener.Raise(finalPos);
-        // }
-#endif
-
-#if UNITY_WEBGL
-        // int currentFinger = -1;
-        // foreach(Touch t in Input.touches){
-        //     if(t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled){
-        //         currentFinger++;
-        //     }else{
-        //         return;
-        //     }
-
-        //     if(currentFinger == 0){
-        //         if(t.phase == TouchPhase.Began){
-        //             mousePositon = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //             Vector2 finalPos = new Vector2(mousePositon.x + 4.5f, mousePositon.y + 4.5f);
-        //             if(finalPos.x>=0 && finalPos.x<=9 && finalPos.y>=0 && finalPos.y<=9) mousePositionListener.Raise(finalPos);
-        //         }
-        //     }else{
-        //         return;
-        //     }
-        // }
-#endif
-
-// TODO : make sure to add input function for andorid platform
-
-}
-
-
-// #region DebugRegion
-//     private void OnDrawGizmos(){
-//          for Debug Purpose
-//     }
-// #endregion
-
+    private void HandleFingerUp(Finger finger)
+    {
+        centerFinger = null;
+        joystick.Knob.anchoredPosition = Vector2.zero;
+        joystick.gameObject.SetActive(false);
+    }
 }

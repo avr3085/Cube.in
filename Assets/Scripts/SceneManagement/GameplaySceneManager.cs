@@ -14,15 +14,14 @@ public class GameplaySceneManager : MonoBehaviour
     [SerializeField] private AssetReference mainUIRequestChannel = default;
 
     [Header("Listening Channel")]
-    [SerializeField] private VoidEventListener exitEventListener = default;
+    [SerializeField] private VoidEventListener exitGameHandler = default;
 
     private void OnEnable(){
-        exitEventListener.onEventRaised += LoadMainUIAsset;
+        exitGameHandler.onEventRaised += LoadMainUIAsset;
     }
 
     private void OnDisable(){
-        // mainUIRequestChannel.ReleaseAsset(); // releasing asset before loading another scene
-        exitEventListener.onEventRaised -= LoadMainUIAsset;
+        exitGameHandler.onEventRaised -= LoadMainUIAsset;
     }
 
     private void LoadMainUIAsset()

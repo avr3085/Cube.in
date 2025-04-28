@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Handles all kernel UI
+/// Kernel UI handler
 /// </summary>
 public class KernelUIHandler : MonoBehaviour
 {
@@ -20,6 +20,10 @@ public class KernelUIHandler : MonoBehaviour
         toggleLoadingUIListener.onEventRaised -= ToggleLoadingUI;
     }
 
+    /// <summary>
+    /// Toggle Loading UI on/off while scene loading is in progress
+    /// </summary>
+    /// <param name="toggle"></param>
     private void ToggleLoadingUI(bool toggle)
     {
         loadingUI.SetActive(toggle);

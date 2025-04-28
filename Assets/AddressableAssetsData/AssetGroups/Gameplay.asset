@@ -17,10 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: cdd1a2f60584460428cee50b7d462646
   m_SerializeEntries:
-  - m_GUID: f8c75261f16432d4fb6ec64468adc132
-    m_Address: Assets/Scenes/MainLevel/MainLevel.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 0860540ea8297504081e6823a71397c7
     m_Address: Assets/Scenes/Gameplay/Gameplay.unity
     m_ReadOnly: 0

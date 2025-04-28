@@ -4,7 +4,8 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// presistance manager
+/// Kernal manager
+/// Handles loading and unloading of MainMenuUI, GameplayUI, Mainlevel simultaneously
 /// </summary>
 public class KernelManager : MonoBehaviour
 {

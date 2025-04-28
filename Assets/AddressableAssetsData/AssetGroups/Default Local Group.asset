@@ -17,8 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 132e81958e4c0ee4c8ec000d7ed1445c
   m_SerializeEntries:
-  - m_GUID: eedef3d28caa7c64dbec45d8712bc833
-    m_Address: Assets/ScriptableObjects/Events/MainUIRequestChannel.asset
+  - m_GUID: f8c75261f16432d4fb6ec64468adc132
+    m_Address: Assets/Scenes/Gameplay/MainLevel.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
