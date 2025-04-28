@@ -5,11 +5,11 @@ using UnityEngine;
 /// </summary>
 public class PlayerCustomization : MonoBehaviour
 {
-    [SerializeField] private Material playerMat;
-    [SerializeField] private TrailRenderer playerTrailRenderer;
+    // [SerializeField] private Material playerMat;
+    // [SerializeField] private TrailRenderer playerTrailRenderer;
 
-    [Header("Data Channel")]
-    [SerializeField] private InventoryItems inventoryItems = default;
+    // [Header("Data Channel")]
+    // [SerializeField] private InventoryItems inventoryItems = default;
 
     private void Start()
     {

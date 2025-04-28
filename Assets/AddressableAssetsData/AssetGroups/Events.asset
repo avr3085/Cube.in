@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Events
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Events
   m_Data:
     m_SerializedData: []
-  m_GUID: 132e81958e4c0ee4c8ec000d7ed1445c
+  m_GUID: 27aa1955e376a7840bcf78ffc72334a3
   m_SerializeEntries:
-  - m_GUID: f8c75261f16432d4fb6ec64468adc132
-    m_Address: Assets/Scenes/Gameplay/MainLevel.unity
+  - m_GUID: d485fe8463b6941449c939845e622393
+    m_Address: Assets/ScriptableObjects/Events
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b50df954f6627bf43a2a3984a39bb888, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 7439953ab5c5d08439563481213438e9, type: 2}
-    - {fileID: 11400000, guid: c27ee569bbcda74489194441762dccc6, type: 2}
+    - {fileID: 11400000, guid: 1418920c1f8818048a08ea45033b78de, type: 2}
+    - {fileID: 11400000, guid: dc8ed3e3f1ca5c94bbc19a55dff44e00, type: 2}

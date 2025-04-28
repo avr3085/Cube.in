@@ -1,6 +1,6 @@
-public enum BotIntention
-{
-    Roaming,
-    Survival,
-    Combat
-}
+// public enum BotIntention
+// {
+//     Roaming,
+//     Survival,
+//     Combat
+// }

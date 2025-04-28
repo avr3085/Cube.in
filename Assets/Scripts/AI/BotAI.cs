@@ -4,16 +4,16 @@ using Misc;
 
 public class BotAI : MonoBehaviour, IResCollector
 {
-    [SerializeField, Range(1, 10)] private int moveSpeed = 6;
-    [SerializeField, Range(1, 100)] private int rotationSpeed = 5;
-    [SerializeField, Range(1, 100)] private int boundry = 46;
+    // [SerializeField, Range(1, 10)] private int moveSpeed = 6;
+    // [SerializeField, Range(1, 100)] private int rotationSpeed = 5;
+    // [SerializeField, Range(1, 100)] private int boundry = 46;
 
-    [Tooltip("Toggle's Debug AABB for uniform grid collision check.")]
-    [SerializeField] private bool debug = false;
-    private float turn = 0.5f;
+    // [Tooltip("Toggle's Debug AABB for uniform grid collision check.")]
+    // [SerializeField] private bool debug = false;
+    // private float turn = 0.5f;
 
-    private Rigidbody rb;
-    private Vector3 rotationDirection;
+    // private Rigidbody rb;
+    // private Vector3 rotationDirection;
     
     // private Vector3 rbVelocity, rotationAngle;
     // private Vector2 rotVector;
@@ -21,14 +21,14 @@ public class BotAI : MonoBehaviour, IResCollector
     // public Vector3 Pos => new Vector3(transform.position.x, 0f, transform.position.z);
     // public float RotAngle => Mathf.Atan2(rotVector.x, rotVector.y) * Mathf.Rad2Deg;
 
-    private IEnumerable<int> hashArray;
-    private int currentHash = -1;
-    private BotIntention intention;
+    // private IEnumerable<int> hashArray;
+    // private int currentHash = -1;
+    // private BotIntention intention;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        intention = BotIntention.Roaming;
+        // rb = GetComponent<Rigidbody>();
+        // intention = BotIntention.Roaming;
         // rotVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         // rotationAngle = new Vector3(0f, RotAngle, 0f);
     }

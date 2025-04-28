@@ -15,8 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity, rotationDirection;
 
     // Collider properties
-    private int maxColliders = 10;
-    private Collider[] hitColliders;
+    // private int maxColliders = 10;
+    // private Collider[] hitColliders;
 
     private void OnEnable()
     {
@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        hitColliders = new Collider[maxColliders];
+        // hitColliders = new Collider[maxColliders];
     }
 
     /// <summary>
