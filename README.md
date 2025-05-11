@@ -21,6 +21,9 @@
     - Scriptable Objects Entire folder is reviewed
     - UI is reviewed and here are the things to be done
         -- Add customization feature to change the skin of the player on demand
-    
+
+## Todo
+    - Add AI bots in the game.
+    - Make Automatic Ai bot generation/pool sytem.
 
 

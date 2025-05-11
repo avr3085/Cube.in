@@ -1,0 +1,68 @@
+Note - This file contains all the necessary details of the game's AI.
+
+- Things the bot will perform
+	- move randomly
+	- Consume food
+	- Upgrade the weapon according to the player
+	- Shoot player if needed
+	- Survive
+
+- Bot's Behaviour states
+	- Roaming
+	- Combat
+	- Survival
+
+- Variables to Consider when switching the state of the bot
+	- Health status
+	- Level XP
+
+- Visual Range of bot
+	-- Long Visual Range
+	-- Short Visual Range
+
+- Detailed state switch
+	- Roaming -> Combat
+		-- Enemey detected
+		-- Health is not critical
+
+	- Roaming -> Survival
+		-- If critical health
+
+	- Survival -> Roaming
+		-- If no danger around and health is not critical
+
+	- Combat -> Roaming
+		-- No enemies around
+
+	- Survival -> Combat
+		-- Health critical, but enemies around attacking
+
+	- Combat -> Survival
+		-- Combat is over, but the health is at critical level
+
+Important link
+	https://gamedesignskills.com/game-design/combat-design/
+
+Bot states detailed explation 
+	Roaming
+		- Bot will move forward
+		- Consume food according to the hunger desire
+		- Hunger desire will be calculated using the formula, which shall depend over the health and level xp rank
+	
+	Combat
+		- If bot sense that enemy is around, then it will decide if he should fight or not.
+		- If enough XP then Bot will try to get into combat with surrounding enemy
+
+	Survival
+		- if the health and xp is not that stable of the bot, it will switch to survival state and will try to eat more fodd than needed
+			to heal itself
+
+	[Regardless of the state of the bot, it will try to avoid the walls at any cost.]
+
+[Design]
+	--> Food Consumption or weapon Upgrade
+		-- The Food consumption or weapon upgrade mechanics will work over the certain factors
+			- Current health of the bot
+			- Current Level xp of the bot
+		
+		-- When the bot is in roaming state, it will focus to over the

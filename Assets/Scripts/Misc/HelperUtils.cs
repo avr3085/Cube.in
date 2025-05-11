@@ -16,6 +16,12 @@ namespace Misc
         private const int mapMax = 52;
 
         /// <summary>
+        /// maxSqrdDistaceCheck - maximum range of distce squared to be checked
+        /// </summary>
+        private const int maxSqrdDistaceCheck = 100;
+        public static int MaxSqrdDistaceCheck => maxSqrdDistaceCheck;
+
+        /// <summary>
         /// Converts Floting point vector3 values to integer format
         /// </summary>
         /// <param name="val">Vector3 Extention method</param>

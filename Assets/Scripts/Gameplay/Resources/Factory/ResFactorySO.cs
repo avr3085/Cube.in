@@ -1,4 +1,5 @@
 using UnityEngine;
+using Misc;
 
 /// <summary>
 /// Factory SO
@@ -99,6 +100,39 @@ public class ResFactorySO : ResFactory
 
             mIndex++;
         }
+    }
+
+    /// <summary>
+    /// Checks the nearest resource position from the current playr positiona and returns it
+    /// </summary>
+    /// <param name="hashKey">Hash key for the uniform grid</param>
+    /// <param name="position">Player current position</param>
+    /// <returns>Best nearest resource from position</returns>
+    public Vector3 CheckNearest(int hashKey, Vector3 position)
+    {
+        HNode hNode = hMap[hashKey];
+        int mIndex = hNode.index;
+
+        Vector3 nearestPos = Vector3.zero;
+        float maxSqrdDistaceCheck = HelperUtils.MaxSqrdDistaceCheck;
+
+        for(int i = 0; i < hNode.totalNodes; i++)
+        {
+            RNode node = resLookup[mIndex];
+            if(node.state == RNodeState.Idol && !node.animatingAlready)
+            {
+                float distSqrd = (node.position - position).sqrMagnitude;
+                if(distSqrd < maxSqrdDistaceCheck)
+                {
+                    maxSqrdDistaceCheck = distSqrd;
+                    nearestPos = node.position;
+                }
+            }
+
+            mIndex++;
+        }
+
+        return nearestPos;
     }
 
     /// <summary>
