@@ -20,6 +20,7 @@ public class BotAI : MonoBehaviour
     private float turn = 0.5f;
     private int currentHash = -1;
     private IEnumerable<int> hashArray;
+    private IEnumerable<Vector3> hashArrayV3;
     
 
     private void Start()
@@ -30,11 +31,11 @@ public class BotAI : MonoBehaviour
         rotationAngle = new Vector3(0f, RotAngle, 0f);
     }
 
-    private void Update()
-    {
-        // Each frame bot will decide its next action
-        Tick(intention);
-    }
+    // private void Update()
+    // {
+    //     // Each frame bot will decide its next action
+    //     Tick(intention);
+    // }
 
     private void FixedUpdate()
     {
@@ -102,11 +103,11 @@ public class BotAI : MonoBehaviour
         }
 
         // Move the bot to the nearestPos
-        // Vector3 newRotVector = nearestPos - Pos;
-        // // Vector2 newDir = rotVector - new Vector2(nearestPos.x, nearestPos.z);
-        // rotVector = new Vector2(newRotVector.x, newRotVector.z).normalized;
+        Vector3 newRotVector = nearestPos - Pos;
+        // Vector2 newDir = rotVector - new Vector2(nearestPos.x, nearestPos.z);
+        rotVector -= new Vector2(newRotVector.x, newRotVector.z).normalized;
 
-        // rotationAngle = new Vector3(0f, RotAngle, 0f);
+        rotationAngle = new Vector3(0f, RotAngle, 0f);
 
     }
 
@@ -135,5 +136,26 @@ public class BotAI : MonoBehaviour
 
         rotationAngle = new Vector3(0f, RotAngle, 0f);
     }
+
+    #if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        // if(!Application.isPlaying) return;
+
+        // Gizmos.color = Color.red;
+        // if(currentHash != Pos.ToHash())
+        // {
+        //     currentHash = Pos.ToHash();
+        //     hashArrayV3 = Pos.ToBBoxHashV3();// Use strategy pattern, if possible -- use a bigger Range
+        //     // hashArray = Position.ToMagBBoxHash(); // using Magnet method
+        // }
+
+        // foreach(var item in hashArrayV3)
+        // {
+        //     Gizmos.DrawSphere(item, 0.1f);
+        // }
+        
+    }
+    #endif
 
 }

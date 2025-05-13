@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 
 namespace Misc
 {
@@ -13,7 +15,7 @@ namespace Misc
         /// mapMax must be greater than the size of the map used in gamplay
         /// otherwise error will appear
         /// </summary>
-        private const int mapMax = 52;
+        private const int mapMax = 52; // The actual map Size is mapMax * 2
 
         /// <summary>
         /// maxSqrdDistaceCheck - maximum range of distce squared to be checked
@@ -36,6 +38,7 @@ namespace Misc
         /// Hash Formula for only first quadrant = x + (y * mapMax) [will work as long as x, y is positive]
         /// Hash Formula used for all quadrants = (x + mapMax/2) + (y + mapMax/2) * mapMax [works for all position]
         /// Note - since we are not using mapMax/2 will make the calculation slow, mapMax is already halfed
+        /// Hence the above Variable "mapMax" == mapMax * 2;
         /// </summary>
         /// <param name="v">Vector3 Extention</param>
         /// <returns>int hash Value</returns>
@@ -76,97 +79,6 @@ namespace Misc
             if(currentHash < tr.ToHash())
             {
                 currentHash = tr.ToHash();
-                yield return currentHash;
-            }
-        }
-
-        /// <summary>
-        /// Calculates hash, when the bounding box is using magnet effect
-        /// Can collect item, like magent does in games
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        public static IEnumerable<int> ToMagBBoxHash(this Vector3 pos)
-        {
-            int currentHash = -1;
-            Vector3 blb = new Vector3(pos.x - 0.5f, 0f, pos.z - 1.5f);
-            currentHash =  blb.ToHash();
-            yield return currentHash;
-
-            Vector3 brb = new Vector3(pos.x + 0.5f, 0f, pos.z - 1.5f);
-            if(currentHash < brb.ToHash())
-            {
-                currentHash = brb.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 bll = new Vector3(pos.x - 1.5f, 0f, pos.z - 0.5f);
-            if(currentHash < bll.ToHash())
-            {
-                currentHash = bll.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
-            if(currentHash < bl.ToHash())
-            {
-                currentHash = bl.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
-            if(currentHash < br.ToHash())
-            {
-                currentHash = br.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 brr = new Vector3(pos.x + 1.5f, 0f, pos.z - 0.5f);
-            if(currentHash < brr.ToHash())
-            {
-                currentHash = brr.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 tll = new Vector3(pos.x - 1.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tll.ToHash())
-            {
-                currentHash = tll.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tl.ToHash())
-            {
-                currentHash = tl.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tr.ToHash())
-            {
-                currentHash = tr.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 trr = new Vector3(pos.x + 1.5f, 0f, pos.z + 0.5f);
-            if(currentHash < trr.ToHash())
-            {
-                currentHash = trr.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 tlu = new Vector3(pos.x - 0.5f, 0f, pos.z + 1.5f);
-            if(currentHash < tlu.ToHash())
-            {
-                currentHash = tlu.ToHash();
-                yield return currentHash;
-            }
-
-            Vector3 tru = new Vector3(pos.x + 0.5f, 0f, pos.z + 1.5f);
-            if(currentHash < tru.ToHash())
-            {
-                currentHash = tru.ToHash();
                 yield return currentHash;
             }
         }
@@ -235,5 +147,71 @@ namespace Misc
         //     yield return (ax,ay);
         //     }
         // }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="xSize"></param>
+        /// <param name="ySize"></param>
+        /// <returns></returns>
+        public static IEnumerable<Vector3> ViewField(this Vector3 pos, int mapSize, int xRange = 2, int yRange = 2)
+        {
+            int xHalved = -(xRange/2);
+            int yHalved = -(yRange/2);
+
+            Vector3Int posFloor = pos.ToFloorInt();
+
+            for(int i = 0; i < xRange + 1; i++)
+            {
+                int currX = xHalved;
+                for(int j = 0; j < yRange + 1; j++)
+                {
+                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    {
+                        yield return new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    }
+
+                    currX++;
+                }
+
+                yHalved++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="mapSize"></param>
+        /// <param name="xRange"></param>
+        /// <param name="yRange"></param>
+        /// <returns></returns>
+        public static IEnumerable<int> ViewFieldHash(this Vector3 pos, int mapSize, int xRange = 2, int yRange = 2)
+        {
+            int xHalved = -(xRange/2);
+            int yHalved = -(yRange/2);
+
+            Vector3Int posFloor = pos.ToFloorInt();
+
+            for(int i = 0; i < xRange + 1; i++)
+            {
+                int currX = xHalved;
+                for(int j = 0; j < yRange + 1; j++)
+                {
+                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    {
+                        yield return outPos.ToHash();
+                    }
+
+                    currX++;
+                }
+
+                yHalved++;
+            }
+        }
     }
 }

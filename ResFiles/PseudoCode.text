@@ -66,3 +66,8 @@ Bot states detailed explation
 			- Current Level xp of the bot
 		
 		-- When the bot is in roaming state, it will focus to over the
+
+
+[Todo]
+	- Design aerial view Tester
+		-- should avoid the area outside the map
