@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 
 namespace Misc
 {
@@ -16,12 +15,14 @@ namespace Misc
         /// otherwise error will appear
         /// </summary>
         private const int mapMax = 52; // The actual map Size is mapMax * 2
+        private const int mapBoundry = 48; // This must always be less than the size of the map
 
         /// <summary>
         /// maxSqrdDistaceCheck - maximum range of distce squared to be checked
         /// </summary>
         private const int maxSqrdDistaceCheck = 100;
         public static int MaxSqrdDistaceCheck => maxSqrdDistaceCheck;
+        public static int MapBoundry => mapBoundry;
 
         /// <summary>
         /// Converts Floting point vector3 values to integer format
@@ -56,31 +57,43 @@ namespace Misc
         /// <returns>Array of hash Key, overlapping uniform grid cell</returns>
         public static IEnumerable<int> ToBBoxHash(this Vector3 pos)
         {
-            int currentHash = -1;
             Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
-            currentHash = bl.ToHash();
-            yield return currentHash;
+            yield return bl.ToHash();
 
             Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
-            if(currentHash < br.ToHash())
-            {
-                currentHash = br.ToHash();
-                yield return currentHash;
-            }
+            yield return br.ToHash();
 
             Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tl.ToHash())
-            {
-                currentHash = tl.ToHash();
-                yield return currentHash;
-            }
+            yield return tl.ToHash();
 
             Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tr.ToHash())
-            {
-                currentHash = tr.ToHash();
-                yield return currentHash;
-            }
+            yield return tr.ToHash();
+
+            // int currentHash = -1;
+            // Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
+            // currentHash = bl.ToHash();
+            // yield return currentHash;
+
+            // Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
+            // if(currentHash < br.ToHash())
+            // {
+            //     currentHash = br.ToHash();
+            //     yield return currentHash;
+            // }
+
+            // Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
+            // if(currentHash < tl.ToHash())
+            // {
+            //     currentHash = tl.ToHash();
+            //     yield return currentHash;
+            // }
+
+            // Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
+            // if(currentHash < tr.ToHash())
+            // {
+            //     currentHash = tr.ToHash();
+            //     yield return currentHash;
+            // }
         }
 
         /// <summary>
@@ -120,14 +133,14 @@ namespace Misc
 
         //     yield break;
         //     }
-            
+
         //     // Handle all other lines
-            
+
         //     side = -1 * ((dx == 0 ? yinc : xinc) - 1);
 
         //     i     = dx + dy;
         //     error = dx - dy;
-            
+
         //     dx *= 2;
         //     dy *= 2;
 
@@ -148,28 +161,33 @@ namespace Misc
         //     }
         // }
 
+        private static void Ndod()
+        { 
+
+        }
 
         /// <summary>
-        /// 
+        /// Return list of all the position vector around the bot, in Squared Field
+        /// Use Visual Debug to check the results
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="xSize"></param>
-        /// <param name="ySize"></param>
+        /// <param name="pos">Current position of the bot</param>
+        /// <param name="visiblity">How Far bot can see and check for collision, Visiblity must be even number</param>
+        /// <param name="mapSize">Map Size</param>
         /// <returns></returns>
-        public static IEnumerable<Vector3> ViewField(this Vector3 pos, int mapSize, int xRange = 2, int yRange = 2)
+        public static IEnumerable<Vector3> VisibleRangeV3(this Vector3 pos, int visiblity = 2, int mapSize = mapBoundry)
         {
-            int xHalved = -(xRange/2);
-            int yHalved = -(yRange/2);
+            int xHalved = -(visiblity / 2);
+            int yHalved = -(visiblity / 2);
 
             Vector3Int posFloor = pos.ToFloorInt();
 
-            for(int i = 0; i < xRange + 1; i++)
+            for (int i = 0; i < visiblity + 1; i++)
             {
                 int currX = xHalved;
-                for(int j = 0; j < yRange + 1; j++)
+                for (int j = 0; j < visiblity + 1; j++)
                 {
                     Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
-                    if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    if (outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
                     {
                         yield return new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
                     }
@@ -182,26 +200,25 @@ namespace Misc
         }
 
         /// <summary>
-        /// 
+        /// Returns All the hash area around the bot
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="mapSize"></param>
-        /// <param name="xRange"></param>
-        /// <param name="yRange"></param>
+        /// <param name="pos">Bot current position</param>
+        /// <param name="visiblity">How Far a bot can see in the map, The number myust be even number</param>
         /// <returns></returns>
-        public static IEnumerable<int> ViewFieldHash(this Vector3 pos, int mapSize, int xRange = 2, int yRange = 2)
+        public static IEnumerable<int> VisibleRangeHash(this Vector3 pos, int visiblity = 2, int mapSize = mapBoundry)
         {
-            int xHalved = -(xRange/2);
-            int yHalved = -(yRange/2);
+            int xHalved = -(visiblity/2);
+            int yHalved = -(visiblity/2);
 
             Vector3Int posFloor = pos.ToFloorInt();
 
-            for(int i = 0; i < xRange + 1; i++)
+            for(int i = 0; i < visiblity + 1; i++)
             {
                 int currX = xHalved;
-                for(int j = 0; j < yRange + 1; j++)
+                for(int j = 0; j < visiblity + 1; j++)
                 {
                     Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    // if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
                     if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
                     {
                         yield return outPos.ToHash();

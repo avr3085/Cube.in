@@ -8,9 +8,9 @@ Note - This file contains all the necessary details of the game's AI.
 	- Survive
 
 - Bot's Behaviour states
-	- Roaming
+	- Petrol
 	- Combat
-	- Survival
+	- Survive
 
 - Variables to Consider when switching the state of the bot
 	- Health status
@@ -21,30 +21,30 @@ Note - This file contains all the necessary details of the game's AI.
 	-- Short Visual Range
 
 - Detailed state switch
-	- Roaming -> Combat
+	- Petrol -> Combat
 		-- Enemey detected
 		-- Health is not critical
 
-	- Roaming -> Survival
+	- Petrol -> Survive
 		-- If critical health
 
-	- Survival -> Roaming
+	- Survive -> Petrol
 		-- If no danger around and health is not critical
 
-	- Combat -> Roaming
+	- Combat -> Petrol
 		-- No enemies around
 
 	- Survival -> Combat
 		-- Health critical, but enemies around attacking
 
-	- Combat -> Survival
+	- Combat -> Survive
 		-- Combat is over, but the health is at critical level
 
 Important link
 	https://gamedesignskills.com/game-design/combat-design/
 
 Bot states detailed explation 
-	Roaming
+	Petroling
 		- Bot will move forward
 		- Consume food according to the hunger desire
 		- Hunger desire will be calculated using the formula, which shall depend over the health and level xp rank
@@ -59,15 +59,6 @@ Bot states detailed explation
 
 	[Regardless of the state of the bot, it will try to avoid the walls at any cost.]
 
-[Design]
-	--> Food Consumption or weapon Upgrade
-		-- The Food consumption or weapon upgrade mechanics will work over the certain factors
-			- Current health of the bot
-			- Current Level xp of the bot
-		
-		-- When the bot is in roaming state, it will focus to over the
-
-
 [Todo]
-	- Design aerial view Tester
-		-- should avoid the area outside the map
+	- Add Petroling Behaviour of the bot
+	- Fix the wall avoid algorithm of the bot

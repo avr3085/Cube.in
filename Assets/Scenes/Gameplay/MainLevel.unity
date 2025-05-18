@@ -216,7 +216,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &103576513
 AudioListener:
   m_ObjectHideFlags: 0
@@ -664,12 +664,12 @@ GameObject:
   - component: {fileID: 345913065}
   - component: {fileID: 345913066}
   m_Layer: 0
-  m_Name: AerialField
+  m_Name: ViewRangeDebug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &345913065
 Transform:
   m_ObjectHideFlags: 0
@@ -697,9 +697,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29a884160fb500e45b7dbaef731c8d71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 2
-  ySize: 2
-  mapSize: 3
+  visiblity: 4
+  mapSize: 2
 --- !u!1 &347351793
 GameObject:
   m_ObjectHideFlags: 0
@@ -3486,7 +3485,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 2
-  boundry: 46
+  boundry: 45
+  visibleRange: 4
 --- !u!65 &1857479165
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -7,9 +7,8 @@ using System.Collections.Generic;
 /// </summary>
 public class AerialFieldTest : MonoBehaviour
 {
-    [SerializeField, Range(1,100)] private int xSize = 2;
-    [SerializeField, Range(1,100)] private int ySize = 2;
-    [SerializeField, Range(3, 50)] private int mapSize = 5;
+    [SerializeField, Range(1,100)] private int visiblity = 2;
+    [SerializeField, Range(1, 50)] private int mapSize = 5;
 
     private int currentHash = -1;
     // private IEnumerable<Vector3> hashArrayV3;
@@ -27,7 +26,7 @@ public class AerialFieldTest : MonoBehaviour
             // hashArrayV3 = Pos.ToBBoxHashV3();// Use strategy pattern, if possible -- use a bigger Range
             // hashArray = Position.ToMagBBoxHash(); // using Magnet method
 
-            hashArrayPos = Pos.ViewField(mapSize, xSize, ySize);
+            hashArrayPos = Pos.VisibleRangeV3(visiblity, mapSize);
         }
 
         Gizmos.color = Color.green;

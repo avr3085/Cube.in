@@ -6,7 +6,8 @@ public class BotAI : MonoBehaviour
 {
     [SerializeField, Range(1, 10)] private int moveSpeed = 1;
     [SerializeField, Range(1, 10)] private int rotationSpeed = 2;
-    [SerializeField, Range(1, 100)] private int boundry = 46;
+    // [SerializeField, Range(1, 100)] private int boundry = 46;
+    [SerializeField, Range(1, 10)] private int visibleRange = 4; // Defines how far the bot can see
 
     private Rigidbody rb;
     private Vector3 rbVelocity, rotationAngle;
@@ -17,24 +18,21 @@ public class BotAI : MonoBehaviour
 
     //Bot properties
     private BotIntention intention;
-    private float turn = 0.5f;
+    private float turnFactor = 0.05f;
     private int currentHash = -1;
     private IEnumerable<int> hashArray;
-    private IEnumerable<Vector3> hashArrayV3;
     
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        intention = BotIntention.Roaming;
+        intention = BotIntention.Petrol;
         rotVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         rotationAngle = new Vector3(0f, RotAngle, 0f);
     }
 
     // private void Update()
     // {
-    //     // Each frame bot will decide its next action
-    //     Tick(intention);
+    //     // Code here
     // }
 
     private void FixedUpdate()
@@ -56,15 +54,12 @@ public class BotAI : MonoBehaviour
     private void Tick(BotIntention currentIntention)
     {
         switch(currentIntention)
-        {
-            case BotIntention.None:
+        {   
+            case BotIntention.Petrol:
+                Petrol();
                 break;
             
-            case BotIntention.Roaming:
-                Roam();
-                break;
-            
-            case BotIntention.Survival:
+            case BotIntention.Survive:
                 break;
             
             case BotIntention.Combat:
@@ -76,14 +71,14 @@ public class BotAI : MonoBehaviour
         }
     }
 
-    private void Roam()
+    private void Petrol()
     {
         Vector3 mPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
         if(currentHash != mPos.ToHash())
         {
             currentHash = mPos.ToHash();
-            hashArray = Pos.ToBBoxHash();// Use strategy pattern, if possible -- use a bigger Range
-            // hashArray = Position.ToMagBBoxHash(); // using Magnet method
+            // hashArray = Pos.ToBBoxHash();
+            hashArray = Pos.VisibleRangeHash(visibleRange);
         }
 
         if(hashArray == null) return;
@@ -114,21 +109,21 @@ public class BotAI : MonoBehaviour
     private void WrapAround()
     {
         Vector2 currentRotVector = rotVector;
-        if(Pos.x < -boundry)
+        if(Pos.x < -HelperUtils.MapBoundry)
         {
-            currentRotVector.x += turn;
+            currentRotVector.x += turnFactor;
         }
-        if(Pos.x > boundry)
+        if(Pos.x > HelperUtils.MapBoundry)
         {
-            currentRotVector.x -= turn;
+            currentRotVector.x -= turnFactor;
         }
-        if(Pos.z < -boundry)
+        if(Pos.z < -HelperUtils.MapBoundry)
         {
-            currentRotVector.y += turn;
+            currentRotVector.y += turnFactor;
         }
-        if(Pos.z > boundry)
+        if(Pos.z > HelperUtils.MapBoundry)
         {
-            currentRotVector.y -= turn;
+            currentRotVector.y -= turnFactor;
         }
 
         Vector2 newDir = rotVector - currentRotVector;
@@ -137,24 +132,33 @@ public class BotAI : MonoBehaviour
         rotationAngle = new Vector3(0f, RotAngle, 0f);
     }
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
+
+    private int dCurrentHash = -1;
+    private IEnumerable<Vector3> dHashArray;
     private void OnDrawGizmos()
     {
-        // if(!Application.isPlaying) return;
+        if (!Application.isPlaying) return;
 
-        // Gizmos.color = Color.red;
-        // if(currentHash != Pos.ToHash())
-        // {
-        //     currentHash = Pos.ToHash();
-        //     hashArrayV3 = Pos.ToBBoxHashV3();// Use strategy pattern, if possible -- use a bigger Range
-        //     // hashArray = Position.ToMagBBoxHash(); // using Magnet method
-        // }
+        Gizmos.color = Color.green;
 
-        // foreach(var item in hashArrayV3)
-        // {
-        //     Gizmos.DrawSphere(item, 0.1f);
-        // }
-        
+        Vector3 mPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
+        if (dCurrentHash != mPos.ToHash())
+        {
+            dCurrentHash = mPos.ToHash();
+            // hashArray = Pos.ToBBoxHash();
+            dHashArray = Pos.VisibleRangeV3(visibleRange);
+        }
+
+        if (dHashArray == null) return;
+
+        foreach (var item in dHashArray)
+        {
+            Gizmos.DrawSphere(item, 0.1f);
+        }
+
+
+
     }
     #endif
 
