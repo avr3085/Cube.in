@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 namespace Misc
 {
@@ -16,24 +15,16 @@ namespace Misc
         /// </summary>
         private const int mapMax = 52; // The actual map Size is mapMax * 2
         private const int mapBoundry = 48; // This must always be less than the size of the map
+        private const float maxSqrdDistanceCheck = 1000f; // Maximum magnitude offset between two vectors
 
-        /// <summary>
-        /// maxSqrdDistaceCheck - maximum range of distce squared to be checked
-        /// </summary>
-        private const int maxSqrdDistaceCheck = 100;
-        public static int MaxSqrdDistaceCheck => maxSqrdDistaceCheck;
+        public static float MaxSqrdDistanceCheck => maxSqrdDistanceCheck;
         public static int MapBoundry => mapBoundry;
 
-        /// <summary>
-        /// Converts Floting point vector3 values to integer format
-        /// </summary>
-        /// <param name="val">Vector3 Extention method</param>
-        /// <returns>Int Vector3 value</returns>
         public static Vector3Int ToFloorInt(this Vector3 val)
         {
             return Vector3Int.FloorToInt(val);
         }
-        
+
         /// <summary>
         /// Converts 2d Vector to single hash value
         /// Hash Formula for only first quadrant = x + (y * mapMax) [will work as long as x, y is positive]
@@ -68,32 +59,71 @@ namespace Misc
 
             Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
             yield return tr.ToHash();
+        }
 
-            // int currentHash = -1;
-            // Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
-            // currentHash = bl.ToHash();
-            // yield return currentHash;
+        /// <summary>
+        /// Return list of all the position vector around the bot, in Squared Field
+        /// Use Visual Debug to check the results
+        /// </summary>
+        /// <param name="pos">Current position of the bot</param>
+        /// <param name="boxSize">Boxed visible Range, Size must be even number</param>
+        /// <param name="mapSize">max allowed Visible Map Size</param>
+        /// <returns></returns>
+        public static IEnumerable<Vector3> BoxVisionV3(this Vector3 pos, int boxSize = 2, int mapSize = mapBoundry)
+        {
+            int xHalved = -(boxSize / 2);
+            int yHalved = -(boxSize / 2);
 
-            // Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
-            // if(currentHash < br.ToHash())
-            // {
-            //     currentHash = br.ToHash();
-            //     yield return currentHash;
-            // }
+            Vector3Int posFloor = pos.ToFloorInt();
 
-            // Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
-            // if(currentHash < tl.ToHash())
-            // {
-            //     currentHash = tl.ToHash();
-            //     yield return currentHash;
-            // }
+            for (int i = 0; i < boxSize + 1; i++)
+            {
+                int currX = xHalved;
+                for (int j = 0; j < boxSize + 1; j++)
+                {
+                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    if (outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    {
+                        yield return new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    }
 
-            // Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
-            // if(currentHash < tr.ToHash())
-            // {
-            //     currentHash = tr.ToHash();
-            //     yield return currentHash;
-            // }
+                    currX++;
+                }
+
+                yHalved++;
+            }
+        }
+        
+        /// <summary>
+        /// Returns All the hash area around the bot
+        /// </summary>
+        /// <param name="pos">Bot current position</param>
+        /// <param name="boxSize">Boxed visible Range, Size must be even number</param>
+        /// <returns></returns>
+        public static IEnumerable<int> BoxVisionHash(this Vector3 pos, int boxSize = 2, int mapSize = mapBoundry)
+        {
+            int xHalved = -(boxSize / 2);
+            int yHalved = -(boxSize / 2);
+
+            Vector3Int posFloor = pos.ToFloorInt();
+
+            for (int i = 0; i < boxSize + 1; i++)
+            {
+                int currX = xHalved;
+                for (int j = 0; j < boxSize + 1; j++)
+                {
+                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    // if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    if (outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    {
+                        yield return outPos.ToHash();
+                    }
+
+                    currX++;
+                }
+
+                yHalved++;
+            }
         }
 
         /// <summary>
@@ -160,75 +190,5 @@ namespace Misc
         //     yield return (ax,ay);
         //     }
         // }
-
-        private static void Ndod()
-        { 
-
-        }
-
-        /// <summary>
-        /// Return list of all the position vector around the bot, in Squared Field
-        /// Use Visual Debug to check the results
-        /// </summary>
-        /// <param name="pos">Current position of the bot</param>
-        /// <param name="visiblity">How Far bot can see and check for collision, Visiblity must be even number</param>
-        /// <param name="mapSize">Map Size</param>
-        /// <returns></returns>
-        public static IEnumerable<Vector3> VisibleRangeV3(this Vector3 pos, int visiblity = 2, int mapSize = mapBoundry)
-        {
-            int xHalved = -(visiblity / 2);
-            int yHalved = -(visiblity / 2);
-
-            Vector3Int posFloor = pos.ToFloorInt();
-
-            for (int i = 0; i < visiblity + 1; i++)
-            {
-                int currX = xHalved;
-                for (int j = 0; j < visiblity + 1; j++)
-                {
-                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
-                    if (outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
-                    {
-                        yield return new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
-                    }
-
-                    currX++;
-                }
-
-                yHalved++;
-            }
-        }
-
-        /// <summary>
-        /// Returns All the hash area around the bot
-        /// </summary>
-        /// <param name="pos">Bot current position</param>
-        /// <param name="visiblity">How Far a bot can see in the map, The number myust be even number</param>
-        /// <returns></returns>
-        public static IEnumerable<int> VisibleRangeHash(this Vector3 pos, int visiblity = 2, int mapSize = mapBoundry)
-        {
-            int xHalved = -(visiblity/2);
-            int yHalved = -(visiblity/2);
-
-            Vector3Int posFloor = pos.ToFloorInt();
-
-            for(int i = 0; i < visiblity + 1; i++)
-            {
-                int currX = xHalved;
-                for(int j = 0; j < visiblity + 1; j++)
-                {
-                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
-                    // if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
-                    if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
-                    {
-                        yield return outPos.ToHash();
-                    }
-
-                    currX++;
-                }
-
-                yHalved++;
-            }
-        }
     }
 }

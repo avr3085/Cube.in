@@ -6,34 +6,37 @@ public class BotAI : MonoBehaviour
 {
     [SerializeField, Range(1, 10)] private int moveSpeed = 1;
     [SerializeField, Range(1, 10)] private int rotationSpeed = 2;
-    // [SerializeField, Range(1, 100)] private int boundry = 46;
-    [SerializeField, Range(1, 10)] private int visibleRange = 4; // Defines how far the bot can see
+    [SerializeField, Range(1, 10)] private int visibleRange = 4; // how far the bot can see
 
     private Rigidbody rb;
-    private Vector3 rbVelocity, rotationAngle;
-    private Vector2 rotVector;
+    private Vector3 rbVelocity, rotVector;
+    private Vector2 rotDirection;
 
     public Vector3 Pos => new Vector3(transform.position.x, 0f, transform.position.z);
-    public float RotAngle => Mathf.Atan2(rotVector.x, rotVector.y) * Mathf.Rad2Deg;
+    public float RotAngle => Mathf.Atan2(rotDirection.x, rotDirection.y) * Mathf.Rad2Deg;
 
     //Bot properties
     private BotIntention intention;
-    private float turnFactor = 0.05f;
+    private float turnFactor = 5f;
     private int currentHash = -1;
     private IEnumerable<int> hashArray;
+
+    // Petrol
+    private bool hasPetrolDirection = false;
+    private Vector3 petrolDirection;
     
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         intention = BotIntention.Petrol;
-        rotVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-        rotationAngle = new Vector3(0f, RotAngle, 0f);
+        rotDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)); //Picking a random Direction for the bot
+        rotVector = new Vector3(0f, RotAngle, 0f);
     }
 
-    // private void Update()
-    // {
-    //     // Code here
-    // }
+    private void Update()
+    {
+        Tick(intention);
+    }
 
     private void FixedUpdate()
     {
@@ -42,7 +45,7 @@ public class BotAI : MonoBehaviour
         rb.velocity = rbVelocity;
 
         // rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
-        var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
+        var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotVector), Time.fixedDeltaTime * rotationSpeed);
         rb.MoveRotation(rot);
     }
 
@@ -73,42 +76,58 @@ public class BotAI : MonoBehaviour
 
     private void Petrol()
     {
-        Vector3 mPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
-        if(currentHash != mPos.ToHash())
+        if (hasPetrolDirection)
         {
-            currentHash = mPos.ToHash();
-            // hashArray = Pos.ToBBoxHash();
-            hashArray = Pos.VisibleRangeHash(visibleRange);
-        }
+            float petrolTargetDistance = (petrolDirection - Pos).sqrMagnitude;
 
-        if(hashArray == null) return;
-
-        Vector3 nearestPos = Vector3.zero;
-        float maxSqrdDistaceCheck = HelperUtils.MaxSqrdDistaceCheck;
-        foreach(int hashKey in hashArray)
-        {
-            
-            Vector3 currentNearest = ResFactoryManager.Instance.GetNearest(hashKey, Pos);
-            float distSqrd = (currentNearest - Pos).sqrMagnitude;
-            if(distSqrd < maxSqrdDistaceCheck)
+            if (petrolTargetDistance > visibleRange * visibleRange)
             {
-                maxSqrdDistaceCheck = distSqrd;
-                nearestPos = currentNearest;
+                hasPetrolDirection = false;
+            }
+            else
+            {
+                return;
             }
         }
 
-        // Move the bot to the nearestPos
-        Vector3 newRotVector = nearestPos - Pos;
-        // Vector2 newDir = rotVector - new Vector2(nearestPos.x, nearestPos.z);
-        rotVector -= new Vector2(newRotVector.x, newRotVector.z).normalized;
+        Vector3 pPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
+        if (currentHash != pPos.ToHash())
+        {
+            currentHash = pPos.ToHash();
+            hashArray = Pos.BoxVisionHash(visibleRange);
+        }
 
-        rotationAngle = new Vector3(0f, RotAngle, 0f);
+        if (hashArray == null) return;
+
+        foreach (int hashKey in hashArray)
+        {
+            if (ResFactoryManager.Instance.ContainsKey(hashKey))
+            {
+                Vector3 curNearestTarget = ResFactoryManager.Instance.GetNearestResource(hashKey, Pos);
+                float distSqrd = (curNearestTarget - Pos).sqrMagnitude;
+                if (distSqrd < visibleRange * visibleRange && distSqrd > 1f)
+                {
+                    petrolDirection = curNearestTarget;
+                    hasPetrolDirection = true;
+                    break;
+                }
+            }
+        }
+
+        //rotate the bot to the new direction
+        Vector3 newPetrolDir = petrolDirection - Pos;
+        Vector2 newDir = rotDirection + new Vector2(newPetrolDir.x, newPetrolDir.z);
+        // Vector2 newDir = new Vector2(newPetrolDir.x, newPetrolDir.z) - rotDirection;
+        rotDirection = newDir.normalized;
+
+        rotVector = new Vector3(0f, RotAngle, 0f);
 
     }
 
     private void WrapAround()
     {
-        Vector2 currentRotVector = rotVector;
+        
+        Vector2 currentRotVector = rotDirection;
         if(Pos.x < -HelperUtils.MapBoundry)
         {
             currentRotVector.x += turnFactor;
@@ -126,12 +145,15 @@ public class BotAI : MonoBehaviour
             currentRotVector.y -= turnFactor;
         }
 
-        Vector2 newDir = rotVector - currentRotVector;
-        rotVector -= newDir.normalized;
+        Vector2 newDir = rotDirection + currentRotVector;
+        rotDirection = newDir.normalized;
 
-        rotationAngle = new Vector3(0f, RotAngle, 0f);
+        rotVector = new Vector3(0f, RotAngle, 0f);
     }
 
+/// <summary>
+/// Debug Area, Should avoid adding to the final code
+/// </summary>
 #if UNITY_EDITOR
 
     private int dCurrentHash = -1;
@@ -141,13 +163,12 @@ public class BotAI : MonoBehaviour
         if (!Application.isPlaying) return;
 
         Gizmos.color = Color.green;
-
         Vector3 mPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
         if (dCurrentHash != mPos.ToHash())
         {
             dCurrentHash = mPos.ToHash();
             // hashArray = Pos.ToBBoxHash();
-            dHashArray = Pos.VisibleRangeV3(visibleRange);
+            dHashArray = Pos.BoxVisionV3(visibleRange);
         }
 
         if (dHashArray == null) return;
@@ -157,7 +178,10 @@ public class BotAI : MonoBehaviour
             Gizmos.DrawSphere(item, 0.1f);
         }
 
+        if (!hasPetrolDirection) return;
 
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(petrolDirection, 0.2f);
 
     }
     #endif

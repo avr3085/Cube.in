@@ -26,7 +26,7 @@ public class AerialFieldTest : MonoBehaviour
             // hashArrayV3 = Pos.ToBBoxHashV3();// Use strategy pattern, if possible -- use a bigger Range
             // hashArray = Position.ToMagBBoxHash(); // using Magnet method
 
-            hashArrayPos = Pos.VisibleRangeV3(visiblity, mapSize);
+            hashArrayPos = Pos.BoxVisionV3(visiblity, mapSize);
         }
 
         Gizmos.color = Color.green;

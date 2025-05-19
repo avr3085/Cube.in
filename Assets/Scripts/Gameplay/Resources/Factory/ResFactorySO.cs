@@ -13,9 +13,10 @@ public class ResFactorySO : ResFactory
     [SerializeField] private AnimationCurve scaleCurve;
     
     public bool ContainsKey (int haskKey) => hMap.ContainsKey(haskKey);
-
-    protected override ResConfig ResConfig 
-    { 
+    public ResType ResourceType => resType;
+    
+    protected override ResConfig ResConfig
+    {
         get => resConfig;
     }
 
@@ -97,24 +98,23 @@ public class ResFactorySO : ResFactory
                     collector.OnResCollected(resType);
                 }
             }
-
             mIndex++;
         }
     }
 
     /// <summary>
-    /// Checks the nearest resource position from the current playr positiona and returns it
+    /// Returns the nearest resource position from the current player position
     /// </summary>
     /// <param name="hashKey">Hash key for the uniform grid</param>
     /// <param name="position">Player current position</param>
     /// <returns>Best nearest resource from position</returns>
-    public Vector3 CheckNearest(int hashKey, Vector3 position)
+    public Vector3 NearestNode(int hashKey, Vector3 position)
     {
         HNode hNode = hMap[hashKey];
         int mIndex = hNode.index;
 
         Vector3 nearestPos = Vector3.zero;
-        float maxSqrdDistaceCheck = HelperUtils.MaxSqrdDistaceCheck;
+        float minSqrdDistance = HelperUtils.MaxSqrdDistanceCheck;
 
         for(int i = 0; i < hNode.totalNodes; i++)
         {
@@ -122,47 +122,14 @@ public class ResFactorySO : ResFactory
             if(node.state == RNodeState.Idol && !node.animatingAlready)
             {
                 float distSqrd = (node.position - position).sqrMagnitude;
-                if(distSqrd < maxSqrdDistaceCheck)
+                if(distSqrd < minSqrdDistance)
                 {
-                    maxSqrdDistaceCheck = distSqrd;
+                    minSqrdDistance = distSqrd;
                     nearestPos = node.position;
                 }
             }
-
             mIndex++;
         }
-
         return nearestPos;
     }
-
-    /// <summary>
-    /// Calculates the average position of all the resources present at given hashkey
-    /// </summary>
-    /// <param name="hashKey">Key at which has is to be calculated</param>
-    /// <returns>Average position, if null then returns zero</returns>
-    // public Vector3 AveragePosition(int hashKey)
-    // {
-    //     Vector3 avgPos = Vector3.zero;
-    //     HNode node = hMap[hashKey];
-        
-    //     int mIndex = node.index;
-    //     int count = 0;
-    //     for(int i = 0; i < node.totalNodes; i++)
-    //     {
-    //         if(resLookup[mIndex].state == RNodeState.Idol)
-    //         {
-    //             avgPos += resLookup[mIndex].position;
-    //             count++;
-    //         }
-
-    //         mIndex++;
-    //     }
-
-    //     if(count > 1)
-    //     {
-    //         avgPos =  avgPos/count;
-    //     }
-
-    //     return avgPos;
-    // }
 }

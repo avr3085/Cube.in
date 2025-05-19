@@ -27,7 +27,6 @@ public class ResCollector : MonoBehaviour, IResCollector
         {
             currentHash = mPos.ToHash();
             hashArray = Position.ToBBoxHash();// Use strategy pattern, if possible
-            // hashArray = Position.ToMagBBoxHash(); // using Magnet method
         }
 
         if(hashArray == null) return;

@@ -42,6 +42,7 @@ Note - This file contains all the necessary details of the game's AI.
 
 Important link
 	https://gamedesignskills.com/game-design/combat-design/
+	https://leanrada.com/notes/sweep-and-prune/
 
 Bot states detailed explation 
 	Petroling
@@ -60,5 +61,11 @@ Bot states detailed explation
 	[Regardless of the state of the bot, it will try to avoid the walls at any cost.]
 
 [Todo]
-	- Add Petroling Behaviour of the bot
-	- Fix the wall avoid algorithm of the bot
+	- Find the nearest resources
+		--[Note] -> We are currently focsing on the edible food sources and nothing else
+		- The Bot is using vision box, which first create an array of the hash from grid, which is
+			lying inside the box
+		- Now we need to check for the nearest Resource, which is sitting under the box
+			-- First find only hash, which has some resources under it
+			-- skip the empty hash
+			--
