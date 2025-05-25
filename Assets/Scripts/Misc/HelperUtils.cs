@@ -9,16 +9,16 @@ namespace Misc
     public static class HelperUtils
     {
         /// <summary>
-        /// mapMax - maximum size of map in either quadrant, to calculate a 1d hash key
-        /// mapMax must be greater than the size of the map used in gamplay
+        /// mapSize - maximum size of map in either quadrant, to calculate a 1d hash key
+        /// mapSize must be greater than the size of the map used in gamplay
         /// otherwise error will appear
         /// </summary>
-        private const int mapMax = 52; // The actual map Size is mapMax * 2
-        private const int mapBoundry = 48; // This must always be less than the size of the map
-        private const float maxSqrdDistanceCheck = 1000f; // Maximum magnitude offset between two vectors
+        private const int mapSize = 52; // The actual map Size is mapSize * 2
+        private const int boundsOffset = 48; // This must always be less than the size of the map
+        private const float maxMagnitudeOffset = 1000f; // Maximum magnitude offset between two vectors
 
-        public static float MaxSqrdDistanceCheck => maxSqrdDistanceCheck;
-        public static int MapBoundry => mapBoundry;
+        public static float MaxMagnitudeOffset => maxMagnitudeOffset;
+        public static int BoundsOffset => boundsOffset;
 
         public static Vector3Int ToFloorInt(this Vector3 val)
         {
@@ -27,17 +27,17 @@ namespace Misc
 
         /// <summary>
         /// Converts 2d Vector to single hash value
-        /// Hash Formula for only first quadrant = x + (y * mapMax) [will work as long as x, y is positive]
-        /// Hash Formula used for all quadrants = (x + mapMax/2) + (y + mapMax/2) * mapMax [works for all position]
-        /// Note - since we are not using mapMax/2 will make the calculation slow, mapMax is already halfed
-        /// Hence the above Variable "mapMax" == mapMax * 2;
+        /// Hash Formula for only first quadrant = x + (y * mapSize) [will work as long as x, y is positive]
+        /// Hash Formula used for all quadrants = (x + mapSize/2) + (y + mapSize/2) * mapSize [works for all position]
+        /// Note - since we are not using mapSize/2 will make the calculation slow, mapSize is already halfed
+        /// Hence the above Variable "mapSize" == mapSize * 2;
         /// </summary>
         /// <param name="v">Vector3 Extention</param>
         /// <returns>int hash Value</returns>
         public static int ToHash(this Vector3 v)
         {
             Vector3Int val = v.ToFloorInt();
-            return ((val.z + mapMax) * (mapMax * 2)) + val.x + mapMax;
+            return ((val.z + mapSize) * (mapSize * 2)) + val.x + mapSize;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Misc
         /// <param name="boxSize">Boxed visible Range, Size must be even number</param>
         /// <param name="mapSize">max allowed Visible Map Size</param>
         /// <returns></returns>
-        public static IEnumerable<Vector3> BoxVisionV3(this Vector3 pos, int boxSize = 2, int mapSize = mapBoundry)
+        public static IEnumerable<Vector3> BoxVisionV3(this Vector3 pos, int boxSize = 2, int bounds = boundsOffset)
         {
             int xHalved = -(boxSize / 2);
             int yHalved = -(boxSize / 2);
@@ -82,7 +82,7 @@ namespace Misc
                 for (int j = 0; j < boxSize + 1; j++)
                 {
                     Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
-                    if (outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    if (outPos.x > -bounds && outPos.x < bounds && outPos.z > -bounds && outPos.z < bounds)
                     {
                         yield return new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
                     }
@@ -100,7 +100,7 @@ namespace Misc
         /// <param name="pos">Bot current position</param>
         /// <param name="boxSize">Boxed visible Range, Size must be even number</param>
         /// <returns></returns>
-        public static IEnumerable<int> BoxVisionHash(this Vector3 pos, int boxSize = 2, int mapSize = mapBoundry)
+        public static IEnumerable<int> BoxVisionHash(this Vector3 pos, int boxSize = 2, int bounds = boundsOffset)
         {
             int xHalved = -(boxSize / 2);
             int yHalved = -(boxSize / 2);
@@ -113,8 +113,7 @@ namespace Misc
                 for (int j = 0; j < boxSize + 1; j++)
                 {
                     Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
-                    // if(outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
-                    if (outPos.x > -mapSize && outPos.x < mapSize && outPos.z > -mapSize && outPos.z < mapSize)
+                    if (outPos.x > -bounds && outPos.x < bounds && outPos.z > -bounds && outPos.z < bounds)
                     {
                         yield return outPos.ToHash();
                     }

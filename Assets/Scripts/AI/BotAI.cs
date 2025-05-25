@@ -7,13 +7,18 @@ public class BotAI : MonoBehaviour
     [SerializeField, Range(1, 10)] private int moveSpeed = 1;
     [SerializeField, Range(1, 10)] private int rotationSpeed = 2;
     [SerializeField, Range(1, 10)] private int visibleRange = 4; // how far the bot can see
+    [SerializeField] private bool debugMode = false;
 
     private Rigidbody rb;
-    private Vector3 rbVelocity, rotVector;
-    private Vector2 rotDirection;
+    // private Vector3 rbVelocity, rotVector;
+    // private Vector2 rotDirection;
+
+    private Vector3 velocity;
+    private Vector3 rotVector;
 
     public Vector3 Pos => new Vector3(transform.position.x, 0f, transform.position.z);
-    public float RotAngle => Mathf.Atan2(rotDirection.x, rotDirection.y) * Mathf.Rad2Deg;
+    // public float RotAngle => Mathf.Atan2(rotDirection.x, rotDirection.y) * Mathf.Rad2Deg;
+    public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
 
     //Bot properties
     private BotIntention intention;
@@ -22,15 +27,19 @@ public class BotAI : MonoBehaviour
     private IEnumerable<int> hashArray;
 
     // Petrol
-    private bool hasPetrolDirection = false;
-    private Vector3 petrolDirection;
-    
+    private bool hasPatrolPoint = false;
+    private Vector3 patrolPoint;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        intention = BotIntention.Petrol;
-        rotDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)); //Picking a random Direction for the bot
+        intention = BotIntention.Patrol;
+        // rotDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)); //Picking a random Direction for the bot
+        // rotVector = new Vector3(0f, RotAngle, 0f);
+
+        velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         rotVector = new Vector3(0f, RotAngle, 0f);
+
     }
 
     private void Update()
@@ -40,9 +49,11 @@ public class BotAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rbVelocity = rb.velocity;
-        rbVelocity = transform.forward * moveSpeed;
-        rb.velocity = rbVelocity;
+        // rbVelocity = rb.velocity;
+        // rbVelocity = transform.forward * moveSpeed;
+        // rb.velocity = rbVelocity;
+
+        rb.velocity = velocity * moveSpeed;
 
         // rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationAngle), Time.fixedDeltaTime * rotationSpeed);
         var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotVector), Time.fixedDeltaTime * rotationSpeed);
@@ -58,8 +69,8 @@ public class BotAI : MonoBehaviour
     {
         switch(currentIntention)
         {   
-            case BotIntention.Petrol:
-                Petrol();
+            case BotIntention.Patrol:
+                Patrol();
                 break;
             
             case BotIntention.Survive:
@@ -74,79 +85,73 @@ public class BotAI : MonoBehaviour
         }
     }
 
-    private void Petrol()
+    private void Patrol()
     {
-        if (hasPetrolDirection)
+        if (hasPatrolPoint)
         {
-            float petrolTargetDistance = (petrolDirection - Pos).sqrMagnitude;
-
-            if (petrolTargetDistance > visibleRange * visibleRange)
+            float patrolOffset = (patrolPoint - Pos).sqrMagnitude;
+            if (patrolOffset < 1f || patrolOffset > visibleRange * visibleRange)
             {
-                hasPetrolDirection = false;
+                hasPatrolPoint = false;
             }
-            else
-            {
-                return;
-            }
+            return;
         }
 
         Vector3 pPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
-        if (currentHash != pPos.ToHash())
-        {
-            currentHash = pPos.ToHash();
-            hashArray = Pos.BoxVisionHash(visibleRange);
-        }
+
+        if (currentHash == pPos.ToHash()) return;
+
+        currentHash = pPos.ToHash();
+        hashArray = Pos.BoxVisionHash(visibleRange);
 
         if (hashArray == null) return;
 
-        foreach (int hashKey in hashArray)
+        Vector3 nearestTarget;
+        foreach (var hashKey in hashArray)
         {
             if (ResFactoryManager.Instance.ContainsKey(hashKey))
             {
-                Vector3 curNearestTarget = ResFactoryManager.Instance.GetNearestResource(hashKey, Pos);
-                float distSqrd = (curNearestTarget - Pos).sqrMagnitude;
-                if (distSqrd < visibleRange * visibleRange && distSqrd > 1f)
+                nearestTarget = ResFactoryManager.Instance.NearestRes(hashKey, Pos);
+                if (!nearestTarget.Equals(Vector3.zero))
                 {
-                    petrolDirection = curNearestTarget;
-                    hasPetrolDirection = true;
-                    break;
+                    float distSqrd = (nearestTarget - Pos).sqrMagnitude;
+                    if (distSqrd < visibleRange * visibleRange && distSqrd > 1f)
+                    {
+                        patrolPoint = nearestTarget;
+                        hasPatrolPoint = true;
+
+                        Vector3 newDir = velocity + (patrolPoint - Pos);
+                        velocity = newDir.normalized;
+                        rotVector = new Vector3(0f, RotAngle, 0f);
+                        break;
+                    }
                 }
             }
         }
-
-        //rotate the bot to the new direction
-        Vector3 newPetrolDir = petrolDirection - Pos;
-        Vector2 newDir = rotDirection + new Vector2(newPetrolDir.x, newPetrolDir.z);
-        // Vector2 newDir = new Vector2(newPetrolDir.x, newPetrolDir.z) - rotDirection;
-        rotDirection = newDir.normalized;
-
-        rotVector = new Vector3(0f, RotAngle, 0f);
-
     }
 
     private void WrapAround()
     {
-        
-        Vector2 currentRotVector = rotDirection;
-        if(Pos.x < -HelperUtils.MapBoundry)
+        Vector3 currentRotVector = velocity;
+        if (Pos.x < -HelperUtils.BoundsOffset)
         {
             currentRotVector.x += turnFactor;
         }
-        if(Pos.x > HelperUtils.MapBoundry)
+        if(Pos.x > HelperUtils.BoundsOffset)
         {
             currentRotVector.x -= turnFactor;
         }
-        if(Pos.z < -HelperUtils.MapBoundry)
+        if(Pos.z < -HelperUtils.BoundsOffset)
         {
-            currentRotVector.y += turnFactor;
+            currentRotVector.z += turnFactor;
         }
-        if(Pos.z > HelperUtils.MapBoundry)
+        if(Pos.z > HelperUtils.BoundsOffset)
         {
-            currentRotVector.y -= turnFactor;
+            currentRotVector.z -= turnFactor;
         }
 
-        Vector2 newDir = rotDirection + currentRotVector;
-        rotDirection = newDir.normalized;
+        Vector3 newDir = velocity + currentRotVector;
+        velocity = newDir.normalized;
 
         rotVector = new Vector3(0f, RotAngle, 0f);
     }
@@ -160,7 +165,7 @@ public class BotAI : MonoBehaviour
     private IEnumerable<Vector3> dHashArray;
     private void OnDrawGizmos()
     {
-        if (!Application.isPlaying) return;
+        if (!Application.isPlaying && debugMode) return;
 
         Gizmos.color = Color.green;
         Vector3 mPos = new Vector3(Pos.x - 0.5f, 0f, Pos.z - 0.5f);
@@ -178,10 +183,14 @@ public class BotAI : MonoBehaviour
             Gizmos.DrawSphere(item, 0.1f);
         }
 
-        if (!hasPetrolDirection) return;
+        if (!hasPatrolPoint) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(petrolDirection, 0.2f);
+        Gizmos.DrawSphere(patrolPoint, 0.2f);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(Pos, patrolPoint);
+        Gizmos.DrawLine(Pos, Pos + velocity);
 
     }
     #endif

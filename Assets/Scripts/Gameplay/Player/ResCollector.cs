@@ -33,7 +33,7 @@ public class ResCollector : MonoBehaviour, IResCollector
 
         foreach(int hashKey in hashArray)
         {
-            ResFactoryManager.Instance.CheckCollision(hashKey, Position, this);
+            ResFactoryManager.Instance.CollisionCheck(hashKey, Position, this);
         }
     }
 

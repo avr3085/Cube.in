@@ -43,7 +43,9 @@ Note - This file contains all the necessary details of the game's AI.
 Important link
 	https://gamedesignskills.com/game-design/combat-design/
 	https://leanrada.com/notes/sweep-and-prune/
-
+	https://github.com/SunnyValleyStudio/rigidbody-vs-Transform-movement-in-Unity-2D
+	https://www.youtube.com/watch?v=UA2F8s3fCLs
+	
 Bot states detailed explation 
 	Petroling
 		- Bot will move forward

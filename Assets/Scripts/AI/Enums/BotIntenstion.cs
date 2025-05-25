@@ -1,6 +1,6 @@
 public enum BotIntention
 {
-    Petrol,
+    Patrol,
     Survive,
     Combat
 }

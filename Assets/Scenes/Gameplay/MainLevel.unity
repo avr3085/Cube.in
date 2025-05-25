@@ -297,7 +297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 8, z: -10}
   smoothing: 10
-  target: {fileID: 1857479167}
+  target: {fileID: 1343585050}
 --- !u!1 &122048383
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &614137057
 Transform:
   m_ObjectHideFlags: 0
@@ -2355,7 +2355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1343585050
 Transform:
   m_ObjectHideFlags: 0
@@ -3484,9 +3484,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 2
-  boundry: 45
+  rotationSpeed: 5
   visibleRange: 4
+  debugMode: 1
 --- !u!65 &1857479165
 BoxCollider:
   m_ObjectHideFlags: 0

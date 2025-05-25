@@ -53,13 +53,13 @@ public class ResFactoryManager : MonoBehaviour
     /// <param name="hashKey"></param>
     /// <param name="pos"></param>
     /// <param name="resCollector">Caller</param>
-    public void CheckCollision(int hashKey, Vector3 pos, IResCollector resCollector)
+    public void CollisionCheck(int hashKey, Vector3 pos, IResCollector resCollector)
     {
         foreach (var factory in resFactories)
         {
             if (factory.ContainsKey(hashKey))
             {
-                factory.CheckCollision(hashKey, pos, resCollector);
+                factory.CollisionCheck(hashKey, pos, resCollector);
             }
         }
     }
@@ -70,17 +70,17 @@ public class ResFactoryManager : MonoBehaviour
     /// <param name="hashKey">Hash key for the uniform grid</param>
     /// <param name="pos">Current Player position</param>
     /// <returns>Best Nearest Resource position</returns>
-    public Vector3 GetNearestResource(int hashKey, Vector3 pos, ResType resType = ResType.Edible)
+    public Vector3 NearestRes(int hashKey, Vector3 pos, ResType resType = ResType.Edible)
     {
         foreach (var factory in resFactories)
         {
             if (factory.ResourceType == resType)
             {
-                return factory.NearestNode(hashKey, pos);
+                return factory.NearestNodeCheck(hashKey, pos);
             }
         }
 
-        return resFactories[0].NearestNode(hashKey, pos);
+        return resFactories[0].NearestNodeCheck(hashKey, pos);
     }
 
     public bool ContainsKey(int key, ResType resType = ResType.Edible)

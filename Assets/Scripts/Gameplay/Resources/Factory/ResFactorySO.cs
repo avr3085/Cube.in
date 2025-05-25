@@ -79,7 +79,7 @@ public class ResFactorySO : ResFactory
     /// <param name="position">Position will be used to check the distance between all the resources staying particular cell</param>
     /// <param name="collector">Caller which collected the resource</pram>
     /// <returns>null</returns>
-    public void CheckCollision(int hashKey, Vector3 position, IResCollector collector)
+    public void CollisionCheck(int hashKey, Vector3 position, IResCollector collector)
     {
         HNode hNode = hMap[hashKey];
         int mIndex = hNode.index;
@@ -108,13 +108,13 @@ public class ResFactorySO : ResFactory
     /// <param name="hashKey">Hash key for the uniform grid</param>
     /// <param name="position">Player current position</param>
     /// <returns>Best nearest resource from position</returns>
-    public Vector3 NearestNode(int hashKey, Vector3 position)
+    public Vector3 NearestNodeCheck(int hashKey, Vector3 position)
     {
         HNode hNode = hMap[hashKey];
         int mIndex = hNode.index;
 
         Vector3 nearestPos = Vector3.zero;
-        float minSqrdDistance = HelperUtils.MaxSqrdDistanceCheck;
+        float minMag = HelperUtils.MaxMagnitudeOffset;
 
         for(int i = 0; i < hNode.totalNodes; i++)
         {
@@ -122,9 +122,9 @@ public class ResFactorySO : ResFactory
             if(node.state == RNodeState.Idol && !node.animatingAlready)
             {
                 float distSqrd = (node.position - position).sqrMagnitude;
-                if(distSqrd < minSqrdDistance)
+                if(distSqrd < minMag)
                 {
-                    minSqrdDistance = distSqrd;
+                    minMag = distSqrd;
                     nearestPos = node.position;
                 }
             }
