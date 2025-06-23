@@ -1,9 +1,10 @@
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Player Movement and rotation handler
 /// </summary>
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : Entity
 {
     [Header("Player Properties")]
     [SerializeField, Range(1,10)] private int moveSpeed = 1;
@@ -13,10 +14,10 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 velocity, rotationDirection;
+    protected Vector3 Pos => new Vector3(transform.position.x, 0f, transform.position.z);
 
-    // Collider properties
-    // private int maxColliders = 10;
-    // private Collider[] hitColliders;
+    public override Vector3 Position => Pos;
+    public override Vector3 Velocity => velocity;
 
     private void OnEnable()
     {
@@ -31,7 +32,6 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        // hitColliders = new Collider[maxColliders];
     }
 
     /// <summary>
@@ -44,10 +44,10 @@ public class PlayerMovement : MonoBehaviour
         rotationDirection = new Vector3(0f, angle, 0f);
     }
 
-    private void Update()
-    {
-        // int hitCount = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 2f, hitColliders);
-    }
+    // private void Update()
+    // {
+    //     // int hitCount = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 2f, hitColliders);
+    // }
 
     private void FixedUpdate()
     {

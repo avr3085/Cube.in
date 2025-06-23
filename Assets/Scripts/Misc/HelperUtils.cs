@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Misc
 {
@@ -93,7 +94,7 @@ namespace Misc
                 yHalved++;
             }
         }
-        
+
         /// <summary>
         /// Returns All the hash area around the bot
         /// </summary>
@@ -123,6 +124,19 @@ namespace Misc
 
                 yHalved++;
             }
+        }
+
+        /// <summary>
+        /// Returns the manual dot product
+        /// This one is faster form the InBuilt dot product system
+        /// since it is not normalizing the vector
+        /// </summary>
+        /// <param name="vec1"></param>
+        /// <param name="vec2"></param>
+        /// <returns></returns>
+        public static float DotProduct(Vector3 vec1, Vector3 vec2)
+        {
+            return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
         }
 
         /// <summary>
