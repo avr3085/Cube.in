@@ -14,9 +14,8 @@ public class PlayerMovement : Entity
 
     private Rigidbody rb;
     private Vector3 velocity, rotationDirection;
-    protected Vector3 Pos => new Vector3(transform.position.x, 0f, transform.position.z);
 
-    public override Vector3 Position => Pos;
+    public override Vector3 Position => new Vector3(transform.position.x, 0f, transform.position.z);
     public override Vector3 Velocity => velocity;
 
     private void OnEnable()

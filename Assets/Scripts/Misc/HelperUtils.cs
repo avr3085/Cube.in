@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System;
 
 namespace Misc
 {
@@ -137,6 +138,34 @@ namespace Misc
         public static float DotProduct(Vector3 vec1, Vector3 vec2)
         {
             return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static IEnumerable<Vector3> GetSurroundRays(this Transform t)
+        {
+            yield return t.right;
+
+            Vector3 upperRight = t.right + t.forward;
+            yield return upperRight;
+
+            yield return t.forward;
+
+            Vector3 upperLeft = t.forward + t.right * -1;
+            yield return upperLeft;
+
+            yield return t.right * -1;
+
+            Vector3 lowerLeft = t.right * -1 + t.forward * -1;
+            yield return lowerLeft;
+
+            yield return t.forward * -1;
+
+            Vector3 lowerRight = t.forward * -1 + t.right;
+            yield return lowerRight;
         }
 
         /// <summary>
