@@ -4,10 +4,15 @@ using Misc;
 public class BotAIController : Entity
 {
     [SerializeField] private BotStats botStats = default;
-    [HideInInspector] public BotIntention intention;
     [HideInInspector] public Vector3 rotVector;
-    [HideInInspector] public Vector3 patrolPoint;
+
+    // Patrol state variables
     [HideInInspector] public bool hasPatrolPoint;
+    [HideInInspector] public Vector3 patrolPoint;
+
+    // Comabt state variables
+    [HideInInspector] public bool hasCombatTarget;
+    [HideInInspector] public Entity comabtTarget;
 
     [Header("FSM")]
     [SerializeField] private State currentState = default;
@@ -19,20 +24,19 @@ public class BotAIController : Entity
     public override Vector3 Velocity => velocity;
     public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
     public BotStats Stats => botStats;
-
     public Vector3 SetVelocity
     {
         set => velocity = value;
     }
-
     public Vector3 UpdateRotVector() => rotVector = new Vector3(0f, RotAngle, 0f);
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        intention = BotIntention.Patrol;
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         rotVector = new Vector3(0f, RotAngle, 0f);
+
+        currentState.Init();
     }
 
     private void Update()
@@ -76,5 +80,14 @@ public class BotAIController : Entity
         velocity = newDir.normalized;
 
         rotVector = new Vector3(0f, RotAngle, 0f);
+    }
+
+    public void SwitchState(State nextState)
+    {
+        if (nextState != currentState)
+        {
+            currentState = nextState;
+            currentState.Init();
+        }
     }
 }

@@ -5,8 +5,13 @@ using Misc;
 [CreateAssetMenu(fileName = "PatrolAction", menuName = "AI/Action/Patrol")]
 public class PatrolActions : Actions
 {
-    private int currentHash = -1;
+    private int currentHash;
     private IEnumerable<int> hashArray;
+
+    public override void Init()
+    {
+        currentHash = -1;
+    }
 
     public override void Act(BotAIController controller)
     {
@@ -42,7 +47,7 @@ public class PatrolActions : Actions
                 nearestTarget = ResFactoryManager.Instance.NearestRes(hashKey, controller.Position);
                 if (!nearestTarget.Equals(Vector3.zero))
                 {
-                    float distSqrd = (nearestTarget -controller.Position).sqrMagnitude;
+                    float distSqrd = (nearestTarget - controller.Position).sqrMagnitude;
                     if (distSqrd < controller.Stats.visionRange * controller.Stats.visionRange && distSqrd > 1f)
                     {
                         controller.patrolPoint = nearestTarget;
