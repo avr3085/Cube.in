@@ -10,11 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60bcba5ab22783248a97ef687af42f4a, type: 3}
-  m_Name: CombatState
+  m_Name: SurvivalState
   m_EditorClassIdentifier: 
   actions:
-  - {fileID: 11400000, guid: 03dae8c0978f86643a3b9b5589761749, type: 2}
-  transitions:
-  - actions: {fileID: 11400000, guid: 5bf8d18cc978dfa4db9f3c990d64c63b, type: 2}
-    trueState: {fileID: 11400000, guid: d9dd421b139841642ad4d36b479ba7b2, type: 2}
-    falseState: {fileID: 0}
+  - {fileID: 11400000, guid: 4f1ca4fb3e4d1ab42bec4d7755c71a31, type: 2}
+  transitions: []

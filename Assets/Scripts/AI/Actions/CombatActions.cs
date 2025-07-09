@@ -1,7 +1,7 @@
 using UnityEngine;
 using Misc;
-using UnityEngine.U2D;
 
+// Note - The bot movement still feels like confusion, make sure the bot will act normal
 [CreateAssetMenu(fileName = "CombatAction", menuName = "AI/Action/Combat")]
 public class CombatActions : Actions
 {
@@ -27,7 +27,6 @@ public class CombatActions : Actions
 
     private void Comabt(BotAIController controller)
     {
-        
         if (currWaitTime < rayCastGap)
         {
             currWaitTime += Time.deltaTime;
@@ -37,44 +36,35 @@ public class CombatActions : Actions
             var sRays = controller.transform.GetSurroundRays();
             int index = 0;
             RaycastHit hit;
-            float maxVal = -100f;
-            // Vector3 interestDir = controller.transform.right;
+            float maxLen = -1000f;
 
             foreach (Vector3 sRay in sRays)
             {
                 float dotProduct = HelperUtils.DotProduct(sRay, controller.comabtTarget.Position - controller.Position);
+                IDMap[index] = (dotProduct > 0f) ? dotProduct : -dotProduct * 0.5f;
+
                 if (Physics.Raycast(controller.Position, sRay, out hit, raySize, lMask))
                 {
-                    // Debug.DrawRay(controller.Position, hit.point - controller.Position, Color.green);
                     IDMap[index] = 0f;
-
-                    int oppIndex = (index >= 4) ? index % 4 : 4 + index % 4;
-                    IDMap[oppIndex] += Mathf.Abs(dotProduct);
-                }
-                else
-                {
-                    IDMap[index] = (dotProduct > 0) ? dotProduct : 0f;
                 }
 
-                if (IDMap[index] > maxVal)
+                if (IDMap[index] > maxLen)
                 {
-                    maxVal = IDMap[index];
+                    maxLen = IDMap[index];
                     interestDir = sRay;
                 }
 
-                Debug.DrawRay(controller.Position, sRay * IDMap[index], Color.red);
+                // Debug.DrawRay(controller.Position, sRay * IDMap[index], Color.green);
                 index++;
             }
 
-
             Vector3 newDir = controller.Velocity + interestDir;
             controller.SetVelocity = newDir.normalized;
-            interestDir = newDir.normalized;
             controller.UpdateRotVector();
 
             currWaitTime = 0f;
         }
-
-        Debug.DrawRay(controller.Position, interestDir * 2f, Color.green);
+        
+        // Debug.DrawRay(controller.Position, interestDir * 5f, Color.red);
     }
 }

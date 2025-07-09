@@ -3,15 +3,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CombatSwitch", menuName = "AI/Transit/CombatSwitch")]
 public class CombatSwitchAction : SwitchAction
 {
-    [Range(1, 5)] public int halfRadius = 1;
-    public LayerMask lMask = default;
+    [Header("Average Chase Time")]
+    [Range(1, 10)] public int minTime = 5;
+    [Range(1, 20)] public int maxTime = 15;
 
-    private const int MAX_COLLS = 5;
-    private Collider[] colls;
+    private float chaseTime;
 
     public override void Init()
     {
-        colls = new Collider[MAX_COLLS];
+        chaseTime = Random.Range(minTime, maxTime);
     }
 
     public override bool SwitchAct(BotAIController controller)
@@ -21,22 +21,25 @@ public class CombatSwitchAction : SwitchAction
 
     private bool CombatSwitch(BotAIController controller)
     {
-        if (controller.hasCombatTarget) return false;
+        // if health is health is low return false;
+        // if the target is null, then return false
 
-        int resCount = Physics.OverlapBoxNonAlloc(controller.Position, Vector3.one * halfRadius, colls, Quaternion.identity, lMask);
-        if (resCount > 1)
+        if ((controller.Position - controller.comabtTarget.Position).sqrMagnitude > controller.Stats.ChaseTargeDistSqrd)
         {
-            foreach (var c in colls)
-            {
-                Entity entity = c.GetComponent<Entity>();
-                if (entity != null && entity != controller)
-                {
-                    controller.comabtTarget = entity;
-                    controller.hasCombatTarget = true;
-                    return true;
-                }
-            }
+            controller.comabtTarget = null;
+            return true;
         }
+
+        if (chaseTime > 0f)
+        {
+            chaseTime -= Time.deltaTime;
+        }
+        else
+        {
+            controller.comabtTarget = null;
+            return true;
+        }
+
         return false;
     }
 }

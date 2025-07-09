@@ -23,7 +23,7 @@ public class PatrolActions : Actions
         if (controller.hasPatrolPoint)
         {
             float patrolOffset = (controller.patrolPoint - controller.Position).sqrMagnitude;
-            if (patrolOffset < 1f || patrolOffset > controller.Stats.visionRange * controller.Stats.visionRange)
+            if (patrolOffset < 1f || patrolOffset > controller.Stats.VisionRangeSqrd)
             {
                 controller.hasPatrolPoint = false;
             }
@@ -48,7 +48,7 @@ public class PatrolActions : Actions
                 if (!nearestTarget.Equals(Vector3.zero))
                 {
                     float distSqrd = (nearestTarget - controller.Position).sqrMagnitude;
-                    if (distSqrd < controller.Stats.visionRange * controller.Stats.visionRange && distSqrd > 1f)
+                    if (distSqrd < controller.Stats.VisionRangeSqrd && distSqrd > 1f)
                     {
                         controller.patrolPoint = nearestTarget;
                         controller.hasPatrolPoint = true;

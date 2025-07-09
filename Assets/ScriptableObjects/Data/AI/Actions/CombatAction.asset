@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6b75204fd273944b4159b265bb609c, type: 3}
   m_Name: CombatAction
   m_EditorClassIdentifier: 
-  raySize: 3
+  raySize: 2
   lMask:
     serializedVersion: 2
     m_Bits: 64
-  rayCastGap: 0.3
+  rayCastGap: 0.5
