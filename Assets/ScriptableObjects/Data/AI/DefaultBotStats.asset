@@ -15,5 +15,5 @@ MonoBehaviour:
   moveSpeed: 6
   rotationSpeed: 8
   visionRange: 4
-  chaseTargetDistance: 4
+  chaseTargetDistance: 8
   turnFactor: 5
