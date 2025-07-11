@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7478613221613460096}
   - component: {fileID: 5524242201783554629}
   - component: {fileID: 7478613221613460102}
+  - component: {fileID: 4807025420317881056}
   m_Layer: 6
   m_Name: Bot
   m_TagString: Untagged
@@ -98,6 +99,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 752aaadbbf17d0c4192045f78f4b7de1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4807025420317881056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478613221613460100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baba227c67a679d4a93fbd83b7d84495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyRenderer: {fileID: 7478613223201906274}
+  cannonRenderer: {fileID: 7478613221640251065}
+  trailRenderer: {fileID: 7478613222516167726}
+  skinInventory: {fileID: 11400000, guid: 508a98680b8dc7a4a85743ef3a7cba3e, type: 2}
 --- !u!1 &7478613221640251071
 GameObject:
   m_ObjectHideFlags: 0

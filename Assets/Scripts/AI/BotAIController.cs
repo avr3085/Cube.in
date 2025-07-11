@@ -1,6 +1,7 @@
 using UnityEngine;
 using Misc;
 
+[RequireComponent(typeof(BotCustomization))]
 public class BotAIController : Entity
 {
     [SerializeField] private BotStats botStats = default;
@@ -28,6 +29,12 @@ public class BotAIController : Entity
     {
         set => velocity = value;
     }
+
+    public Vector3 SetPosition
+    {
+        set => transform.position = value;
+    }
+
     public Vector3 UpdateRotVector() => rotVector = new Vector3(0f, RotAngle, 0f);
 
     private void Start()

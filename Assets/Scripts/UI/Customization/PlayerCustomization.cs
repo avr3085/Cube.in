@@ -1,13 +1,8 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
-public class PlayerCustomization : MonoBehaviour
+[RequireComponent(typeof(PlayerCustomization))]
+public class PlayerCustomization : SkinCustomization
 {
-    [SerializeField] private Renderer bodyRenderer;
-    [SerializeField] private Renderer cannonRenderer;
-    [SerializeField] private TrailRenderer trailRenderer;
-    [SerializeField] private SkinInventory skinInventory = default;
-
     [Header("Listening Channel")]
     [SerializeField] private IntEventListener inventoryRequestHandler = default;
 
@@ -29,13 +24,5 @@ public class PlayerCustomization : MonoBehaviour
     private void Start()
     {
         UpdateSkin(skinInventory.selectedSkin);
-    }
-
-    private void UpdateSkin(int val)
-    {
-        SkinSO currentSkin = skinInventory.GetSkin(val);
-        bodyRenderer.material.mainTexture = currentSkin.texture;
-        cannonRenderer.material.mainTexture = currentSkin.texture;
-        trailRenderer.colorGradient = currentSkin.trailColor;
     }
 }
