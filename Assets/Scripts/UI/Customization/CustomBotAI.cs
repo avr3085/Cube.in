@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// Custom Bot AI script for MainMenu
+/// This will only showcase the currently selected them of the player
+/// Custom/Demo bot is moving randomly in the scene
+/// </summary>
 public class CustomBotAI : MonoBehaviour
 {
     [SerializeField, Range(5, 20)] private int roamAreaSize = 10;

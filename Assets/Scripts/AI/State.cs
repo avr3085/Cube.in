@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// FSM system
+/// </summary>
 [CreateAssetMenu(fileName = "State", menuName = "AI/State")]
 public class State : ScriptableObject
 {

@@ -4,6 +4,7 @@ using TMPro;
 
 /// <summary>
 /// System Inventory Ui handler
+/// Currently handling skin seleection system
 /// </summary>
 public class InventoryUIHandler : MonoBehaviour
 {

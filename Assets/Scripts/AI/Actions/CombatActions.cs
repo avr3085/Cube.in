@@ -1,6 +1,9 @@
 using UnityEngine;
 using Misc;
 
+/// <summary>
+/// Action to be performed in combat state
+/// </summary>
 // Note - The bot movement still feels like confusion, make sure the bot will act normal
 [CreateAssetMenu(fileName = "CombatAction", menuName = "AI/Action/Combat")]
 public class CombatActions : Actions

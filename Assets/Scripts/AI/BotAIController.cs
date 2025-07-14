@@ -1,6 +1,11 @@
 using UnityEngine;
 using Misc;
 
+/// <summary>
+/// Bot Controller script
+/// Manages all the AI related behaviour of the bot
+/// The script is responible for movement of the bot in the scene
+/// </summary>
 [RequireComponent(typeof(BotCustomization))]
 public class BotAIController : Entity
 {
@@ -18,6 +23,12 @@ public class BotAIController : Entity
     [Header("FSM")]
     [SerializeField] private State currentState = default;
 
+    [Header("Overlap Test")]
+    [SerializeField, Range(1, 10)] private int halfRadius = 1;
+    [SerializeField] private LayerMask lMask;
+    
+    private const int MAX_COLLS = 5;
+    private Collider[] colls;
     private Rigidbody rb;
     private Vector3 velocity;
 
@@ -25,6 +36,8 @@ public class BotAIController : Entity
     public override Vector3 Velocity => velocity;
     public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
     public BotStats Stats => botStats;
+    public Collider[] Colls => colls;
+
     public Vector3 SetVelocity
     {
         set => velocity = value;
@@ -42,6 +55,7 @@ public class BotAIController : Entity
         rb = GetComponent<Rigidbody>();
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         rotVector = new Vector3(0f, RotAngle, 0f);
+        colls = new Collider[MAX_COLLS];
 
         currentState.Init();
     }
@@ -96,5 +110,10 @@ public class BotAIController : Entity
             currentState = nextState;
             currentState.Init();
         }
+    }
+
+    public int CheckOverlapsBox()
+    {
+        return Physics.OverlapBoxNonAlloc(Position, Vector3.one * halfRadius, colls, Quaternion.identity, lMask);
     }
 }

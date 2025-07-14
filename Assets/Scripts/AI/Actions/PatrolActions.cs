@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using Misc;
 
+/// <summary>
+/// Action to be performed when the bot is in Patrolling state
+/// </summary>
 [CreateAssetMenu(fileName = "PatrolAction", menuName = "AI/Action/Patrol")]
 public class PatrolActions : Actions
 {

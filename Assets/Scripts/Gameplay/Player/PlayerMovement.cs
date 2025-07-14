@@ -1,9 +1,9 @@
 using UnityEngine;
-using System.Linq;
 
 /// <summary>
 /// Player Movement and rotation handler
 /// </summary>
+[RequireComponent(typeof(PlayerCustomization))]
 public class PlayerMovement : Entity
 {
     [Header("Player Properties")]

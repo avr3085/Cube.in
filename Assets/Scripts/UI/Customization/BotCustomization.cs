@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Enables Customization in bot
+/// </summary>
 public class BotCustomization : SkinCustomization
 {
     private void Start()

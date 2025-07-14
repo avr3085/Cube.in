@@ -1,6 +1,8 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerCustomization))]
+/// <summary>
+/// Enables customization in player
+/// </summary>
 public class PlayerCustomization : SkinCustomization
 {
     [Header("Listening Channel")]

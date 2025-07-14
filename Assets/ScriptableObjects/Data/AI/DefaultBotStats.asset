@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83726462fbe20e94cbbe55fbf85364fa, type: 3}
   m_Name: DefaultBotStats
   m_EditorClassIdentifier: 
-  moveSpeed: 6
+  moveSpeed: 4
   rotationSpeed: 8
   visionRange: 4
   chaseTargetDistance: 8

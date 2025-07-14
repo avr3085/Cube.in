@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Player/Bot customization system
+/// </summary>
 public class SkinCustomization : MonoBehaviour
 {
     [SerializeField] protected Renderer bodyRenderer;

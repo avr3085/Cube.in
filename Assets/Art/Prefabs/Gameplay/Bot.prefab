@@ -87,6 +87,10 @@ MonoBehaviour:
   hasCombatTarget: 0
   comabtTarget: {fileID: 0}
   currentState: {fileID: 11400000, guid: d9dd421b139841642ad4d36b479ba7b2, type: 2}
+  halfRadius: 3
+  lMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &7478613221613460102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,6 +434,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7478613223409473816}
+  - component: {fileID: 9167980908504801201}
   m_Layer: 6
   m_Name: Weapon
   m_TagString: Untagged
@@ -453,3 +458,18 @@ Transform:
   m_Father: {fileID: 7478613221613460098}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9167980908504801201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478613223409473817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a2bb756fc8e5ff40aaf3e34fb37f6df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 5
+  botAIController: {fileID: 5524242201783554629}
+  waitTime: 1
