@@ -1,20 +1,17 @@
+using System;
 using UnityEngine;
 
 public class CannonController : MonoBehaviour
 {
-    [SerializeField, Range(1, 10)] private int rotationSpeed = 5;
-    [SerializeField] private BotAIController botAIController;
-    [SerializeField, Range(1f, 5f)] private float waitTime = 1f;
+    [SerializeField] private BotAIController controller;
+    [SerializeField, Range(1, 10)] private int waitTime = 2;
+    [SerializeField] private Transform nozzle;
 
-    private float elapsedTime;
+    [Header("Broadcasting Channel")]
+    [SerializeField] private MissileRequestHandler missileRequestHandler = default;
+
+    private float elapsedTime = 0f;
     private Vector3 lookDirection;
-    private const float yAxisLevel = 0.5f;
-    private void Start()
-    {
-        lookDirection = transform.forward;
-        lookDirection.y += yAxisLevel;
-        elapsedTime = 0f;
-    }
 
     private void Update()
     {
@@ -24,29 +21,29 @@ public class CannonController : MonoBehaviour
         }
         else
         {
-            int res = botAIController.CheckOverlapsBox();
+            int res = controller.CheckOverlapsBox();
             if (res > 1)
             {
-                foreach (Collider col in botAIController.Colls)
+                foreach (Collider col in controller.Colls)
                 {
                     var item = col.GetComponent<Entity>();
-                    if (item != botAIController)
+                    if (item != controller)
                     {
-                        lookDirection = item.Position - transform.position;
-                        lookDirection.y += yAxisLevel;
+                        lookDirection = item.Position - controller.Position;
+                        transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+                        // shoot in forward direction
+                        missileRequestHandler.Raise(MissileType.Missile, nozzle);
                         break;
                     }
                 }
             }
-
             elapsedTime = 0f;
         }
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDirection), rotationSpeed * Time.deltaTime);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position + lookDirection, 0.2f);
-    }
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawRay(transform.position, transform.forward);
+    // }
 }

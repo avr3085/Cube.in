@@ -9,15 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83726462fbe20e94cbbe55fbf85364fa, type: 3}
-  m_Name: DefaultBotStats
+  m_Script: {fileID: 11500000, guid: 2011848a950188245b9a7190995bf38a, type: 3}
+  m_Name: MissilePool
   m_EditorClassIdentifier: 
-  moveSpeed: 4
-  rotationSpeed: 8
-  visionRange: 4
-  chaseTargetDistance: 8
-  turnFactor: 5
-  halfRadius: 5
-  lMask:
-    serializedVersion: 2
-    m_Bits: 64
+  missileFactorySO: {fileID: 11400000, guid: 6cb33dccb9036904aa690b4705bbf3b5, type: 2}
+  bombType: 0

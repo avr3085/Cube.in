@@ -22,10 +22,6 @@ public class BotAIController : Entity
 
     [Header("FSM")]
     [SerializeField] private State currentState = default;
-
-    [Header("Overlap Test")]
-    [SerializeField, Range(1, 10)] private int halfRadius = 1;
-    [SerializeField] private LayerMask lMask;
     
     private const int MAX_COLLS = 5;
     private Collider[] colls;
@@ -45,7 +41,10 @@ public class BotAIController : Entity
 
     public Vector3 SetPosition
     {
-        set => transform.position = value;
+        set
+        {
+            transform.position = value;
+        }
     }
 
     public Vector3 UpdateRotVector() => rotVector = new Vector3(0f, RotAngle, 0f);
@@ -67,9 +66,9 @@ public class BotAIController : Entity
 
     private void FixedUpdate()
     {
-        rb.velocity = velocity * botStats.moveSpeed;
-        var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotVector), Time.fixedDeltaTime * botStats.rotationSpeed);
-        rb.MoveRotation(rot);
+        // rb.velocity = velocity * botStats.moveSpeed;
+        // var rot = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotVector), Time.fixedDeltaTime * botStats.rotationSpeed);
+        // rb.MoveRotation(rot);
     }
 
     private void LateUpdate()
@@ -114,6 +113,6 @@ public class BotAIController : Entity
 
     public int CheckOverlapsBox()
     {
-        return Physics.OverlapBoxNonAlloc(Position, Vector3.one * halfRadius, colls, Quaternion.identity, lMask);
+        return Physics.OverlapBoxNonAlloc(Position, Vector3.one * botStats.halfRadius, colls, Quaternion.identity, botStats.lMask);
     }
 }

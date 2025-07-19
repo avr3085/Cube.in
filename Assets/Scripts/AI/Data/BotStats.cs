@@ -11,4 +11,8 @@ public class BotStats : ScriptableObject
 
     public int ChaseTargeDistSqrd => chaseTargetDistance * chaseTargetDistance;
     public int VisionRangeSqrd => visionRange * visionRange;
+
+    [Header("Overlap Test")]
+    [Range(1, 10)] public int halfRadius = 1;
+    public LayerMask lMask;
 }

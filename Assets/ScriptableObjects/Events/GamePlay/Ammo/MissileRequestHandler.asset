@@ -9,15 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83726462fbe20e94cbbe55fbf85364fa, type: 3}
-  m_Name: DefaultBotStats
+  m_Script: {fileID: 11500000, guid: 642109d6ba65ec647b647590cb3efd67, type: 3}
+  m_Name: MissileRequestHandler
   m_EditorClassIdentifier: 
-  moveSpeed: 4
-  rotationSpeed: 8
-  visionRange: 4
-  chaseTargetDistance: 8
-  turnFactor: 5
-  halfRadius: 5
-  lMask:
-    serializedVersion: 2
-    m_Bits: 64
+  description: 
