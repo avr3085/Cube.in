@@ -15,12 +15,13 @@ public abstract class BaseEventSO<T> : ScriptableObject, IEventListener<T>
     }
 }
 
-public abstract class BaseEventSO<T,P> : ScriptableObject, IEventListener<T,P>
+public abstract class BaseEventSO<T, P> : ScriptableObject, IEventListener<T, P>
 {
     public string description;
-    public UnityAction<T,P> onEventRaised;
+    public UnityAction<T, P> onEventRaised;
 
-    public virtual void Raise(T arg0,P arg1){
+    public virtual void Raise(T arg0, P arg1)
+    {
         onEventRaised?.Invoke(arg0, arg1);
     }
 }

@@ -97,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 1, y: 1.5, z: 1}
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &5524242201783554629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,10 +118,6 @@ MonoBehaviour:
   hasCombatTarget: 0
   comabtTarget: {fileID: 0}
   currentState: {fileID: 11400000, guid: d9dd421b139841642ad4d36b479ba7b2, type: 2}
-  halfRadius: 3
-  lMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &7478613221613460102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,8 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a2bb756fc8e5ff40aaf3e34fb37f6df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 5
+  controller: {fileID: 5524242201783554629}
   waitTime: 2
-  botAIController: {fileID: 5524242201783554629}
   nozzle: {fileID: 1954712327778083696}
   missileRequestHandler: {fileID: 11400000, guid: 4343e36c8463c414ea8270731811fb36, type: 2}

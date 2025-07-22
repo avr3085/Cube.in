@@ -32,7 +32,8 @@ public class BotAIController : Entity
     public override Vector3 Velocity => velocity;
     public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
     public BotStats Stats => botStats;
-    public Collider[] Colls => colls;
+    public override Collider[] Colls => colls;
+    public override Rigidbody RBody => rb;
 
     public Vector3 SetVelocity
     {
@@ -66,9 +67,9 @@ public class BotAIController : Entity
 
     private void FixedUpdate()
     {
-        // rb.velocity = velocity * botStats.moveSpeed;
-        // var rot = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotVector), Time.fixedDeltaTime * botStats.rotationSpeed);
-        // rb.MoveRotation(rot);
+        rb.velocity = velocity * botStats.moveSpeed;
+        var rot = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotVector), Time.fixedDeltaTime * botStats.rotationSpeed);
+        rb.MoveRotation(rot);
     }
 
     private void LateUpdate()
@@ -111,8 +112,13 @@ public class BotAIController : Entity
         }
     }
 
-    public int CheckOverlapsBox()
+    public override int CheckOverlapsBox()
     {
         return Physics.OverlapBoxNonAlloc(Position, Vector3.one * botStats.halfRadius, colls, Quaternion.identity, botStats.lMask);
+    }
+
+    public override void TakeDamage(int amount)
+    {
+        
     }
 }

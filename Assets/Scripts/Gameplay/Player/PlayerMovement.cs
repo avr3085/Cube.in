@@ -10,13 +10,22 @@ public class PlayerMovement : Entity
     [SerializeField, Range(1,10)] private int moveSpeed = 1;
     [SerializeField, Range(1,100)] private int rotationSpeed = 50;
 
+    [Header("Overlap Test")]
+    [Range(1, 10), Tooltip("This value should match as the Bot Stats SO half Radius.")]
+    public int halfRadius = 1;
+    public LayerMask lMask;
+
     [Space(10), Header("Listening Channel"), SerializeField] private Vector2EventListener inputAxisListener = default;
 
+    private const int MAX_COLLS = 5;
+    private Collider[] colls;
     private Rigidbody rb;
     private Vector3 velocity, rotationDirection;
 
     public override Vector3 Position => new Vector3(transform.position.x, 0f, transform.position.z);
     public override Vector3 Velocity => velocity;
+    public override Rigidbody RBody => rb;
+    public override Collider[] Colls => colls;
 
     private void OnEnable()
     {
@@ -31,6 +40,7 @@ public class PlayerMovement : Entity
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        colls = new Collider[MAX_COLLS];
     }
 
     /// <summary>
@@ -43,11 +53,6 @@ public class PlayerMovement : Entity
         rotationDirection = new Vector3(0f, angle, 0f);
     }
 
-    // private void Update()
-    // {
-    //     // int hitCount = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 2f, hitColliders);
-    // }
-
     private void FixedUpdate()
     {
         velocity = rb.velocity;
@@ -57,5 +62,15 @@ public class PlayerMovement : Entity
         // rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.Euler(rotationDirection), Time.fixedDeltaTime * rotationSpeed);
         var rot = Quaternion.Slerp(rb.rotation, Quaternion.Euler(rotationDirection), Time.fixedDeltaTime * rotationSpeed);
         rb.MoveRotation(rot);
+    }
+
+    public override int CheckOverlapsBox()
+    {
+        return Physics.OverlapBoxNonAlloc(Position, Vector3.one * halfRadius, colls, Quaternion.identity, lMask);
+    }
+
+    public override void TakeDamage(int amount)
+    {
+        //
     }
 }

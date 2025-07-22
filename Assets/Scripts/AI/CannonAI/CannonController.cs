@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CannonController : MonoBehaviour
 {
-    [SerializeField] private BotAIController controller;
+    [SerializeField] private Entity controller;
     [SerializeField, Range(1, 10)] private int waitTime = 2;
     [SerializeField] private Transform nozzle;
 
@@ -31,7 +31,6 @@ public class CannonController : MonoBehaviour
                     {
                         lookDirection = item.Position - controller.Position;
                         transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                        // shoot in forward direction
                         missileRequestHandler.Raise(MissileType.Missile, nozzle);
                         break;
                     }
@@ -40,10 +39,4 @@ public class CannonController : MonoBehaviour
             elapsedTime = 0f;
         }
     }
-
-    // private void OnDrawGizmos()
-    // {
-    //     Gizmos.color = Color.red;
-    //     Gizmos.DrawRay(transform.position, transform.forward);
-    // }
 }

@@ -6,8 +6,12 @@ public class MissileController : MonoBehaviour
     [SerializeField, Range(1, 100)] private int moveSpeed = 15;
     public event UnityAction<MissileType, MissileController> onMissileHit;
 
+    [Header("Broadcasting Channel")]
+    [SerializeField] private FXRequestHandler ammoFXRecHandler = default;
+
     private Rigidbody rb;
     private MissileType mType;
+    private const int EXP_CONST = 100;
 
     private void Awake()
     {
@@ -24,7 +28,13 @@ public class MissileController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("hit");
         onMissileHit?.Invoke(mType, this);
+        ammoFXRecHandler?.Raise(transform.position);
+
+        var item = other.GetComponent<Entity>();
+        if (item != this && item != null)
+        {
+            item.RBody.AddExplosionForce(EXP_CONST * ((int)mType + 1), transform.position, 2f, 0f, ForceMode.Impulse);
+        }
     }
 }
