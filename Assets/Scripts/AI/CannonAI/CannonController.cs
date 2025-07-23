@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class CannonController : MonoBehaviour
@@ -13,9 +12,17 @@ public class CannonController : MonoBehaviour
     private float elapsedTime = 0f;
     private Vector3 lookDirection;
 
+    private float randWaitTime = 1f;
+
+    private void Awake()
+    {
+        randWaitTime = Random.Range(1f, 3f);
+    }
+
     private void Update()
     {
-        if (elapsedTime < waitTime)
+        // if (elapsedTime < waitTime)
+        if(elapsedTime < randWaitTime)
         {
             elapsedTime += Time.deltaTime;
         }

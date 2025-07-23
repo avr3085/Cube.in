@@ -4,7 +4,7 @@ using UnityEngine;
 /// Player Movement and rotation handler
 /// </summary>
 [RequireComponent(typeof(PlayerCustomization))]
-public class PlayerMovement : Entity
+public class PlayerMovement : EntityData
 {
     [Header("Player Properties")]
     [SerializeField, Range(1,10)] private int moveSpeed = 1;
@@ -16,16 +16,8 @@ public class PlayerMovement : Entity
     public LayerMask lMask;
 
     [Space(10), Header("Listening Channel"), SerializeField] private Vector2EventListener inputAxisListener = default;
-
-    private const int MAX_COLLS = 5;
-    private Collider[] colls;
-    private Rigidbody rb;
-    private Vector3 velocity, rotationDirection;
-
-    public override Vector3 Position => new Vector3(transform.position.x, 0f, transform.position.z);
-    public override Vector3 Velocity => velocity;
-    public override Rigidbody RBody => rb;
-    public override Collider[] Colls => colls;
+    
+    private Vector3 rotationDirection;
 
     private void OnEnable()
     {
@@ -37,10 +29,12 @@ public class PlayerMovement : Entity
         inputAxisListener.onEventRaised -= RotatePlayer;
     }
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         colls = new Collider[MAX_COLLS];
+
+        base.InitData();
     }
 
     /// <summary>
@@ -67,10 +61,5 @@ public class PlayerMovement : Entity
     public override int CheckOverlapsBox()
     {
         return Physics.OverlapBoxNonAlloc(Position, Vector3.one * halfRadius, colls, Quaternion.identity, lMask);
-    }
-
-    public override void TakeDamage(int amount)
-    {
-        //
     }
 }

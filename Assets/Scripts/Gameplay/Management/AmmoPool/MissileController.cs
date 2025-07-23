@@ -35,6 +35,7 @@ public class MissileController : MonoBehaviour
         if (item != this && item != null)
         {
             item.RBody.AddExplosionForce(EXP_CONST * ((int)mType + 1), transform.position, 2f, 0f, ForceMode.Impulse);
+            item.TakeDamage(10);
         }
     }
 }

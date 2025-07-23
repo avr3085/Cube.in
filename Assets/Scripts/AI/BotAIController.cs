@@ -7,7 +7,7 @@ using Misc;
 /// The script is responible for movement of the bot in the scene
 /// </summary>
 [RequireComponent(typeof(BotCustomization))]
-public class BotAIController : Entity
+public class BotAIController : EntityData
 {
     [SerializeField] private BotStats botStats = default;
     [HideInInspector] public Vector3 rotVector;
@@ -22,18 +22,9 @@ public class BotAIController : Entity
 
     [Header("FSM")]
     [SerializeField] private State currentState = default;
-    
-    private const int MAX_COLLS = 5;
-    private Collider[] colls;
-    private Rigidbody rb;
-    private Vector3 velocity;
 
-    public override Vector3 Position => new Vector3(transform.position.x, 0f, transform.position.z);
-    public override Vector3 Velocity => velocity;
     public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
     public BotStats Stats => botStats;
-    public override Collider[] Colls => colls;
-    public override Rigidbody RBody => rb;
 
     public Vector3 SetVelocity
     {
@@ -50,13 +41,14 @@ public class BotAIController : Entity
 
     public Vector3 UpdateRotVector() => rotVector = new Vector3(0f, RotAngle, 0f);
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         rotVector = new Vector3(0f, RotAngle, 0f);
         colls = new Collider[MAX_COLLS];
 
+        base.InitData();
         currentState.Init();
     }
 
@@ -116,9 +108,5 @@ public class BotAIController : Entity
     {
         return Physics.OverlapBoxNonAlloc(Position, Vector3.one * botStats.halfRadius, colls, Quaternion.identity, botStats.lMask);
     }
-
-    public override void TakeDamage(int amount)
-    {
-        
-    }
+    
 }
