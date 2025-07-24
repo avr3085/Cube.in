@@ -145,7 +145,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7328745706952462811
 MonoBehaviour:
@@ -159,9 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58752509afdbc64a9f1ce892ccbd439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 15
+  explosionAudioSO: {fileID: 11400000, guid: 50a69f6f09f3b2140b37e4f7b1e0bedc, type: 2}
   ammoFXRecHandler: {fileID: 11400000, guid: 0e6d66b1ab3454749b7a1835f5aed30f, type: 2}
-  halfRadius: 2
-  lMask:
-    serializedVersion: 2
-    m_Bits: 64
+  audioClipRequestHandler: {fileID: 11400000, guid: 8a478bc936446c34a9c406504270f128, type: 2}

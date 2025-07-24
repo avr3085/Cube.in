@@ -52,7 +52,7 @@ public class ResCollector : MonoBehaviour, IResCollector
     {
         // Since the time is short, we are only focusd on collecting the Edible res
         // will add MBox and Dcrate later
-        entity.Score += 100;
+        entity.AddScore(100);
     }
 
     // private void DrawDebugCube(Vector2 pos)

@@ -3,28 +3,32 @@ using UnityEngine;
 public class CannonController : MonoBehaviour
 {
     [SerializeField] private Entity controller;
-    [SerializeField, Range(1, 10)] private int waitTime = 2;
     [SerializeField] private Transform nozzle;
+    [SerializeField] private ParticleSystem pSystem;
+
+    [Header("Data Channel"), SerializeField] private AudioSO fireAudioSO = default;
 
     [Header("Broadcasting Channel")]
     [SerializeField] private MissileRequestHandler missileRequestHandler = default;
+    [SerializeField] private AudioClipRequestHandler audioClipRequestHandler = default;
 
-    private float elapsedTime = 0f;
+    private float elapsedReloadTime = 0f;
     private Vector3 lookDirection;
+    private int reloadTime;
 
-    private float randWaitTime = 1f;
+    public float ElapsedReloadTime => elapsedReloadTime;
+    public int ReloadTime => reloadTime;
 
     private void Awake()
     {
-        randWaitTime = Random.Range(1f, 3f);
+        reloadTime = Random.Range(2, 10);
     }
 
     private void Update()
     {
-        // if (elapsedTime < waitTime)
-        if(elapsedTime < randWaitTime)
+        if (elapsedReloadTime < reloadTime)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedReloadTime += Time.deltaTime;
         }
         else
         {
@@ -38,12 +42,21 @@ public class CannonController : MonoBehaviour
                     {
                         lookDirection = item.Position - controller.Position;
                         transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                        missileRequestHandler.Raise(MissileType.Missile, nozzle);
+                        missileRequestHandler.Raise(controller.ActiveMissileType, nozzle);
+                        PlayParticle();
                         break;
                     }
                 }
+                reloadTime = Random.Range(2, 10);
+                elapsedReloadTime = 0f;
             }
-            elapsedTime = 0f;
         }
+    }
+
+    private void PlayParticle()
+    {
+        audioClipRequestHandler.Raise(fireAudioSO);
+        pSystem.gameObject.SetActive(true);
+        if (!pSystem.isPlaying) pSystem.Play();
     }
 }

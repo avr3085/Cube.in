@@ -1,35 +1,40 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EntityUIHandler : MonoBehaviour
 {
     [SerializeField] private Entity entity;
+    [SerializeField] private CannonController cannonController;
     [SerializeField] private Slider healthSlider = default;
     [SerializeField] private Slider levelSlider = default;
+    [SerializeField] private TextMeshProUGUI levelText = default;
 
     private void OnEnable()
     {
-        entity.OnEventRaised += ActNow;
+        entity.OnEventRaised += RefreshUI;
     }
 
     private void OnDisable()
     {
-        entity.OnEventRaised -= ActNow;
-    }
-
-    private void ActNow()
-    {
-        UpdateUI();
+        entity.OnEventRaised -= RefreshUI;
     }
 
     private void Start()
     {
-        UpdateUI();
+        RefreshUI();
     }
 
-    private void UpdateUI()
+    private void Update()
+    {
+        levelSlider.maxValue = cannonController.ReloadTime;
+        levelSlider.value = cannonController.ElapsedReloadTime;
+    }
+
+    private void RefreshUI()
     {
         healthSlider.value = entity.Health;
-        levelSlider.value = 100;
+        levelText.SetText("Level " + entity.Level.ToString());
+        
     }
 }
