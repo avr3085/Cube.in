@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Base entity stats component/interface, which will be inherited later to diffrent entities
+/// </summary>
 [RequireComponent(typeof(ResCollector))]
 public abstract class Entity : MonoBehaviour, IData
 {

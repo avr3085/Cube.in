@@ -4884,6 +4884,7 @@ GameObject:
   - component: {fileID: 436668}
   - component: {fileID: 19874418}
   - component: {fileID: 19921400}
+  - component: {fileID: 7991816280772890264}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -4898,8 +4899,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 151086}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.88}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4918,7 +4919,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 1.05
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 3
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -9712,6 +9713,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7991816280772890264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd60c7ef12636b54caba76f357ec8a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fxReturnHandler: {fileID: 11400000, guid: 92392ab6b22399941afb7ae9ee20f9a7, type: 2}
 --- !u!1 &182560
 GameObject:
   m_ObjectHideFlags: 0

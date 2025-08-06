@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Missile collision FX pool Manager
+/// </summary>
 public class AmmoFXPoolManager : MonoBehaviour
 {
     [SerializeField] private FXPoolSO ammoFX = default;

@@ -32,6 +32,10 @@ public class InventoryUIHandler : MonoBehaviour
         DeactivateSkin(currSelected);
     }
 
+    /// <summary>
+    /// Handling skin selection request in Inventory
+    /// </summary>
+    /// <param name="val"></param>
     private void HandleInventoryRequests(int val)
     {
         ActivateSkin(skinInventory.selectedSkin);
@@ -39,6 +43,10 @@ public class InventoryUIHandler : MonoBehaviour
         skinInventory.selectedSkin = val;
     }
 
+    /// <summary>
+    /// If player selects diffrent skin, current one will be disabled
+    /// </summary>
+    /// <param name="selectedSkin"></param>
     private void ActivateSkin(int selectedSkin)
     {
         Transform selectedTrans = skinContent.GetChild(selectedSkin);
@@ -48,6 +56,10 @@ public class InventoryUIHandler : MonoBehaviour
         button.GetComponentInChildren<TextMeshProUGUI>().text = "Use";
     }
 
+    /// <summary>
+    /// Selected skin tab should be disabled to avoid double selection
+    /// </summary>
+    /// <param name="selectedSkin"></param>
     private void DeactivateSkin(int selectedSkin)
     {
         Transform selectedTrans = skinContent.GetChild(selectedSkin);

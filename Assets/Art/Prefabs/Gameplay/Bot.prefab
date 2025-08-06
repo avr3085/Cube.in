@@ -5648,6 +5648,10 @@ MonoBehaviour:
   hasCombatTarget: 0
   comabtTarget: {fileID: 0}
   currentState: {fileID: 11400000, guid: d9dd421b139841642ad4d36b479ba7b2, type: 2}
+  EntityExplosionAudioSO: {fileID: 11400000, guid: 2dd13220367dbe84cb7e23a92bd5247b, type: 2}
+  botReturnRequest: {fileID: 11400000, guid: 3e8438312842e8f43aa0c01bcb314aa6, type: 2}
+  explosionFXRequest: {fileID: 11400000, guid: 9fd2c42fc5ce3414d804a27d141a6d39, type: 2}
+  audioClipRequestHandler: {fileID: 11400000, guid: 8a478bc936446c34a9c406504270f128, type: 2}
 --- !u!114 &7478613221613460102
 MonoBehaviour:
   m_ObjectHideFlags: 0

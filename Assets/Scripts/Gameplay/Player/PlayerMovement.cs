@@ -7,16 +7,23 @@ using UnityEngine;
 public class PlayerMovement : EntityData
 {
     [Header("Player Properties")]
-    [SerializeField, Range(1,10)] private int moveSpeed = 1;
-    [SerializeField, Range(1,100)] private int rotationSpeed = 50;
+    [SerializeField, Range(1, 10)] private int moveSpeed = 1;
+    [SerializeField, Range(1, 100)] private int rotationSpeed = 50;
 
     [Header("Overlap Test")]
     [Range(1, 10), Tooltip("This value should match as the Bot Stats SO half Radius.")]
     public int halfRadius = 1;
     public LayerMask lMask;
 
+    [Header("Data Channel"), SerializeField] private AudioSO EntityExplosionAudioSO = default;
+
     [Space(10), Header("Listening Channel"), SerializeField] private Vector2EventListener inputAxisListener = default;
-    
+
+    [Header("Broadcasting Channel")]
+    [SerializeField] private FXRequestHandler explosionFXRequest = default;
+    [SerializeField] private AudioClipRequestHandler audioClipRequestHandler = default;
+    [SerializeField] private VoidEventListener gameOverRequestHandler = default;
+
     private Vector3 rotationDirection;
 
     private void OnEnable()
@@ -61,5 +68,20 @@ public class PlayerMovement : EntityData
     public override int CheckOverlapsBox()
     {
         return Physics.OverlapBoxNonAlloc(Position, Vector3.one * halfRadius, colls, Quaternion.identity, lMask);
+    }
+
+    public override void TakeDamage(int amount)
+    {
+        base.TakeDamage(amount);
+
+        // if player health is less than zero. it is a game over
+        if (health <= 0)
+        {
+            // pop game over UI and finish the game
+            explosionFXRequest.Raise(Position);
+            audioClipRequestHandler.Raise(EntityExplosionAudioSO);
+            gameOverRequestHandler.Raise(); // Pops up the game over UI
+            gameObject.SetActive(false);
+        }
     }
 }

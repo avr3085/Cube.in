@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// This Class is to Handle the active entity stats UI in the game
+/// The stats are basically the health and reload bar, visible on the player
+/// </summary>
 public class EntityUIHandler : MonoBehaviour
 {
     [SerializeField] private Entity entity;
@@ -35,6 +39,5 @@ public class EntityUIHandler : MonoBehaviour
     {
         healthSlider.value = entity.Health;
         levelText.SetText("Level " + entity.Level.ToString());
-        
     }
 }

@@ -1,3 +1,6 @@
+/// <summary>
+/// Simple entity interface for taking damage and adding score
+/// </summary>
 public interface IData
 {
     public void TakeDamage(int amount);

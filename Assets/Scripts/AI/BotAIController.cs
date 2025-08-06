@@ -23,6 +23,13 @@ public class BotAIController : EntityData
     [Header("FSM")]
     [SerializeField] private State currentState = default;
 
+    [Header("Data Channel"), SerializeField] private AudioSO EntityExplosionAudioSO = default;
+
+    [Header("Broadcasting Channel")]
+    [SerializeField] private BotReturnRequestHandler botReturnRequest = default;
+    [SerializeField] private FXRequestHandler explosionFXRequest = default;
+    [SerializeField] private AudioClipRequestHandler audioClipRequestHandler = default;
+
     public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
     public BotStats Stats => botStats;
 
@@ -107,6 +114,20 @@ public class BotAIController : EntityData
     public override int CheckOverlapsBox()
     {
         return Physics.OverlapBoxNonAlloc(Position, Vector3.one * botStats.halfRadius, colls, Quaternion.identity, botStats.lMask);
+    }
+
+    public override void TakeDamage(int amount)
+    {
+        base.TakeDamage(amount);
+        /*
+        if Bot dies in the game return it to the pool and create a new bot in the game
+        */
+        if (health <= 0)
+        {
+            explosionFXRequest.Raise(Position);
+            audioClipRequestHandler.Raise(EntityExplosionAudioSO);
+            botReturnRequest.Raise(this);
+        }
     }
     
 }

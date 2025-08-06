@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Abstraction layer for the entity data/interface
+/// </summary>
 public abstract class EntityData : Entity
 {
     protected int health;
@@ -16,7 +19,7 @@ public abstract class EntityData : Entity
 
     public override int Health => health;
     public override MissileType ActiveMissileType => mType;
-    public override int MaxResTillUpdate =>  (FIX_MUL * (int)mType) + FIX_ADD;
+    public override int MaxResTillUpdate => (FIX_MUL * (int)mType) + FIX_ADD;
     public override int CurrResTillUpdate => tillUpCount;
     public override int Level => level;
     public override Rigidbody RBody => rb;
@@ -52,7 +55,7 @@ public abstract class EntityData : Entity
     public override void TakeDamage(int amount)
     {
         health -= amount;
-        OnEventRaised?.Invoke();
+        OnEventRaised?.Invoke(); // updating player stats UI
     }
 
     public override void AddScore(int amount)
@@ -65,7 +68,6 @@ public abstract class EntityData : Entity
             level++;
             tillUpCount = MaxResTillUpdate;
         }
-        
         OnEventRaised?.Invoke();
     }
 }
