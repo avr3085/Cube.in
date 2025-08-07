@@ -13,18 +13,66 @@ public class CannonController : MonoBehaviour
     [SerializeField] private AudioClipRequestHandler audioClipRequestHandler = default;
 
     private float elapsedReloadTime = 0f;
+    private float shootWait = 0f;
+    private int shotToFire = 10;
     private Vector3 lookDirection;
     private int reloadTime;
+    private Entity target;
 
     public float ElapsedReloadTime => elapsedReloadTime;
     public int ReloadTime => reloadTime;
 
     private void Awake()
     {
-        reloadTime = Random.Range(2, 10);
+        reloadTime = (int)controller.ActiveMissileType + 1;
+    }
+
+    private void Start()
+    {
+        target = null;
     }
 
     private void Update()
+    {
+        if (target == null)
+        {
+            LocateTarget();
+        }
+        else
+        {
+            ShootTarget();
+        }
+
+    }
+
+    private void ShootTarget()
+    {
+        if (shotToFire > 0)
+        {
+            if (shootWait < 0.5f)
+            {
+                shootWait += Time.deltaTime;
+            }
+            else
+            {
+                lookDirection = target.Position - controller.Position;
+                transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+                missileRequestHandler.Raise(controller, nozzle);
+                PlayParticle();
+                shootWait = 0f;
+                shotToFire--;
+            }
+        }
+        else
+        {
+            shotToFire = 10;
+            target = null;
+            reloadTime = (int)controller.ActiveMissileType + 1;
+            elapsedReloadTime = 0f;
+        }
+    }
+
+    private void LocateTarget()
     {
         if (elapsedReloadTime < reloadTime)
         {
@@ -40,15 +88,18 @@ public class CannonController : MonoBehaviour
                     var item = col.GetComponent<Entity>();
                     if (item != controller)
                     {
-                        lookDirection = item.Position - controller.Position;
-                        transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                        missileRequestHandler.Raise(controller.ActiveMissileType, nozzle);
-                        PlayParticle();
+                        target = item;
+                        // lookDirection = item.Position - controller.Position;
+                        // transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+                        // missileRequestHandler.Raise(controller, nozzle);
+                        // PlayParticle();
+                        // Shoot(item);
                         break;
                     }
                 }
-                reloadTime = Random.Range(2, 10);
-                elapsedReloadTime = 0f;
+
+                // reloadTime = (int)controller.ActiveMissileType + 1;
+                // elapsedReloadTime = 0f;
             }
         }
     }

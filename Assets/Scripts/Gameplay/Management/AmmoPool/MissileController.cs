@@ -16,9 +16,11 @@ public class MissileController : MonoBehaviour
     [SerializeField] private AudioClipRequestHandler audioClipRequestHandler = default;
 
     private Rigidbody rb;
-    private MissileType mType;
+    // private MissileType mType;
+    private Entity missileOwner;
     private const int EXP_CONST = 50;
     private const int BASE_DAMAGE = 20;
+    private int MissileToInt => (int)missileOwner.ActiveMissileType + 1;
 
     private void Awake()
     {
@@ -28,14 +30,15 @@ public class MissileController : MonoBehaviour
     /// <summary>
     /// Setting missile direction for shooting
     /// </summary>
-    /// <param name="missileType"></param>
+    /// <param name="mEntity"></param>
     /// <param name="t"></param>
-    public void SetMissileDirection(MissileType missileType, Transform t)
+    public void SetMissileDirection(Entity mEntity, Transform t)
     {
         transform.position = t.position;
         transform.rotation = Quaternion.LookRotation(t.forward);
         rb.velocity = t.forward * moveSpeed;
-        mType = missileType;
+        // mType = mEntity.ActiveMissileType;
+        missileOwner = mEntity;
     }
 
     /// <summary>
@@ -44,17 +47,22 @@ public class MissileController : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        onMissileHit?.Invoke(mType, this); // returns to the pool manager after the hit
+        onMissileHit?.Invoke(missileOwner.ActiveMissileType, this); // returns to the pool manager after the hit
         ammoFXRecHandler?.Raise(transform.position); // pops explosion effect of the missile when it hit
         audioClipRequestHandler.Raise(explosionAudioSO); // missile hit sound effect
 
         var item = other.GetComponent<Entity>();
         if (item != this && item != null)
         {
-            item.RBody.AddExplosionForce(EXP_CONST * ((int)mType + 1), transform.position, 0.3f, 0f, ForceMode.Impulse); // Creating impulse effect
-            item.TakeDamage(BASE_DAMAGE * ((int)mType + 1)); // this will add damage to the hit entity
-            /// add score to the missile owner
-            /// increase the kill count of the owner
+            item.RBody.AddExplosionForce(EXP_CONST * MissileToInt, transform.position, 0.3f, 0f, ForceMode.Impulse); // Creating impulse effect
+            item.TakeDamage(BASE_DAMAGE * MissileToInt); // this will add damage to the hit entity
+            item.ResetLevel();
+            if (item.Health <= 0)
+            {
+                // add the kill count and score as callback
+                missileOwner.KillCount++;
+                missileOwner.Score += 1000;
+            }
         }
     }
 }

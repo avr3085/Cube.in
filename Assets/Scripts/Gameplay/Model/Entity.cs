@@ -14,6 +14,7 @@ public abstract class Entity : MonoBehaviour, IData
     public abstract Rigidbody RBody { get; }
     public abstract int Health { get; }
     public abstract int Score { get; set; }
+    public abstract int KillCount { get; set; }
     public abstract int Level { get; }
     public abstract MissileType ActiveMissileType { get; }
     public abstract int MaxResTillUpdate { get; }
@@ -22,4 +23,5 @@ public abstract class Entity : MonoBehaviour, IData
     public abstract int CheckOverlapsBox();
     public abstract void TakeDamage(int amount);
     public abstract void AddScore(int amount);
+    public abstract void ResetLevel();
 }

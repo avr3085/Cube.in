@@ -4,4 +4,4 @@ using UnityEngine;
 /// SO to requdst Missile
 /// </summary>
 [CreateAssetMenu(fileName = "MissileRequestHandler", menuName = "EventSO/MissileRequestHandler")]
-public class MissileRequestHandler : BaseEventSO<MissileType, Transform>{}
+public class MissileRequestHandler : BaseEventSO<Entity, Transform>{}

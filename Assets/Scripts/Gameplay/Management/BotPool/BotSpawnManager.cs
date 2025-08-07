@@ -10,7 +10,6 @@ public class BotSpawnManager : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField, Range(1, 10)] private int initialSpawnAmount = 5;
-    [SerializeField, Range(1, 20)] private int sphereRadius = 5;
     [SerializeField] private Transform[] spawnPoints;
 
     [Header("Listening Channel")]
@@ -42,7 +41,6 @@ public class BotSpawnManager : MonoBehaviour
             int randInt = Random.Range(0, spawnPoints.Length);
             var bot = botPool.Request();
             bot.SetPosition = spawnPoints[randInt].position;
-            //set the bots to random level
         }
     }
 

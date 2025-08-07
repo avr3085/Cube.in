@@ -54,8 +54,7 @@ public class BotAIController : EntityData
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         rotVector = new Vector3(0f, RotAngle, 0f);
         colls = new Collider[MAX_COLLS];
-
-        base.InitData();
+        base.InitData((MissileType)Random.Range(0, 5));
         currentState.Init();
     }
 
@@ -129,5 +128,11 @@ public class BotAIController : EntityData
             botReturnRequest.Raise(this);
         }
     }
+
+    // public void PickRandomMissile()
+    // {
+    //     mType = (MissileType)Random.Range(0, 4);
+    //     level = (int)ActiveMissileType + 1;
+    // }
     
 }

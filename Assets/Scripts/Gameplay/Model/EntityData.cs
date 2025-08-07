@@ -7,6 +7,7 @@ public abstract class EntityData : Entity
 {
     protected int health;
     protected int score;
+    protected int killCount;
     protected MissileType mType;
     protected int level;
     protected Rigidbody rb;
@@ -18,10 +19,10 @@ public abstract class EntityData : Entity
     private const int FIX_ADD = 5;
 
     public override int Health => health;
+    public override int Level => level;
     public override MissileType ActiveMissileType => mType;
     public override int MaxResTillUpdate => (FIX_MUL * (int)mType) + FIX_ADD;
     public override int CurrResTillUpdate => tillUpCount;
-    public override int Level => level;
     public override Rigidbody RBody => rb;
     public override Collider[] Colls => colls;
     public override Vector3 Position => new Vector3(transform.position.x, 0f, transform.position.z);
@@ -35,9 +36,19 @@ public abstract class EntityData : Entity
         }
     }
 
+    public override int KillCount
+    {
+        get => killCount;
+        set
+        {
+            killCount = value;
+        }
+    }
+
     public virtual void InitData()
     {
         score = 0;
+        killCount = 0;
         health = 100;
         mType = MissileType.Missile;
         level = 1;
@@ -47,9 +58,10 @@ public abstract class EntityData : Entity
     public virtual void InitData(MissileType misType)
     {
         score = 0;
+        killCount = 0;
         health = 100;
         mType = misType;
-        level = 1;
+        level = (int)misType + 1;
     }
 
     public override void TakeDamage(int amount)
@@ -69,5 +81,11 @@ public abstract class EntityData : Entity
             tillUpCount = MaxResTillUpdate;
         }
         OnEventRaised?.Invoke();
+    }
+
+    public override void ResetLevel()
+    {
+        mType = MissileType.Missile;
+        level = 1;
     }
 }

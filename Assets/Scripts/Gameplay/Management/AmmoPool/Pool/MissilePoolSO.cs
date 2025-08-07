@@ -4,7 +4,6 @@ using UnityEngine;
 public class MissilePoolSO : ComponentPool<MissileController>
 {
     [SerializeField] private MissileFactorySO missileFactorySO;
-    [SerializeField] private MissileType bombType = MissileType.Missile;
 
     protected override IFactory<MissileController> Factory 
     { 

@@ -8,7 +8,7 @@ public class MissilePoolManager : MonoBehaviour
 {
     [Header("Pool Array"), Tooltip("Make Sure to add Bomb Type in Sorted manner. Ex - Add Type A before Type B.")]
     [SerializeField] private MissilePoolSO[] missilePoolArray;
-    [SerializeField, Range(5, 20)] private int poolArraySize = 10;
+    [SerializeField, Range(5, 50)] private int poolArraySize = 10;
 
     [Header("Listening Channel")]
     [SerializeField] private MissileRequestHandler missileRequestHandler = default;
@@ -40,10 +40,10 @@ public class MissilePoolManager : MonoBehaviour
         }
     }
 
-    private void RequestMissile(MissileType mType, Transform t)
+    private void RequestMissile(Entity mEntity, Transform t)
     {
-        MissileController requestedMissile = missilePoolArray[(int)mType].Request();
-        requestedMissile.SetMissileDirection(mType, t);
+        MissileController requestedMissile = missilePoolArray[(int)mEntity.ActiveMissileType].Request();
+        requestedMissile.SetMissileDirection(mEntity, t);
         requestedMissile.onMissileHit += ReturnMissile;
     }
 
