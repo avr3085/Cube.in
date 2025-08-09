@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
-using Etouch = UnityEngine.InputSystem.EnhancedTouch;
+// using UnityEngine.InputSystem.EnhancedTouch;
+// using Etouch = UnityEngine.InputSystem.EnhancedTouch;
 
 /// <summary>
 /// Input Handler
@@ -21,24 +21,24 @@ public class InputHandler : MonoBehaviour
 
     [Header("Listening Channel"), SerializeField] private VoidEventListener gameOverRequestHandler = default;
 
-    private Finger centerFinger;
+    // private Finger centerFinger;
     private readonly float maxKnobMovement = 100f;
 
     private void OnEnable()
     {
-        Etouch.EnhancedTouchSupport.Enable();
-        Etouch.Touch.onFingerDown += HandleFingerDown;
-        Etouch.Touch.onFingerMove += HandleFingerMove;
-        Etouch.Touch.onFingerUp += HandleFingerUp;
+        // Etouch.EnhancedTouchSupport.Enable();
+        // Etouch.Touch.onFingerDown += HandleFingerDown;
+        // Etouch.Touch.onFingerMove += HandleFingerMove;
+        // Etouch.Touch.onFingerUp += HandleFingerUp;
         gameOverRequestHandler.onEventRaised += DisableJoystick;
     }
 
     private void OnDisable()
     {
-        Etouch.Touch.onFingerDown -= HandleFingerDown;
-        Etouch.Touch.onFingerMove -= HandleFingerMove;
-        Etouch.Touch.onFingerUp -= HandleFingerUp;
-        Etouch.EnhancedTouchSupport.Disable();
+        // Etouch.Touch.onFingerDown -= HandleFingerDown;
+        // Etouch.Touch.onFingerMove -= HandleFingerMove;
+        // Etouch.Touch.onFingerUp -= HandleFingerUp;
+        // Etouch.EnhancedTouchSupport.Disable();
         gameOverRequestHandler.onEventRaised -= DisableJoystick;
     }
 
@@ -51,45 +51,109 @@ public class InputHandler : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void HandleFingerDown(Finger finger)
-    {
-        float screenBoundary = Screen.height * validTouchPercentile;
-        if(centerFinger == null && finger.screenPosition.y < screenBoundary)
-        {
-            centerFinger = finger;
-            joystick.gameObject.SetActive(true);
-            joystick.JoystickRect.anchoredPosition = finger.screenPosition;
-        }
-    }
+    // private void HandleFingerDown(Finger finger)
+    // {
+    //     float screenBoundary = Screen.height * validTouchPercentile;
+    //     if (centerFinger == null && finger.screenPosition.y < screenBoundary)
+    //     {
+    //         centerFinger = finger;
+    //         joystick.gameObject.SetActive(true);
+    //         joystick.JoystickRect.anchoredPosition = finger.screenPosition;
+    //     }
+    // }
 
-    private void HandleFingerMove(Finger finger)
+    // private void HandleFingerMove(Finger finger)
+    // {
+    //     if (finger == centerFinger)
+    //     {
+    //         Vector2 knobPosition;
+    //         Vector2 moveDirection = finger.screenPosition - joystick.JoystickRect.anchoredPosition;
+    //         float moveDirectionSqrMagnitude = moveDirection.sqrMagnitude;
+    //         if (moveDirectionSqrMagnitude > maxKnobMovement * maxKnobMovement)
+    //         {
+    //             knobPosition = moveDirection.normalized * maxKnobMovement;
+    //         }
+    //         else
+    //         {
+    //             knobPosition = moveDirection;
+    //         }
+
+    //         joystick.Knob.anchoredPosition = knobPosition;
+    //         if (moveDirectionSqrMagnitude > minTolranceRange * minTolranceRange)
+    //         {
+    //             inputAxisListener.Raise(moveDirection.normalized);
+    //         }
+    //     }
+    // }
+
+    // private void HandleFingerUp(Finger finger)
+    // {
+    //     centerFinger = null;
+    //     joystick.Knob.anchoredPosition = Vector2.zero;
+    //     joystick.gameObject.SetActive(false);
+    // }
+
+/// <summary>
+///  This will work in webgl only
+/// </summary>
+    private void Update()
     {
-        if(finger == centerFinger)
+#if UNITY_WEBGL
+        //Testing new input system
+        int currentFinger = -1;
+        foreach (Touch t in Input.touches)
         {
-            Vector2 knobPosition;
-            Vector2 moveDirection = finger.screenPosition - joystick.JoystickRect.anchoredPosition;
-            float moveDirectionSqrMagnitude = moveDirection.sqrMagnitude;
-            if(moveDirectionSqrMagnitude > maxKnobMovement * maxKnobMovement)
+            if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled)
             {
-                knobPosition = moveDirection.normalized * maxKnobMovement;
+                currentFinger++;
             }
             else
             {
-                knobPosition = moveDirection;
+                joystick.Knob.anchoredPosition = Vector2.zero;
+                joystick.gameObject.SetActive(false);
+                return;
             }
-            
-            joystick.Knob.anchoredPosition = knobPosition;
-            if(moveDirectionSqrMagnitude > minTolranceRange * minTolranceRange)
+
+            if (currentFinger == 0)
             {
-                inputAxisListener.Raise(moveDirection.normalized);
+                if (t.phase == TouchPhase.Began)
+                {
+                    float screenBoundary = Screen.height * validTouchPercentile;
+                    if (t.position.y < screenBoundary)
+                    {
+                        // centerFinger = finger;
+                        joystick.gameObject.SetActive(true);
+                        joystick.JoystickRect.anchoredPosition = t.position;
+                    }
+                }
+                if (t.phase == TouchPhase.Moved)
+                {
+                    // Vector3 movePosition = Camera.main.ScreenToWorldPoint(t.position) - currentMousePostiton;
+                    // mouseDragEventChannel.Raise(new Vector2(movePosition.x, movePosition.y));
+                    Vector2 knobPosition;
+                    Vector2 moveDirection = t.position - joystick.JoystickRect.anchoredPosition;
+                    float moveDirectionSqrMagnitude = moveDirection.sqrMagnitude;
+                    if (moveDirectionSqrMagnitude > maxKnobMovement * maxKnobMovement)
+                    {
+                        knobPosition = moveDirection.normalized * maxKnobMovement;
+                    }
+                    else
+                    {
+                        knobPosition = moveDirection;
+                    }
+
+                    joystick.Knob.anchoredPosition = knobPosition;
+                    if (moveDirectionSqrMagnitude > minTolranceRange * minTolranceRange)
+                    {
+                        inputAxisListener.Raise(moveDirection.normalized);
+                    }
+                }
+            }
+            else
+            {
+                return;
             }
         }
-    }
-
-    private void HandleFingerUp(Finger finger)
-    {
-        centerFinger = null;
-        joystick.Knob.anchoredPosition = Vector2.zero;
-        joystick.gameObject.SetActive(false);
+#endif
     }
 }
