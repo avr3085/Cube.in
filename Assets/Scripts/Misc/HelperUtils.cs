@@ -9,34 +9,35 @@ namespace Misc
     public static class HelperUtils
     {
         /// <summary>
-        /// mapMax - maximum size of map in either quadrant, to calculate a 1d hash key
-        /// mapMax must be greater than the size of the map used in gamplay
+        /// mapSize - maximum size of map in either quadrant, to calculate a 1d hash key
+        /// mapSize must be greater than the size of the map used in gamplay
         /// otherwise error will appear
         /// </summary>
-        private const int mapMax = 52;
+        private const int mapSize = 52; // The actual map Size is mapSize * 2
+        private const int boundsOffset = 48; // This must always be less than the size of the map
+        private const float maxMagnitudeOffset = 1000f; // Maximum magnitude offset between two vectors
 
-        /// <summary>
-        /// Converts Floting point vector3 values to integer format
-        /// </summary>
-        /// <param name="val">Vector3 Extention method</param>
-        /// <returns>Int Vector3 value</returns>
+        public static float MaxMagnitudeOffset => maxMagnitudeOffset;
+        public static int BoundsOffset => boundsOffset;
+
         public static Vector3Int ToFloorInt(this Vector3 val)
         {
             return Vector3Int.FloorToInt(val);
         }
-        
+
         /// <summary>
         /// Converts 2d Vector to single hash value
-        /// Hash Formula for only first quadrant = x + (y * mapMax) [will work as long as x, y is positive]
-        /// Hash Formula used for all quadrants = (x + mapMax/2) + (y + mapMax/2) * mapMax [works for all position]
-        /// Note - since we are not using mapMax/2 will make the calculation slow, mapMax is already halfed
+        /// Hash Formula for only first quadrant = x + (y * mapSize) [will work as long as x, y is positive]
+        /// Hash Formula used for all quadrants = (x + mapSize/2) + (y + mapSize/2) * mapSize [works for all position]
+        /// Note - since we are not using mapSize/2 will make the calculation slow, mapSize is already halfed
+        /// Hence the above Variable "mapSize" == mapSize * 2;
         /// </summary>
         /// <param name="v">Vector3 Extention</param>
         /// <returns>int hash Value</returns>
         public static int ToHash(this Vector3 v)
         {
             Vector3Int val = v.ToFloorInt();
-            return ((val.z + mapMax) * (mapMax * 2)) + val.x + mapMax;
+            return ((val.z + mapSize) * (mapSize * 2)) + val.x + mapSize;
         }
 
         /// <summary>
@@ -47,122 +48,122 @@ namespace Misc
         /// <returns>Array of hash Key, overlapping uniform grid cell</returns>
         public static IEnumerable<int> ToBBoxHash(this Vector3 pos)
         {
-            int currentHash = -1;
             Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
-            currentHash = bl.ToHash();
-            yield return currentHash;
+            yield return bl.ToHash();
 
             Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
-            if(currentHash < br.ToHash())
-            {
-                currentHash = br.ToHash();
-                yield return currentHash;
-            }
+            yield return br.ToHash();
 
             Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tl.ToHash())
-            {
-                currentHash = tl.ToHash();
-                yield return currentHash;
-            }
+            yield return tl.ToHash();
 
             Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tr.ToHash())
+            yield return tr.ToHash();
+        }
+
+        /// <summary>
+        /// Return list of all the position vector around the bot, in Squared Field
+        /// Use Visual Debug to check the results
+        /// </summary>
+        /// <param name="pos">Current position of the bot</param>
+        /// <param name="boxSize">Boxed visible Range, Size must be even number</param>
+        /// <param name="mapSize">max allowed Visible Map Size</param>
+        /// <returns></returns>
+        public static IEnumerable<Vector3> BoxVisionV3(this Vector3 pos, int boxSize = 2, int bounds = boundsOffset)
+        {
+            int xHalved = -(boxSize / 2);
+            int yHalved = -(boxSize / 2);
+
+            Vector3Int posFloor = pos.ToFloorInt();
+
+            for (int i = 0; i < boxSize + 1; i++)
             {
-                currentHash = tr.ToHash();
-                yield return currentHash;
+                int currX = xHalved;
+                for (int j = 0; j < boxSize + 1; j++)
+                {
+                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    if (outPos.x > -bounds && outPos.x < bounds && outPos.z > -bounds && outPos.z < bounds)
+                    {
+                        yield return new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    }
+
+                    currX++;
+                }
+
+                yHalved++;
             }
         }
 
         /// <summary>
-        /// Calculates hash, when the bounding box is using magnet effect
-        /// Can collect item, like magent does in games
+        /// Returns All the hash area around the bot
         /// </summary>
-        /// <param name="pos"></param>
+        /// <param name="pos">Bot current position</param>
+        /// <param name="boxSize">Boxed visible Range, Size must be even number</param>
         /// <returns></returns>
-        public static IEnumerable<int> ToMagBBoxHash(this Vector3 pos)
+        public static IEnumerable<int> BoxVisionHash(this Vector3 pos, int boxSize = 2, int bounds = boundsOffset)
         {
-            int currentHash = -1;
-            Vector3 blb = new Vector3(pos.x - 0.5f, 0f, pos.z - 1.5f);
-            currentHash =  blb.ToHash();
-            yield return currentHash;
+            int xHalved = -(boxSize / 2);
+            int yHalved = -(boxSize / 2);
 
-            Vector3 brb = new Vector3(pos.x + 0.5f, 0f, pos.z - 1.5f);
-            if(currentHash < brb.ToHash())
-            {
-                currentHash = brb.ToHash();
-                yield return currentHash;
-            }
+            Vector3Int posFloor = pos.ToFloorInt();
 
-            Vector3 bll = new Vector3(pos.x - 1.5f, 0f, pos.z - 0.5f);
-            if(currentHash < bll.ToHash())
+            for (int i = 0; i < boxSize + 1; i++)
             {
-                currentHash = bll.ToHash();
-                yield return currentHash;
-            }
+                int currX = xHalved;
+                for (int j = 0; j < boxSize + 1; j++)
+                {
+                    Vector3 outPos = new Vector3(posFloor.x + currX, 0f, posFloor.z + yHalved);
+                    if (outPos.x > -bounds && outPos.x < bounds && outPos.z > -bounds && outPos.z < bounds)
+                    {
+                        yield return outPos.ToHash();
+                    }
 
-            Vector3 bl = new Vector3(pos.x - 0.5f, 0f, pos.z - 0.5f);
-            if(currentHash < bl.ToHash())
-            {
-                currentHash = bl.ToHash();
-                yield return currentHash;
-            }
+                    currX++;
+                }
 
-            Vector3 br = new Vector3(pos.x + 0.5f, 0f, pos.z - 0.5f);
-            if(currentHash < br.ToHash())
-            {
-                currentHash = br.ToHash();
-                yield return currentHash;
+                yHalved++;
             }
+        }
 
-            Vector3 brr = new Vector3(pos.x + 1.5f, 0f, pos.z - 0.5f);
-            if(currentHash < brr.ToHash())
-            {
-                currentHash = brr.ToHash();
-                yield return currentHash;
-            }
+        /// <summary>
+        /// Returns the manual dot product
+        /// This one is faster form the InBuilt dot product system
+        /// since it is not normalizing the vector
+        /// </summary>
+        /// <param name="vec1"></param>
+        /// <param name="vec2"></param>
+        /// <returns></returns>
+        public static float DotProduct(Vector3 vec1, Vector3 vec2)
+        {
+            return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
+        }
 
-            Vector3 tll = new Vector3(pos.x - 1.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tll.ToHash())
-            {
-                currentHash = tll.ToHash();
-                yield return currentHash;
-            }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static IEnumerable<Vector3> GetSurroundRays(this Transform t)
+        {
+            yield return t.right;
 
-            Vector3 tl = new Vector3(pos.x - 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tl.ToHash())
-            {
-                currentHash = tl.ToHash();
-                yield return currentHash;
-            }
+            Vector3 upperRight = t.right + t.forward;
+            yield return upperRight;
 
-            Vector3 tr = new Vector3(pos.x + 0.5f, 0f, pos.z + 0.5f);
-            if(currentHash < tr.ToHash())
-            {
-                currentHash = tr.ToHash();
-                yield return currentHash;
-            }
+            yield return t.forward;
 
-            Vector3 trr = new Vector3(pos.x + 1.5f, 0f, pos.z + 0.5f);
-            if(currentHash < trr.ToHash())
-            {
-                currentHash = trr.ToHash();
-                yield return currentHash;
-            }
+            Vector3 upperLeft = t.forward + t.right * -1;
+            yield return upperLeft;
 
-            Vector3 tlu = new Vector3(pos.x - 0.5f, 0f, pos.z + 1.5f);
-            if(currentHash < tlu.ToHash())
-            {
-                currentHash = tlu.ToHash();
-                yield return currentHash;
-            }
+            yield return t.right * -1;
 
-            Vector3 tru = new Vector3(pos.x + 0.5f, 0f, pos.z + 1.5f);
-            if(currentHash < tru.ToHash())
-            {
-                currentHash = tru.ToHash();
-                yield return currentHash;
-            }
+            Vector3 lowerLeft = t.right * -1 + t.forward * -1;
+            yield return lowerLeft;
+
+            yield return t.forward * -1;
+
+            Vector3 lowerRight = t.forward * -1 + t.right;
+            yield return lowerRight;
         }
 
         /// <summary>
@@ -202,14 +203,14 @@ namespace Misc
 
         //     yield break;
         //     }
-            
+
         //     // Handle all other lines
-            
+
         //     side = -1 * ((dx == 0 ? yinc : xinc) - 1);
 
         //     i     = dx + dy;
         //     error = dx - dy;
-            
+
         //     dx *= 2;
         //     dy *= 2;
 

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bdabb5601368f4ba7c4635da781cb5, type: 3}
+  m_Name: SkinInventory
+  m_EditorClassIdentifier: 
+  selectedSkin: 5
+  skins:
+  - {fileID: 11400000, guid: 7fb54a4ad07e1f34aa47e2a254e6c989, type: 2}
+  - {fileID: 11400000, guid: 3177edf197b56974093482572e0c4bca, type: 2}
+  - {fileID: 11400000, guid: 041c561daa27fb44697eee7646f340ac, type: 2}
+  - {fileID: 11400000, guid: 4143d5e906b65cf48bea26fd74dd8373, type: 2}
+  - {fileID: 11400000, guid: 321938fb31e4aa54a93b68b5751cba71, type: 2}
+  - {fileID: 11400000, guid: b4db8a221b2a985418837fbfd2982dd4, type: 2}
+  - {fileID: 11400000, guid: bf5e4b3390578e248b7cfc6585c0e263, type: 2}
+  - {fileID: 11400000, guid: b0783667b98bcd14ba7af3402db356c3, type: 2}
+  - {fileID: 11400000, guid: 260d4bcac25b9ca4a8ad13351743586a, type: 2}
+  - {fileID: 11400000, guid: a647a90682ae25d45a3407554f7281b9, type: 2}

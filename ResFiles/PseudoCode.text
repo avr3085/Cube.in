@@ -1,0 +1,99 @@
+Note - This file contains all the necessary details of the game's AI.
+
+- Things the bot will perform
+	- move randomly
+	- Consume food
+	- Upgrade the weapon according to the player
+	- Shoot player if needed
+	- Survive
+
+- Bot's Behaviour states
+	- Petrol
+	- Combat
+	- Survive
+
+- Variables to Consider when switching the state of the bot
+	- Health status
+	- Level XP
+
+- Visual Range of bot
+	-- Long Visual Range
+	-- Short Visual Range
+
+- Detailed state switch
+	- Petrol -> Combat
+		-- Enemey detected
+		-- Health is not critical
+
+	- Petrol -> Survive
+		-- If critical health
+
+	- Survive -> Petrol
+		-- If no danger around and health is not critical
+
+	- Combat -> Petrol
+		-- No enemies around
+
+	- Survival -> Combat
+		-- Health critical, but enemies around attacking
+
+	- Combat -> Survive
+		-- Combat is over, but the health is at critical level
+
+Important link
+	https://gamedesignskills.com/game-design/combat-design/
+	https://leanrada.com/notes/sweep-and-prune/
+	https://github.com/SunnyValleyStudio/rigidbody-vs-Transform-movement-in-Unity-2D
+	https://www.youtube.com/watch?v=UA2F8s3fCLs
+	
+Bot states detailed explation 
+	Petroling
+		- Bot will move forward
+		- Consume food according to the hunger desire
+		- Hunger desire will be calculated using the formula, which shall depend over the health and level xp rank
+	
+	Combat
+		- If bot sense that enemy is around, then it will decide if he should fight or not.
+		- If enough XP then Bot will try to get into combat with surrounding enemy
+
+	Survival
+		- if the health and xp is not that stable of the bot, it will switch to survival state and will try to eat more fodd than needed
+			to heal itself
+
+	[Regardless of the state of the bot, it will try to avoid the walls at any cost.]
+
+[Todo]
+	- Fix the problem of bot's y axis movement. when patrolling
+	- Add weapon shooting and movement system in the game
+	- Add animation to the weapon
+	- Add combat state in the game
+
+
+[Design pseudocode]
+	# PseudoCode design	
+	-- Updated iteration on the bot AI ------
+
+	# New Update Mechanics details
+		- The cannon will now shoot and then reload for a given short period of time
+		- During this period of time, the bot will try to avoid any upcoming bot from any side
+		- when the cannon relods itself again, then the bot will shoot at the next new target again, and then process will work in the same
+			fashion for the player as well
+
+	# How the player will act with this shoot system?
+		- In order to make the gameplay fair, i used the new system. this new system is having a Reload and Shoot mechanic
+		- When the game starts the player will have it's cannon loaded alredy, then then when an enemy appear, the cannon will shoot
+			automatically. and after it shoots to the enemy then the player will have to go to the safe state, where there are no 
+			other bots around the player.
+	
+	# Basic behaviour details [Based on Player Behaviour]
+		- If there will be no enemy then the player will roam freely, eating and upgrading itself
+		- If the player encounter an enemy then it will try to shoot at the enemy.[This will only happen when the health of the player is good enough]
+		- If Player's health is not good enough, then the player should try to move away from the other bots
+		
+		--------------------------------- Player movement details ---------------------------
+		- If player health is ok, and it encounter the enemy. then it won't run away from the enemy
+		- Since the shoot/reload is automated. the bot needs to just steer and in a circular manner and do the job
+		[Try to learn about the comabt system like the game black myth wukong]
+			- The combat system is called souls like comabt 
+			- The other system is meelee combat
+			- 

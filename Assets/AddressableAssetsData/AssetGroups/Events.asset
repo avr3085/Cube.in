@@ -15,7 +15,7 @@ MonoBehaviour:
   m_GroupName: Events
   m_Data:
     m_SerializedData: []
-  m_GUID: 27aa1955e376a7840bcf78ffc72334a3
+  m_GUID: 4296ac2f467dafa44a6c742703f2fd05
   m_SerializeEntries:
   - m_GUID: d485fe8463b6941449c939845e622393
     m_Address: Assets/ScriptableObjects/Events
@@ -25,5 +25,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: b50df954f6627bf43a2a3984a39bb888, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 1418920c1f8818048a08ea45033b78de, type: 2}
-    - {fileID: 11400000, guid: dc8ed3e3f1ca5c94bbc19a55dff44e00, type: 2}
+    - {fileID: 11400000, guid: 9fedce72be61a21428cbba409e979906, type: 2}
+    - {fileID: 11400000, guid: 84be5210c4f562a43bc2ff4e21fca92c, type: 2}

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Misc;
 
 /// <summary>
 /// Factory SO
@@ -12,9 +13,10 @@ public class ResFactorySO : ResFactory
     [SerializeField] private AnimationCurve scaleCurve;
     
     public bool ContainsKey (int haskKey) => hMap.ContainsKey(haskKey);
-
-    protected override ResConfig ResConfig 
-    { 
+    public ResType ResourceType => resType;
+    
+    protected override ResConfig ResConfig
+    {
         get => resConfig;
     }
 
@@ -77,7 +79,7 @@ public class ResFactorySO : ResFactory
     /// <param name="position">Position will be used to check the distance between all the resources staying particular cell</param>
     /// <param name="collector">Caller which collected the resource</pram>
     /// <returns>null</returns>
-    public void CheckCollision(int hashKey, Vector3 position, IResCollector collector)
+    public void CollisionCheck(int hashKey, Vector3 position, IResCollector collector)
     {
         HNode hNode = hMap[hashKey];
         int mIndex = hNode.index;
@@ -96,39 +98,38 @@ public class ResFactorySO : ResFactory
                     collector.OnResCollected(resType);
                 }
             }
-
             mIndex++;
         }
     }
 
     /// <summary>
-    /// Calculates the average position of all the resources present at given hashkey
+    /// Returns the nearest resource position from the current player position
     /// </summary>
-    /// <param name="hashKey">Key at which has is to be calculated</param>
-    /// <returns>Average position, if null then returns zero</returns>
-    // public Vector3 AveragePosition(int hashKey)
-    // {
-    //     Vector3 avgPos = Vector3.zero;
-    //     HNode node = hMap[hashKey];
-        
-    //     int mIndex = node.index;
-    //     int count = 0;
-    //     for(int i = 0; i < node.totalNodes; i++)
-    //     {
-    //         if(resLookup[mIndex].state == RNodeState.Idol)
-    //         {
-    //             avgPos += resLookup[mIndex].position;
-    //             count++;
-    //         }
+    /// <param name="hashKey">Hash key for the uniform grid</param>
+    /// <param name="position">Player current position</param>
+    /// <returns>Best nearest resource from position</returns>
+    public Vector3 NearestNodeCheck(int hashKey, Vector3 position)
+    {
+        HNode hNode = hMap[hashKey];
+        int mIndex = hNode.index;
 
-    //         mIndex++;
-    //     }
+        Vector3 nearestPos = Vector3.zero;
+        float minMag = HelperUtils.MaxMagnitudeOffset;
 
-    //     if(count > 1)
-    //     {
-    //         avgPos =  avgPos/count;
-    //     }
-
-    //     return avgPos;
-    // }
+        for(int i = 0; i < hNode.totalNodes; i++)
+        {
+            RNode node = resLookup[mIndex];
+            if(node.state == RNodeState.Idol && !node.animatingAlready)
+            {
+                float distSqrd = (node.position - position).sqrMagnitude;
+                if(distSqrd < minMag)
+                {
+                    minMag = distSqrd;
+                    nearestPos = node.position;
+                }
+            }
+            mIndex++;
+        }
+        return nearestPos;
+    }
 }

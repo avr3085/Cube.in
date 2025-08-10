@@ -15,8 +15,20 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_Data:
     m_SerializedData: []
-  m_GUID: 132e81958e4c0ee4c8ec000d7ed1445c
+  m_GUID: 4fe402393de1b384a86fdea6308f3e11
   m_SerializeEntries:
+  - m_GUID: 2f37224ba65785647bea90ff42407b0a
+    m_Address: Assets/Scenes/UI/MainUI.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: dd72559fe9c2e604ba0f9881d6c4795e
+    m_Address: Assets/Scenes/Manager/Kernel.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0860540ea8297504081e6823a71397c7
+    m_Address: Assets/Scenes/Gameplay/Gameplay.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   - m_GUID: f8c75261f16432d4fb6ec64468adc132
     m_Address: Assets/Scenes/Gameplay/MainLevel.unity
     m_ReadOnly: 0
