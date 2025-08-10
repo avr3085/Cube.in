@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60bcba5ab22783248a97ef687af42f4a, type: 3}
   m_Name: SurvivalState
   m_EditorClassIdentifier: 
-  actions:
-  - {fileID: 11400000, guid: 4f1ca4fb3e4d1ab42bec4d7755c71a31, type: 2}
-  transitions: []
+  act: {fileID: 11400000, guid: 4f1ca4fb3e4d1ab42bec4d7755c71a31, type: 2}
+  transAct:
+    actions: {fileID: 11400000, guid: 5a6d43c1f186f244bb8d319679dfeecc, type: 2}
+    trueState: {fileID: 11400000, guid: d9dd421b139841642ad4d36b479ba7b2, type: 2}
+    falseState: {fileID: 11400000, guid: 3303311426d939846ba82541bf90e068, type: 2}

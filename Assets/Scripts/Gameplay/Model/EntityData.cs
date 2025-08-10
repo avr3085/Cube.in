@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -62,6 +63,7 @@ public abstract class EntityData : Entity
         health = 100;
         mType = misType;
         level = (int)misType + 1;
+        tillUpCount = MaxResTillUpdate;
     }
 
     public override void TakeDamage(int amount)
@@ -87,5 +89,6 @@ public abstract class EntityData : Entity
     {
         mType = MissileType.Missile;
         level = 1;
+        tillUpCount = MaxResTillUpdate;
     }
 }

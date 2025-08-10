@@ -44,6 +44,7 @@ public class SurvivalActions : Actions
                     if (entity != null && entity != controller)
                     {
                         moveDirection += controller.Position - entity.Position;
+                        break;
                     }
                 }
             }

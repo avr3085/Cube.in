@@ -6,20 +6,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "State", menuName = "AI/State")]
 public class State : ScriptableObject
 {
-    public Actions[] actions = default;
-    public Transitions[] transitions = default;
+    public Actions act = default;
+    public Transitions transAct = default;
 
     public void Init()
     {
-        foreach (Actions act in actions)
-        {
-            act.Init();
-        }
-
-        foreach (Transitions t in transitions)
-        {
-            t.actions.Init();
-        }
+        act.Init();
+        transAct.actions.Init();
     }
 
     public void UpdateState(BotAIController controller)
@@ -30,21 +23,21 @@ public class State : ScriptableObject
 
     private void ExecuteActions(BotAIController controller)
     {
-        foreach (Actions act in actions)
-        {
-            act.Act(controller);
-        }
+        act.Act(controller);
     }
 
     private void ExecuteTransitActions(BotAIController controller)
     {
-        foreach (Transitions t in transitions)
+        if (transAct.actions.SwitchAct(controller))
         {
-            if (t.actions.SwitchAct(controller))
+            controller.SwitchState(transAct.trueState);
+        }
+        else
+        {
+            if (!transAct.actions.StayInState)
             {
-                controller.SwitchState(t.trueState);
+                controller.SwitchState(transAct.falseState);
             }
-            // add false state logic as well
         }
     }
 

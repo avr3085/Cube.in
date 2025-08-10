@@ -8,9 +8,13 @@ public class CombatSwitchAction : SwitchAction
     [Range(1, 20)] public int maxTime = 15;
 
     private float chaseTime;
+    private bool stayInState;
+
+    public override bool StayInState => stayInState;
 
     public override void Init()
     {
+        stayInState = true;
         chaseTime = Random.Range(minTime, maxTime);
     }
 
@@ -21,8 +25,23 @@ public class CombatSwitchAction : SwitchAction
 
     private bool CombatSwitch(BotAIController controller)
     {
-        // if health is health is low return false;
-        // if the target is null, then return false
+        // true state - patrol state
+        // false state - survival state
+
+        /**
+         if plyaer is too far switch to roaming state
+         if player time is over switch to patrol state
+         if health is low, switch to survival state
+        */
+
+        if (controller.HasCriticalHealth)
+        {
+            // switch to survival state
+            controller.hasCombatTarget = false;
+            controller.comabtTarget = null;
+            stayInState = false;
+            return false;
+        }
 
         if ((controller.Position - controller.comabtTarget.Position).sqrMagnitude > controller.Stats.ChaseTargeDistSqrd)
         {

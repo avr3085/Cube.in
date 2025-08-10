@@ -9,7 +9,7 @@ using Misc;
 [RequireComponent(typeof(BotCustomization))]
 public class BotAIController : EntityData
 {
-    [SerializeField] private BotStats botStats = default;
+    [SerializeField] private BotStats botStats = default; // statistics ex(visionRange etc)
     [HideInInspector] public Vector3 rotVector;
 
     // Patrol state variables
@@ -21,6 +21,7 @@ public class BotAIController : EntityData
     [HideInInspector] public Entity comabtTarget;
 
     [Header("FSM")]
+    [SerializeField] private State defaultState = default;
     [SerializeField] private State currentState = default;
 
     [Header("Data Channel"), SerializeField] private AudioSO EntityExplosionAudioSO = default;
@@ -32,6 +33,8 @@ public class BotAIController : EntityData
 
     public float RotAngle => Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
     public BotStats Stats => botStats;
+    private const int CRITICAL_HEALTH_VALUE = 30;
+    public bool HasCriticalHealth => health <= CRITICAL_HEALTH_VALUE;
 
     public Vector3 SetVelocity
     {
@@ -129,10 +132,9 @@ public class BotAIController : EntityData
         }
     }
 
-    // public void PickRandomMissile()
-    // {
-    //     mType = (MissileType)Random.Range(0, 4);
-    //     level = (int)ActiveMissileType + 1;
-    // }
-    
+    public void ResetState()
+    {
+        currentState = defaultState;
+        currentState.Init();
+    }
 }

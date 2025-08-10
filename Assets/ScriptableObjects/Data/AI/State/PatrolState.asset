@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60bcba5ab22783248a97ef687af42f4a, type: 3}
   m_Name: PatrolState
   m_EditorClassIdentifier: 
-  actions:
-  - {fileID: 11400000, guid: ee463b7af05af8b429dec10091b5bd3f, type: 2}
-  transitions:
-  - actions: {fileID: 11400000, guid: d119f70334092ed43900b3105dde4aaf, type: 2}
+  act: {fileID: 11400000, guid: ee463b7af05af8b429dec10091b5bd3f, type: 2}
+  transAct:
+    actions: {fileID: 11400000, guid: d119f70334092ed43900b3105dde4aaf, type: 2}
     trueState: {fileID: 11400000, guid: 3303311426d939846ba82541bf90e068, type: 2}
-    falseState: {fileID: 0}
+    falseState: {fileID: 11400000, guid: 4d257ab4e57c05147b469b49be7f2508, type: 2}

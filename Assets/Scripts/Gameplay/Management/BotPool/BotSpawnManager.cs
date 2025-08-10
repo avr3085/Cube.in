@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -14,6 +16,8 @@ public class BotSpawnManager : MonoBehaviour
 
     [Header("Listening Channel")]
     [SerializeField] private BotReturnRequestHandler botReturnRequest = default;
+
+    private Queue<BotAIController> returnQ = new Queue<BotAIController>();
 
     private void OnEnable()
     {
@@ -46,7 +50,27 @@ public class BotSpawnManager : MonoBehaviour
 
     private void ReturnBot(BotAIController bot)
     {
+        returnQ.Enqueue(bot);
         botPool.Return(bot);
-        SpawnBots();
+
+        StartCoroutine(WaitSpawn());
+        // bot.InitData((MissileType)Random.Range(0, 5));
+        // bot.ResetState();
+        // SpawnBots();
+    }
+
+    private IEnumerator WaitSpawn()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (returnQ.Count > 0)
+        {
+            var bot = returnQ.Dequeue();
+            SpawnBots();
+            bot.InitData((MissileType)Random.Range(0, 5));
+            bot.ResetState();
+
+            StartCoroutine(WaitSpawn());
+        }
     }
 }
