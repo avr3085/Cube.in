@@ -55,6 +55,7 @@
     <type fullname="SoundManager" preserve="all" />
     <type fullname="State" preserve="all" />
     <type fullname="SurvivalActions" preserve="all" />
+    <type fullname="SurvivalSwitchAction" preserve="all" />
     <type fullname="Vector2EventListener" preserve="all" />
     <type fullname="VoidEventListener" preserve="all" />
     <type fullname="Transitions" preserve="nothing" serialized="true" />
